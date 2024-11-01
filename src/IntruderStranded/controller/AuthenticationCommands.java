@@ -9,7 +9,7 @@ import IntruderStranded.gameExceptions.*;
  * Course: ITEC 3860 Fall 2024
  * Written: October 19th, 2024
  * 
- * This class – Is the Commands subclass for Authentication Commands. Handles all user commands
+ * This class â€“ Is the Commands subclass for Authentication Commands. Handles all user commands
  * sent from GameController and returns appropriate replies or exceptions.
  * Relevant after the player has launched the Intruder Stranded application, but before they
  * are logged in.

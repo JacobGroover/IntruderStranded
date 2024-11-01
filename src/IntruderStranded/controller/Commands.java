@@ -10,7 +10,7 @@ import IntruderStranded.gameExceptions.*;
  * Course: ITEC 3860 Fall 2024
  * Written: Oct 20, 2024
  * 
- * This class – Handles commands from the user. The command is parsed, type of command determined and
+ * This class â€“ Handles commands from the user. The command is parsed, type of command determined and
  * then routed to correct methods to handle the command.
  * Uses Observer design pattern to sync game state with the GameController that called it by updating a List of Observer interfaces.
  */
