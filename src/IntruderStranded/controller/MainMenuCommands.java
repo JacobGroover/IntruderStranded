@@ -1,0 +1,71 @@
+package IntruderStranded.controller;
+
+import IntruderStranded.gameExceptions.*;
+
+/**
+ * Class: MainMenu
+ * @author Jacob Groover
+ * @version 1.0
+ * Course: ITEC 3860 Fall 2024
+ * Written: October 19th, 2024
+ * 
+ * This class – Is the Commands subclass for Main Menu Commands. Handles all user commands sent
+ * from GameController and returns appropriate replies or exceptions.
+ * Relevant while the player is logged in, but not yet in an active game session.
+ */
+public class MainMenuCommands extends Commands {
+
+	/**
+	 * Method: executeCommand
+	 * Validates and then executes a command received from the GameController.
+	 * Valid Commands (case-insensitive):
+	 * Start new game commands - New Game, New [calls the newGame method]
+	 * Load a saved game commands - Load Game, Load [calls the loadGame method]
+	 * Exit [calls the exit method]
+	 * Help [calls the help method]
+	 * 
+	 * Throws an exception for an invalid command
+	 * @param command
+	 */
+	@Override()
+	String executeCommand(String command) throws GameException {
+		// TODO - implement MainMenuCommands.executeCommand
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Method: newGame
+	 * Starts a new game by calling GameDBCreate.newGame method.
+	 * Calls the changeGameState method and changes the game state to GameplayCommands.
+	 */
+	private String newGame() throws GameException {
+		// TODO - implement MainMenuCommands.newGame
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Method: help
+	 * returns a String to the player giving them the list of commands available:
+	 * New Game
+	 * Load Game
+	 * Exit
+	 * Help
+	 */
+	@Override()
+	String help() {
+		// TODO - implement MainMenuCommands.help
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Method: getIntroText
+	 * Returns a String to the calling method containing:
+	 * Welcome message and Game title
+	 * list of available commands
+	 */
+	protected String getIntroText() {
+		// TODO - implement MainMenuCommands.getIntroText
+		throw new UnsupportedOperationException();
+	}
+
+}

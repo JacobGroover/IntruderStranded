@@ -1,0 +1,50 @@
+package IntruderStranded.controller;
+
+public class Item {
+
+	private int itemID;
+	private String itemName;
+	private String itemDescription;
+
+	/**
+	 * Returns the name and description of the item as a string.
+	 */
+	String display() {
+		// TODO - implement Item.display
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * 
+	 * @param itemID
+	 */
+	public Item(int itemID) {
+		// TODO - implement Item.Item
+		throw new UnsupportedOperationException();
+	}
+
+	public String getItemName() {
+		return this.itemName;
+	}
+
+	/**
+	 * 
+	 * @param itemName
+	 */
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	public String getItemDescription() {
+		return this.itemDescription;
+	}
+
+	/**
+	 * 
+	 * @param itemDescription
+	 */
+	public void setItemDescription(String itemDescription) {
+		this.itemDescription = itemDescription;
+	}
+
+}
