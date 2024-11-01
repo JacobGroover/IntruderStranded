@@ -1,73 +1,143 @@
 package IntruderStranded.model;
 
-import java.sql.Connection;
+import java.sql.*;
 
 /**
  * Class: DB
- * @author Jacob Groover
+ * @author Fareed Ahmed
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
- * Written: October 22, 2024
- * This class - Handles basic database functionality, including query and update methods.
+ * Written: November 1, 2024
+ * This class handles basic database functionality, including the query and update methods.
+ * It also supports committing and rolling back transactions and using prepared statements.
  */
-public abstract class DB {
-
-	protected String dbName = "src/IntruderStranded/IntruderStranded.db";
-	protected String sJdbc;
-	protected String sDriverName;
-	protected Connection conn;
-	protected String sDbUrl;
-	protected int timeout = 5;
+public abstract class DB implements AutoCloseable {
+	private final Connection connection;
+	private static final int TIMEOUT = 3;
 
 	/**
-	 * Method: queryDB
-	 * Reads from the database, returning a ResultSet
-	 * @param sql
+	 * Constructs a <code>DB</code>.
+	 * @param connectionString The JDBC database url to connect to.
+	 * @param autoCommit Whether to enable auto-commit mode or not.
+	 * @throws SQLException If an error occurs while connecting to the database.
 	 */
-	protected java.sql.ResultSet queryDB(String sql) throws java.sql.SQLException {
-		// TODO - implement DB.queryDB
-		throw new UnsupportedOperationException();
+	public DB(String connectionString, boolean autoCommit) throws SQLException {
+		connection = DriverManager.getConnection(connectionString);
+		connection.setAutoCommit(autoCommit);
 	}
 
 	/**
-	 * Method: updateDB
-	 * Updates the database, returning true if the first result is a ResultSet object; false if it is an
-	 * update count or there are no results.
-	 * @param SQL
+	 * Method Name: commitTransaction
+	 * Makes all changes to the database since the last transaction permanent.
+	 * This method should only be called if auto-commit mode is disabled.
+	 * @throws SQLException If a database error occurs.
 	 */
-	protected boolean updateDB(String SQL) throws java.sql.SQLException {
-		// TODO - implement DB.updateDB
-		throw new UnsupportedOperationException();
+	public void commitTransaction() throws SQLException {
+		connection.commit();
 	}
 
 	/**
-	 * Method: count
-	 * Gets the count of records in the specified table from the database
-	 * @param table
+	 * Method Name: rollbackTransaction
+	 * Undoes all changes to the database since the last transaction.
+	 * This method should only be called if auto-commit mode is disabled.
+	 * @throws SQLException If a database error occurs.
 	 */
-	protected int count(String table) throws java.sql.SQLException {
-		// TODO - implement DB.count
-		throw new UnsupportedOperationException();
+	public void rollbackTransaction() throws SQLException {
+		connection.rollback();
 	}
 
 	/**
-	 * Method: getMaxValue
-	 * Gets the max value for a specific field in a specific table from the database.
-	 * @param columnName
-	 * @param table
+	 * Method Name: query
+	 * Executes the given SQL query and returns the generated <code>ResultSet</code>.
+	 * The caller of this method is expected to close the returned <code>ResultSet</code>'s
+	 * underlying <code>Statement</code> by calling <code>resultSet.getStatement().close()</code>.
+	 * @param sql The SQL string to execute.
+	 * @return The <code>ResultSet</code> which contains the data returned by the query.
+	 * @throws SQLException If a database error occurs.
 	 */
-	protected int getMaxValue(String columnName, String table) throws java.sql.SQLException {
-		// TODO - implement DB.getMaxValue
-		throw new UnsupportedOperationException();
+	public ResultSet query(String sql) throws SQLException {
+		Statement statement = connection.createStatement();
+		statement.setQueryTimeout(TIMEOUT);
+		return statement.executeQuery(sql);
 	}
 
 	/**
-	 * Method: close
-	 * Closes the database connection.
+	 * Method Name: queryPrepared
+	 * Executes the given SQL query with the given parameters and returns the generated
+	 * <code>ResultSet</code>. The caller of this method is expected to close the returned
+	 * <code>ResultSet</code>'s underlying <code>Statement</code> by calling
+	 * <code>resultSet.getStatement().close()</code>.
+	 * @param sql The SQL string to execute.
+	 * @param parameters The parameters to use.
+	 * @return The <code>ResultSet</code> which contains the data returned by the query.
+	 * @throws SQLException If a database error occurs.
 	 */
-	protected void close() throws java.sql.SQLException {
-		// TODO - implement DB.close
-		throw new UnsupportedOperationException();
+	public ResultSet queryPrepared(String sql, Object... parameters) throws SQLException {
+		return createPreparedStatement(sql, parameters).executeQuery();
 	}
 
+	/**
+	 * Method Name: update
+	 * Executes the given SQL statement and returns the number of rows affected.
+	 * @param sql The SQL string to execute.
+	 * @return The number of rows affected.
+	 * @throws SQLException If a database error occurs.
+	 */
+	public int update(String sql) throws SQLException {
+		Statement statement = connection.createStatement();
+		statement.setQueryTimeout(TIMEOUT);
+		int rowCount = statement.executeUpdate(sql);
+		statement.close();
+		return rowCount;
+	}
+
+	/**
+	 * Method Name: updatePrepared
+	 * Executes the given SQL statement and returns the number of rows affected.
+	 * @param sql The SQL string to execute.
+	 * @param parameters The parameters to use.
+	 * @return The number of rows affected.
+	 * @throws SQLException If a database error occurs.
+	 */
+	public int updatePrepared(String sql, Object... parameters) throws SQLException {
+		PreparedStatement statement = createPreparedStatement(sql, parameters);
+		int rowCount = statement.executeUpdate();
+		statement.close();
+		return rowCount;
+	}
+
+	/**
+	 * Method Name: close
+	 * Closes this <code>DB</code> by closing its underlying connection object. If auto-commit
+	 * mode is off, the current transaction is rolled back before the connection to the database
+	 * is closed.
+	 * @throws SQLException If a database error occurs.
+	 */
+	@Override
+	public void close() throws SQLException {
+		if (!connection.getAutoCommit()) {
+			connection.rollback();
+		}
+
+		connection.close();
+	}
+
+	/**
+	 * Method Name: createPreparedStatement
+	 * Creates a <code>PreparedStatement</code> from an SQL string and a list of parameters.
+	 * @param sql The SQL string to use.
+	 * @param parameters The parameters to use.
+	 * @return The <code>PreparedStatement</code> with the given SQL string and parameters.
+	 * @throws SQLException If a database error occurs.
+	 */
+	private PreparedStatement createPreparedStatement(String sql, Object... parameters) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setQueryTimeout(TIMEOUT);
+
+		for (int i = 0; i < parameters.length; i++) {
+			statement.setObject(i + 1, parameters[i]);
+		}
+
+		return statement;
+	}
 }
