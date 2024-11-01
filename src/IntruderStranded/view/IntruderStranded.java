@@ -2,6 +2,8 @@ package IntruderStranded.view;
 
 import IntruderStranded.controller.*;
 
+import java.util.Scanner;
+
 /**
  * Class: IntruderStranded
  * @author Jacob Groover
@@ -9,7 +11,7 @@ import IntruderStranded.controller.*;
  * Course: ITEC 3860 Fall 2024
  * Written: October 19th, 2024
  * 
- * This class – is the UI class for Intruder Stranded, a text-based adventure game. This class
+ * This class â€“ is the UI class for Intruder Stranded, a text-based adventure game. This class
  * will control all user aspects of this game.
  */
 public class IntruderStranded {

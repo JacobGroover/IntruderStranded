@@ -1,5 +1,7 @@
 package IntruderStranded.model;
 
+import java.sql.Connection;
+
 /**
  * Class: DB
  * @author Jacob Groover

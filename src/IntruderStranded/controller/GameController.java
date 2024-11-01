@@ -9,7 +9,7 @@ import IntruderStranded.gameExceptions.*;
  * Course: ITEC 3860 Fall 2024
  * Written: October 19th, 2024
  * 
- * This class – Is the UI to controller interface for Intruder Stranded.
+ * This class â€“ Is the UI to controller interface for Intruder Stranded.
  * All user interactions will be sent to this class to be sent on to Commands for further processing.
  * Uses Observer design pattern to sync game state with the commands object by implementing the Observer interface.
  */

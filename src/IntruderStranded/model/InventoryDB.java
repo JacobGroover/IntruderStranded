@@ -2,6 +2,8 @@ package IntruderStranded.model;
 
 import IntruderStranded.controller.*;
 
+import java.util.List;
+
 public class InventoryDB {
 
 	/**

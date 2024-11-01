@@ -3,6 +3,8 @@ package IntruderStranded.controller;
 import IntruderStranded.model.*;
 import IntruderStranded.gameExceptions.*;
 
+import java.util.ArrayList;
+
 public class Player extends Entity {
 
 	private int playerId;

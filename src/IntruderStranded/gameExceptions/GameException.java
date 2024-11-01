@@ -9,7 +9,7 @@ import java.io.*;
  * Course: ITEC 3860 Fall 2024
  * Written: October 19th, 2024
  * 
- * This class – is the custom exception for the game. Inherits from IOException.
+ * This class â€“ is the custom exception for the game. Inherits from IOException.
  */
 public class GameException extends IOException {
 

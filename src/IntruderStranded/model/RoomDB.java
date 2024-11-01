@@ -2,13 +2,16 @@ package IntruderStranded.model;
 
 import IntruderStranded.controller.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class: RoomDB
  * @author Jacob Groover
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
  * Written: October 22, 2024
- * This class – Holds the Room data for the Intruder Stranded game.
+ * This class â€“ Holds the Room data for the Intruder Stranded game.
  */
 public class RoomDB {
 

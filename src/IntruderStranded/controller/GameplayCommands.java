@@ -9,7 +9,7 @@ import IntruderStranded.gameExceptions.*;
  * Course: ITEC 3860 Fall 2024
  * Written: October 19th, 2024
  * 
- * This class – Is the Commands subclass for Gameplay Commands. Handles all user commands sent
+ * This class â€“ Is the Commands subclass for Gameplay Commands. Handles all user commands sent
  * from GameController and returns appropriate replies or exceptions.
  * Relevant while the player is in an active game session.
  */

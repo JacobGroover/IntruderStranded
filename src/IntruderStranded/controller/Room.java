@@ -12,7 +12,7 @@ public class Room {
 	private RoomDB rdb;
 	private boolean teleport;
 	private Collection<ArrayList<Exit>> exits;
-	private Collection<ArrayList<RoomEvent>> roomEvents;
+	private ArrayList<RoomEvent> roomEvents;
 
 	Room() {
 		// TODO - implement Room.Room
