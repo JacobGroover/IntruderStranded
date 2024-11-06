@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * Written: October 22, 2024
  * This class – Holds the Room data for the Intruder Stranded game.
  */
-public record RoomDB(int roomID, int playerID) implements VisitRoomDB, ItemRoomDB, ExitDB, MonsterRoomDB, PuzzleRoomDB {
+public record RoomDB(int roomID, int playerID) implements VisitRoomDB, ItemRoomDB, ExitDB, MonsterRoomDB, PuzzleRoomDB, RewardDB {
 	public void updateRoom(Room room) throws SQLException {
 		if (room.getVisited()) {
 			setVisited();
