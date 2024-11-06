@@ -2,115 +2,32 @@ package IntruderStranded.model;
 
 import IntruderStranded.controller.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Class: RoomDB
+ *
  * @author Jacob Groover
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
  * Written: October 22, 2024
  * This class – Holds the Room data for the Intruder Stranded game.
  */
-public class RoomDB {
-
-	private int roomID;
-	private int playerID;
-
-	/**
-	 * One-argument Constructor for RoomDB class
-	 * 
-	 * Sets roomID equal to the input parameter.
-	 * @param roomID
-	 * @param playerID
-	 */
-	public RoomDB(int roomID, int playerID) {
-		// TODO - implement RoomDB.RoomDB
-		throw new UnsupportedOperationException();
+public record RoomDB(int roomID, int playerID) implements VisitRoomDB, ItemRoomDB, ExitDB, MonsterRoomDB, PuzzleRoomDB {
+	public void updateRoom(Room room) throws SQLException {
+		if (room.getVisited()) {
+			setVisited();
+		}
 	}
 
-	/**
-	 * 
-	 * @param room
-	 */
-	public void updateRoom(Room room) {
-		// TODO - implement RoomDB.updateRoom
-		throw new UnsupportedOperationException();
+	public Room getRoom() throws SQLException {
+		ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Room WHERE RoomID = ?", roomID);
+		resultSet.next();
+		Room room = new Room(roomID);
+		room.setRoomName(resultSet.getString("RoomName"));
+		room.setRoomDescription(resultSet.getString("RoomDescription"));
+		resultSet.getStatement().close();
+		return room;
 	}
-
-	/**
-	 * 
-	 * @param roomID
-	 */
-	public Room getRoom(int roomID) {
-		// TODO - implement RoomDB.getRoom
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Method: addItem
-	 * Calls ItemRoomDB.addItem method to add an item to a room. Passes in the Item and the roomID
-	 * class attribute.
-	 * @param item
-	 */
-	public void addItem(Item item) {
-		// TODO - implement RoomDB.addItem
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Method: removeItem
-	 * Calls ItemRoomDB.removeItem method to add an item to a room. Passes in the Item and the roomID
-	 * class attribute.
-	 * @param item
-	 */
-	public void removeItem(Item item) {
-		// TODO - implement RoomDB.removeItem
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Method: getExits
-	 * Calls ExitDB.getExits to retrieve the exits associated with a Room. Passes in roomID class attribute.
-	 */
-	public ArrayList<Exit> getExits() {
-		// TODO - implement RoomDB.getExits
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Method: getVisited
-	 * Calls VisitRoomDB.getVisited to return the visited status of a room. Passes in roomID class attribute.
-	 */
-	public boolean getVisited() {
-		// TODO - implement RoomDB.getVisited
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Method: getVisited
-	 * Calls VisitRoomDB.setVisited to assign the visited status of a room. Passes in roomID class attribute.
-	 * @param visited
-	 */
-	public void setVisited(boolean visited) {
-		// TODO - implement RoomDB.setVisited
-		throw new UnsupportedOperationException();
-	}
-
-	public ArrayList<Item> getItems() {
-		// TODO - implement RoomDB.getItems
-		throw new UnsupportedOperationException();
-	}
-
-	public List<Puzzle> getPuzzles() {
-		// TODO - implement RoomDB.getPuzzles
-		throw new UnsupportedOperationException();
-	}
-
-	public List<Monster> getMonsters() {
-		// TODO - implement RoomDB.getMonsters
-		throw new UnsupportedOperationException();
-	}
-
 }
