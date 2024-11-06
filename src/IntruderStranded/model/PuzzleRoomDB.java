@@ -13,9 +13,16 @@ public interface PuzzleRoomDB extends RoomDBInfoProvider {
 		List<Puzzle> puzzles = new ArrayList<>();
 
 		while (resultSet.next()) {
+			int id = resultSet.getInt("PuzzleID");
+
 			Puzzle puzzle = switch (resultSet.getInt("PuzzleType")) {
-				case 0 -> new CombinationPuzzle();
-				case 1 -> new UnscrambledWordsPuzzle();
+				case 0 -> new CombinationPuzzle(id);
+				case 1 -> new UnscrambledWordsPuzzle(id);
+				case 2 -> new HangmanPuzzle(id);
+				case 3 -> new MathPuzzle(id);
+				case 4 -> new NumberGuessingPuzzle(id);
+				case 5 -> new SandPuzzle(id);
+				default -> throw new UnsupportedOperationException("Invalid Puzzle ID: " + id);
 			};
 
 			puzzles.add(puzzle);
@@ -25,7 +32,7 @@ public interface PuzzleRoomDB extends RoomDBInfoProvider {
 		return puzzles;
 	}
 
-	default void removePuzzle(Puzzle puzzle) {
-		throw new UnsupportedOperationException();
+	default void removePuzzle(Puzzle puzzle) throws SQLException {
+		DBService.getDB().updatePrepared("DELETE FROM Puzzle WHERE PuzzleID = ?", puzzle.getID());
 	}
 }
