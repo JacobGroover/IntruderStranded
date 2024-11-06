@@ -27,7 +27,7 @@ public interface MonsterRoomDB extends RoomDBInfoProvider {
 	}
 
 	default void removeMonster(Monster monster) throws SQLException {
-		ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM MonsterRoom WHERE MonsterID = ?", monster.getID());
+		ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM MonsterRoom WHERE MonsterID = ? AND RoomID = ? AND PlayerID = ?", monster.getID(), roomID(), playerID());
 		resultSet.next();
 		int quantity = resultSet.getInt("MonsterQuantity");
 
