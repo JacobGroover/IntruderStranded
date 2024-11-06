@@ -17,7 +17,8 @@ public class MathPuzzle extends Puzzle {
 	 * No-argument Constructor for HangmanPuzzle class
 	 * Calls setupPuzzle() method to assign the numberX, answerNumber, and puzzleCounter class attributes.
 	 */
-	MathPuzzle() {
+	public MathPuzzle(int id) {
+		super(id);
 		// TODO - implement MathPuzzle.MathPuzzle
 		throw new UnsupportedOperationException();
 	}

@@ -17,7 +17,8 @@ public class CombinationPuzzle extends Puzzle {
 	 * No-argument Constructor for CombinationPuzzle class
 	 * Calls setupPuzzle() method to assign the numberX, answerNumber, and puzzleCounter class attributes.
 	 */
-	CombinationPuzzle() {
+	public CombinationPuzzle(int id) {
+		super(id);
 		// TODO - implement CombinationPuzzle.CombinationPuzzle
 		throw new UnsupportedOperationException();
 	}

@@ -17,4 +17,7 @@ public abstract class Entity {
 		this.health = health;
 	}
 
+    public int getID() {
+        return id;
+    }
 }
