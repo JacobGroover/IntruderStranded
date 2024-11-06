@@ -17,7 +17,8 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 	 * No-argument Constructor for UnscrambledWordsPuzzle class
 	 * Calls setupPuzzle() method to assign the answerWord, scrambledWord, and puzzleCounter class attributes.
 	 */
-	UnscrambledWordsPuzzle() {
+	public UnscrambledWordsPuzzle(int id) {
+		super(id);
 		// TODO - implement UnscrambledWordsPuzzle.UnscrambledWordsPuzzle
 		throw new UnsupportedOperationException();
 	}
