@@ -47,4 +47,7 @@ public class Item {
 		this.itemDescription = itemDescription;
 	}
 
+    public int getItemID() {
+        return itemID;
+    }
 }
