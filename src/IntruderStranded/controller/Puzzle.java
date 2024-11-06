@@ -1,8 +1,12 @@
 package IntruderStranded.controller;
 
 public abstract class Puzzle implements RoomEvent {
-
+	private int id;
 	int puzzleCounter;
+
+	public Puzzle(int id) {
+		this.id = id;
+	}
 
 	/**
 	 * Method: run
@@ -17,4 +21,7 @@ public abstract class Puzzle implements RoomEvent {
 	 */
 	abstract void setupPuzzle();
 
+    public int getID() {
+        return id;
+    }
 }

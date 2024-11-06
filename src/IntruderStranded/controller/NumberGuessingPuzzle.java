@@ -16,8 +16,9 @@ public class NumberGuessingPuzzle extends Puzzle {
 	 * No-argument Constructor for NumberGuessingPuzzle class
 	 * Calls setupPuzzle() method to assign the answerNumber and puzzleCounter class attributes.
 	 */
-	NumberGuessingPuzzle() {
-		// TODO - implement NumberGuessingPuzzle.NumberGuessingPuzzle
+	public NumberGuessingPuzzle(int id) {
+        super(id);
+        // TODO - implement NumberGuessingPuzzle.NumberGuessingPuzzle
 		throw new UnsupportedOperationException();
 	}
 

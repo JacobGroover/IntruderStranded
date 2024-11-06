@@ -10,6 +10,10 @@ package IntruderStranded.controller;
  */
 public class SandPuzzle extends Puzzle {
 
+	public SandPuzzle(int id) {
+		super(id);
+	}
+
 	/**
 	 * Method: run
 	 * returns "To throw this rope, you must align these numbers: The first is half of 18, The second is the number of seasons, The third is the sides of a hexagon."
