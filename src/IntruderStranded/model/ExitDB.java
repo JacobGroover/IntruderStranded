@@ -18,7 +18,11 @@ public interface ExitDB extends RoomDBInfoProvider {
 
 		while (resultSet.next())
 		{
-
+			Exit exit = new Exit();
+			exit.setRoomID(roomID());
+			exit.setDestinationID(resultSet.getInt("Destination"));
+			exit.setDirection(Direction.fromInt(resultSet.getInt("Direction")));
+			exits.add(exit);
 		}
 
 		resultSet.getStatement().close();
