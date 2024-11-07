@@ -136,4 +136,7 @@ public class Room {
 		this.visited = visited;
 	}
 
+    public int getID() {
+        return roomID;
+    }
 }
