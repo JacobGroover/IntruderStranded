@@ -39,7 +39,7 @@ public interface ItemRoomDB extends RoomDBInfoProvider {
 			int quantity = resultSet.getInt("ItemQuantity");
 			DBService.getDB().updatePrepared("UPDATE ItemRoom SET Quantity = ?", quantity + 1);
 		} else {
-			DBService.getDB().updatePrepared("INSERT INTO ItemRoom (ItemID, RoomID, PlayerID, Quantity), (?, ?, ?, ?)", item.getItemID(), roomID(), playerID(), 1);
+			DBService.getDB().updatePrepared("INSERT INTO ItemRoom (ItemID, RoomID, PlayerID, ItemQuantity), (?, ?, ?, ?)", item.getItemID(), roomID(), playerID(), 1);
 		}
 
 		resultSet.getStatement().close();
