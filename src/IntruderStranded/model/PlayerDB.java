@@ -46,7 +46,8 @@ public class PlayerDB implements InventoryDB {
 	 * @param email
 	 */
 	public void addPlayer(String username, String password, String email) throws SQLException {
-		DBService.getDB().updatePrepared("INSERT INTO Player (Username, Password, Email) VALUES (?, ?, ?)", username, password, email);
+		DBService.getDB().updatePrepared("INSERT INTO Player (Username, Password, Email, CurrentRoom, PreviousRoom, Weapon, Health) VALUES (?, ?, ?, ?, ?, ?, ?)",
+				username, password, email, 1, -1, -1, 100);
 	}
 
 	/**
