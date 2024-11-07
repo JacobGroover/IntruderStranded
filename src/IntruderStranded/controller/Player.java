@@ -82,11 +82,11 @@ public class Player extends Entity {
 	 * Getter for the currentRoom class attribute.
 	 * Called by GameplayCommands class to access the player's current Room.
 	 */
-	Room getCurrentRoom() {
+	public Room getCurrentRoom() {
 		return this.currentRoom;
 	}
 
-	Room getPreviousRoom() {
+	public Room getPreviousRoom() {
 		return this.previousRoom;
 	}
 
