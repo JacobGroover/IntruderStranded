@@ -10,7 +10,7 @@ public class Item {
 	 * Returns the name and description of the item as a string.
 	 */
 	String display() {
-		return itemName + " " + itemDescription;
+		return itemName + "- " + itemDescription;
 	}
 
 	/**
