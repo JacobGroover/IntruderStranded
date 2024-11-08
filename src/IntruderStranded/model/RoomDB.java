@@ -27,6 +27,7 @@ public record RoomDB(int roomID, int playerID) implements VisitRoomDB, ItemRoomD
 		Room room = new Room(roomID, playerID);
 		room.setRoomName(resultSet.getString("RoomName"));
 		room.setRoomDescription(resultSet.getString("RoomDescription"));
+		room.setLevel(resultSet.getString("RoomLevel"));
 		resultSet.getStatement().close();
 		return room;
 	}

@@ -25,7 +25,7 @@ public class Room {
 	private boolean teleport;
 	private List<Exit> exits;
 	private List<RoomEvent> roomEvents;
-	private int level;
+	private String level;
 	private int playerId;
 
 	/**
@@ -201,5 +201,9 @@ public class Room {
 	 */
     public int getID() {
         return roomID;
+    }
+    
+    public void setLevel(String level) {
+        this.level = level;
     }
 }
