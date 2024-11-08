@@ -56,7 +56,7 @@ public class Room {
 	 * Calls rdb.getItems method to get a list of items in the room.
 	 */
 	String display() {
-		String status = "";
+		String status;
 
 		if (visited) {
 			status = "(Visited)";
@@ -76,7 +76,7 @@ public class Room {
 		}
 
 
-		String display = roomName + " " + status + "\n Current Level: " level +
+		String display = roomName + " " + status + "\n Current Level: " + level +
 				"\n" + roomDescription + "\n" + itemList;
 
 		return display;
@@ -108,10 +108,11 @@ public class Room {
 	 * @param command
 	 */
 	int leaveRoom(String command) throws GameException {
+		Direction direction = Direction.parseDirection(command);
+
 		for(ArrayList<Exit> exitList : exits) {
 			for (Exit exit : exitList) {
-				String direction = exit.getDirection().getDescription();
-				if(direction.equalsIgnoreCase(command)) {
+				if (exit.getDirection() == direction) {
 					return exit.getDestinationID();
 				}
 			}
