@@ -14,7 +14,6 @@ public enum Direction {
 	TEL2;
 
 	private static final Map<String, Direction> directionMap = new HashMap<>();
-	private static final Direction[] values = Direction.values();
 
 	static {
 		directionMap.put("NORTH", NORTH);
@@ -32,15 +31,5 @@ public enum Direction {
 	 */
 	public static Direction parseDirection(String direction) {
 		return directionMap.get(direction);
-	}
-
-	/**
-	 * Method: fromInt
-	 * Converts an integer into its corresponding direction.
-	 * @param direction The integer to convert into a direction.
-	 * @return The direction value represented by the provided integer.
-	 */
-	public static Direction fromInt(int direction) {
-		return values[direction];
 	}
 }
