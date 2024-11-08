@@ -3,6 +3,7 @@ package IntruderStranded.controller;
 import IntruderStranded.model.*;
 import IntruderStranded.gameExceptions.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -45,7 +46,7 @@ public class Player extends Entity {
 	 * PlayerDB.addItem method.
 	 * @param item
 	 */
-	void addItem(Item item) throws GameException {
+	void addItem(Item item) throws GameException, SQLException {
 		currentRoom.removeItem(item);
 		pdb.addItem(playerId, item);
 	}
@@ -57,7 +58,7 @@ public class Player extends Entity {
 	 * Adds item to currentRoom by calling currentRoom.addItem method.
 	 * @param item
 	 */
-	void removeItem(Item item) throws GameException {
+	void removeItem(Item item) throws GameException, SQLException {
 		pdb.removeItem(playerId, item);
 		currentRoom.addItem(item);
 

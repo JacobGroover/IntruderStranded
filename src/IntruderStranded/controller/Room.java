@@ -53,7 +53,7 @@ public class Room {
 	 * @param playerID
 	 * @return
 	 */
-	public static Room getById(int roomID, int playerID) {
+	public static Room getById(int roomID, int playerID) throws SQLException {
 		RoomDB rdb = new RoomDB(roomID, playerID);
 		Room room = rdb.getRoom();
 		room.exits = rdb.getExits();
