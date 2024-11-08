@@ -3,6 +3,7 @@ package IntruderStranded.model;
 import IntruderStranded.controller.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerDB {
 
@@ -69,7 +70,7 @@ public class PlayerDB {
 	 * 
 	 * @param playerID
 	 */
-	public ArrayList<Item> getInventory(int playerID) {
+	public List<Item> getInventory(int playerID) {
 		// TODO - implement PlayerDB.getInventory
 		throw new UnsupportedOperationException();
 	}

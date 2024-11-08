@@ -5,9 +5,9 @@ import java.util.*;
 public class Monster extends Entity implements RoomEvent {
 
 	private String name;
-	private Collection<Item> rewards;
+	private List<Item> rewards;
 
-	public Collection<Item> getRewards() {
+	public List<Item> getRewards() {
 		return this.rewards;
 	}
 

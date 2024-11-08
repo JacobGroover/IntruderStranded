@@ -13,7 +13,7 @@ public interface RewardDB extends RoomDBInfoProvider {
 	/**
 	 * Method: getRewards
 	 */
-	default Collection<Item> getRewards() throws SQLException {
+	default List<Item> getRewards() throws SQLException {
 		ResultSet resultSet = DBService.getDB().queryPrepared("SELECT Item.* FROM Rewards LEFT JOIN Item ON Rewards.ItemID = Item.ItemID WHERE RoomID = ?", roomID());
 
 		List<Item> rewards = new ArrayList<>();
