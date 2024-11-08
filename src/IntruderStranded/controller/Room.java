@@ -23,7 +23,7 @@ public class Room {
 	private boolean visited;
 	private RoomDB rdb;
 	private boolean teleport;
-	private Collection<ArrayList<Exit>> exits;
+	private ArrayList<Exit> exits;
 	private ArrayList<RoomEvent> roomEvents;
 	private int level;
 	private int playerId;
@@ -90,13 +90,11 @@ public class Room {
 	 * Should be called from the Room constructor right after the Room data is retrieved from the database.
 	 */
 	boolean canTeleport()  {
-		for(ArrayList<Exit> exitList : exits) {
-			for (Exit exit : exitList) {
-				Direction direction = exit.getDirection();
-				if (direction == Direction.TEL0IN || direction == Direction.TEL0OUT ||
-						direction == Direction.TEL1 || direction == Direction.TEL2) {
-					return true;
-				}
+		for (Exit exit : exits) {
+			Direction direction = exit.getDirection();
+			if (direction == Direction.TEL0IN || direction == Direction.TEL0OUT ||
+					direction == Direction.TEL1 || direction == Direction.TEL2) {
+				return true;
 			}
 		}
 		return false;
@@ -112,11 +110,9 @@ public class Room {
 	int leaveRoom(String command) throws GameException {
 		Direction direction = Direction.parseDirection(command);
 
-		for(ArrayList<Exit> exitList : exits) {
-			for (Exit exit : exitList) {
-				if (exit.getDirection() == direction) {
-					return exit.getDestinationID();
-				}
+		for (Exit exit : exits) {
+			if (exit.getDirection() == direction) {
+				return exit.getDestinationID();
 			}
 		}
 		throw new GameException("Invalid direction.");
