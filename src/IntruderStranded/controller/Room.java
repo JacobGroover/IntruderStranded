@@ -2,6 +2,8 @@ package IntruderStranded.controller;
 
 import IntruderStranded.gameExceptions.GameException;
 import IntruderStranded.model.*;
+
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -55,7 +57,7 @@ public class Room {
 	 * Returns a string representation of this room, with the room name, visited state, description, items and exits.
 	 * Calls rdb.getItems method to get a list of items in the room.
 	 */
-	String display() {
+	String display() throws SQLException {
 		String status;
 
 		if (visited) {
@@ -64,7 +66,7 @@ public class Room {
 			status = "(Not Visited)";
 		}
 
-		ArrayList<Item> items = rdb.getItems();
+		ArrayList<Item> items = (ArrayList<Item>) rdb.getItems();
 		String itemList = "";
 		if (items.isEmpty()) {
 			itemList = "No items in this room.";
@@ -125,7 +127,7 @@ public class Room {
 	 * Calls RoomDB.addItem method to add an item to the room.
 	 * @param item
 	 */
-	void addItem(Item item) throws GameException {
+	void addItem(Item item) throws GameException, SQLException {
 		rdb.addItem(item);
 	}
 
@@ -134,7 +136,7 @@ public class Room {
 	 * Calls RoomDB.removeItem to remove an item from this room.
 	 * @param item
 	 */
-	void removeItem(Item item) throws GameException {
+	void removeItem(Item item) throws GameException, SQLException {
 		rdb.removeItem(item);
 	}
 

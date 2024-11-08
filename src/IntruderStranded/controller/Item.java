@@ -1,5 +1,7 @@
 package IntruderStranded.controller;
 
+import IntruderStranded.model.ItemDB;
+
 public class Item {
 
 	private int itemID;
@@ -18,8 +20,8 @@ public class Item {
 	 * @param itemID
 	 */
 	public Item(int itemID) {
-		// TODO - implement Item.Item
-		throw new UnsupportedOperationException();
+		ItemDB idb = new ItemDB();
+		idb.getItem(itemID);
 	}
 
 	public String getItemName() {
