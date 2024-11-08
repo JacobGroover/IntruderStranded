@@ -10,8 +10,7 @@ public class Item {
 	 * Returns the name and description of the item as a string.
 	 */
 	String display() {
-		// TODO - implement Item.display
-		throw new UnsupportedOperationException();
+		return itemName + " " + itemDescription;
 	}
 
 	/**
@@ -36,6 +35,7 @@ public class Item {
 	}
 
 	public String getItemDescription() {
+
 		return this.itemDescription;
 	}
 
