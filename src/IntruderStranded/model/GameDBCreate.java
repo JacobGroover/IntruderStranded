@@ -13,8 +13,8 @@ import java.sql.SQLException;
  * database entries for the individual player associated with that playerID.
  */
 public class GameDBCreate {
-	private static final String MAIN_COMMANDS_PATH = "src/resources/main_db_commands.txt";
-	private static final String PLAYER_COMMANDS_PATH = "src/resources/player_db_commands.txt";
+	private static final String MAIN_COMMANDS_PATH = "resources/main_db_commands.txt";
+	private static final String PLAYER_COMMANDS_PATH = "resources/player_db_commands.txt";
 
 	private void executeSQLFromFile(String path, Object... parameters) throws GameException {
 		try {
