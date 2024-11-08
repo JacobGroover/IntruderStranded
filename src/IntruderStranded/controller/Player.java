@@ -93,15 +93,11 @@ public class Player extends Entity {
 	 * @param password
 	 */
 	String checkLogin(String username, String password) throws GameException {
-		String login = "";
-		if(pdb.checkLogin(username, password)) {
-			login = "Login Successful";
+		if (pdb.checkLogin(username, password)) {
+			return "Login Successful";
 		}
-		else {
-			login = "Login Failed";
-		}
-
-		return login;
+		
+		return "Login Failed";
 	}
 
 
