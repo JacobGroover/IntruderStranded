@@ -1,0 +1,85 @@
+CREATE TABLE Player (
+    PlayerID        INT NOT NULL PRIMARY KEY,
+    Username        TEXT NOT NULL,
+    Email           TEXT NOT NULL,
+    Password        TEXT NOT NULL,
+    Weapon          INT NOT NULL,
+    Health          INT NOT NULL,
+    CurrentRoom     INT NOT NULL,
+    PreviousRoom    INT NOT NULL
+);
+
+CREATE TABLE Weapon (
+    WeaponID        INT NOT NULL PRIMARY KEY,
+    Damage          INT NOT NULL,
+    ItemID          INT NOT NULL
+);
+
+CREATE TABLE Inventory (
+    PlayerID        INT NOT NULL,
+    ItemID          INT NOT NULL,
+    ItemQuantity    INT NOT NULL,
+    PRIMARY KEY     (PlayerID, ItemID)
+);
+
+CREATE TABLE Item (
+    ItemID          INT NOT NULL PRIMARY KEY,
+    ItemName        TEXT NOT NULL,
+    ItemDescription TEXT NOT NULL,
+    ConsumableType  INT NOT NULL
+);
+
+CREATE TABLE Monster (
+    MonsterID       INT NOT NULL PRIMARY KEY,
+    Name            TEXT NOT NULL,
+    Health          INT NOT NULL
+);
+
+CREATE TABLE MonsterRoom (
+    RoomID          INT NOT NULL,
+    MonsterID       INT NOT NULL,
+    PlayerID        INT NOT NULL,
+    MonsterQuantity INT NOT NULL,
+    PRIMARY KEY     (RoomID, PlayerID, MonsterID)
+);
+
+CREATE TABLE ItemRoom (
+    ItemID          INT NOT NULL,
+    RoomID          INT NOT NULL,
+    PlayerID        INT NOT NULL,
+    ItemQuantity    INT NOT NULL,
+    PRIMARY KEY     (RoomID, PlayerID, ItemID)
+);
+
+CREATE TABLE Reward (
+    ItemID          INT NOT NULL,
+    RoomID          INT NOT NULL,
+    PRIMARY KEY     (RoomID, ItemID)
+);
+
+CREATE TABLE Puzzle (
+    PuzzleID        INT NOT NULL PRIMARY KEY,
+    PuzzleType      INT NOT NULL,
+    RoomID          INT NOT NULL,
+    PlayerID        INT NOT NULL
+);
+
+CREATE TABLE VisitRoom (
+    RoomID          INT NOT NULL,
+    PlayerID        INT NOT NULL,
+    PRIMARY KEY     (RoomID, PlayerID)
+);
+
+CREATE TABLE Room (
+    RoomID          INT NOT NULL PRIMARY KEY,
+    RoomName        TEXT NOT NULL,
+    RoomDescription TEXT NOT NULL,
+    RoomLevel       INT NOT NULL
+);
+
+CREATE TABLE Exit (
+    ExitID          INT NOT NULL PRIMARY KEY,
+    RoomID          INT NOT NULL,
+    Destination     INT NOT NULL,
+    Direction       INT NOT NULL
+);
