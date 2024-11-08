@@ -5,6 +5,15 @@ import IntruderStranded.gameExceptions.*;
 
 import java.util.ArrayList;
 
+/**
+ * Class: Room
+ * @author Hannah Jensen
+ * @version 1.0
+ * Course: ITEC 3860 Fall 2024
+ * Written: November 5, 2024
+ * This class handles business logic for Player objects.
+ */
+
 public class Player extends Entity {
 
 	private int playerId;
@@ -15,15 +24,18 @@ public class Player extends Entity {
 	private PlayerDB pdb;
 	private int score;
 
+
 	/**
 	 * One-argument Constructor for Player class
 	 * Instantiates a Player object with the given playerId by calling PlayerDB.getPlayer method.
 	 * @param playerId
 	 */
 	public Player(int playerId) {
-		// TODO - implement Player.Player
-		throw new UnsupportedOperationException();
+		this.pdb = new PlayerDB();
+		Player player = pdb.getPlayer(playerId);
 	}
+
+
 
 	/**
 	 * Method: addItem
@@ -32,9 +44,9 @@ public class Player extends Entity {
 	 * PlayerDB.addItem method.
 	 * @param item
 	 */
-	void addItem(Item item) {
-		// TODO - implement Player.addItem
-		throw new UnsupportedOperationException();
+	void addItem(Item item) throws GameException {
+		currentRoom.removeItem(item);
+		pdb.addItem(playerId, item);
 	}
 
 	/**
@@ -44,9 +56,10 @@ public class Player extends Entity {
 	 * Adds item to currentRoom by calling currentRoom.addItem method.
 	 * @param item
 	 */
-	void removeItem(Item item) {
-		// TODO - implement Player.removeItem
-		throw new UnsupportedOperationException();
+	void removeItem(Item item) throws GameException {
+		pdb.removeItem(playerId, item);
+		currentRoom.addItem(item);
+
 	}
 
 	/**
@@ -54,8 +67,14 @@ public class Player extends Entity {
 	 * Calls getInventory method and uses it to return a String representation of Item objects.
 	 */
 	String displayInventory() {
-		// TODO - implement Player.displayInventory
-		throw new UnsupportedOperationException();
+		ArrayList<Item> inventory = getInventory();
+		String inventoryList = "INV \n";
+
+		for(Item item : inventory) {
+			inventoryList += item.display() + "\n";
+		}
+
+		return inventoryList;
 	}
 
 	/**
@@ -63,8 +82,9 @@ public class Player extends Entity {
 	 * Returns an ArrayList of Item objects by calling PlayerDB.getInventory method.
 	 */
 	ArrayList<Item> getInventory() {
-		// TODO - implement Player.getInventory
-		throw new UnsupportedOperationException();
+		ArrayList<Item> inventory = pdb.getInventory(playerId);
+
+		return inventory;
 	}
 
 	/**
@@ -73,9 +93,17 @@ public class Player extends Entity {
 	 * @param password
 	 */
 	String checkLogin(String username, String password) throws GameException {
-		// TODO - implement Player.checkLogin
-		throw new UnsupportedOperationException();
+		String login = "";
+		if(pdb.checkLogin(username, password)) {
+			login = "Login Successful";
+		}
+		else {
+			login = "Login Failed";
+		}
+
+		return login;
 	}
+
 
 	/**
 	 * Method: getCurrentRoom
@@ -100,8 +128,8 @@ public class Player extends Entity {
 	 * @param item
 	 */
 	String useItem(Item item) {
-		// TODO - implement Player.useItem
-		throw new UnsupportedOperationException();
+		pdb.removeItem(playerId, item);
+		return item.display();
 	}
 
 	public int getScore() {
