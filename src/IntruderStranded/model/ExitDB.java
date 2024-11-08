@@ -21,7 +21,7 @@ public interface ExitDB extends RoomDBInfoProvider {
 			Exit exit = new Exit();
 			exit.setRoomID(roomID());
 			exit.setDestinationID(resultSet.getInt("Destination"));
-			exit.setDirection(Direction.fromInt(resultSet.getInt("Direction")));
+			exit.setDirection(directionFromInt(resultSet.getInt("Direction")));
 			exits.add(exit);
 		}
 
@@ -29,4 +29,13 @@ public interface ExitDB extends RoomDBInfoProvider {
 		return exits;
 	}
 
+	/**
+	 * Method: directionFromInt
+	 * Converts an integer into its corresponding direction.
+	 * @param direction The integer to convert into a direction.
+	 * @return The direction value represented by the provided integer.
+	 */
+	private Direction directionFromInt(int direction) {
+		return Direction.values()[direction];
+	}
 }
