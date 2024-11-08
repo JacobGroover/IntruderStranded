@@ -21,7 +21,7 @@ public class Player extends Entity {
 	private int weapon;
 	private Room currentRoom;
 	private Room previousRoom;
-	private PlayerDB pdb;
+	private PlayerDB pdb = new PlayerDB();
 	private int score;
 
 
@@ -31,11 +31,12 @@ public class Player extends Entity {
 	 * @param playerId
 	 */
 	public Player(int playerId) {
-		this.pdb = new PlayerDB();
-		Player player = pdb.getPlayer(playerId);
+		this.playerId = playerId;
 	}
 
-
+	public static Player getById(int playerId) {
+		return new PlayerDB().getPlayer(playerId);
+	}
 
 	/**
 	 * Method: addItem

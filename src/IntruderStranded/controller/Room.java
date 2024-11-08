@@ -23,26 +23,45 @@ public class Room {
 	private boolean visited;
 	private RoomDB rdb;
 	private boolean teleport;
-	private ArrayList<Exit> exits;
-	private ArrayList<RoomEvent> roomEvents;
+	private List<Exit> exits;
+	private List<RoomEvent> roomEvents;
 	private int level;
 	private int playerId;
 
 	/**
-	 * One-argument Constructor for Room class
+	 * Two-argument Constructor for Room class
 	 * 
 	 * Sets roomID class attribute to input parameter.
 	 * Instantiates a RoomDB object using this Room's roomID class attribute, assigns it to rdb.
+	 * @param roomID
+	 */
+	public Room(int roomID, int playerID) {
+		this.roomID = roomID;
+		this.playerId = playerID;
+		rdb = new RoomDB(roomID, playerID);
+	}
+
+	/**
+	 * Method: getById
+	 * Gets a Room object by its ID.
 	 * Calls rdb.getExits method to assign exits class attribute.
 	 * Calls rdb.getRoomEvents method to assign roomEvents class attribute.
 	 * Calls canTeleport method to determine if this Room has teleport exits. This sets the teleport class
 	 * attribute to true or false.
 	 * Calls rdb.getVisited to assign the visited class attribute.
 	 * @param roomID
+	 * @param playerID
+	 * @return
 	 */
-	public Room(int roomID) throws GameException{
-		this.roomID = roomID;
-		RoomDB rdb = new RoomDB(roomID, playerId);
+	public static Room getById(int roomID, int playerID) {
+		RoomDB rdb = new RoomDB(roomID, playerID);
+		Room room = rdb.getRoom();
+		room.exits = rdb.getExits();
+		room.roomEvents = new ArrayList<>(rdb.getMonsters());
+		room.roomEvents.addAll(rdb.getPuzzles());
+		room.teleport = room.canTeleport();
+		room.visited = rdb.getVisited();
+		return room;
 	}
 
 	/**
@@ -136,7 +155,7 @@ public class Room {
 		rdb.removeItem(item);
 	}
 
-	ArrayList<RoomEvent> getRoomEvents() {
+	List<RoomEvent> getRoomEvents() {
 		return this.roomEvents;
 	}
 

@@ -24,7 +24,7 @@ public record RoomDB(int roomID, int playerID) implements VisitRoomDB, ItemRoomD
 	public Room getRoom() throws SQLException {
 		ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Room WHERE RoomID = ?", roomID);
 		resultSet.next();
-		Room room = new Room(roomID);
+		Room room = new Room(roomID, playerID);
 		room.setRoomName(resultSet.getString("RoomName"));
 		room.setRoomDescription(resultSet.getString("RoomDescription"));
 		resultSet.getStatement().close();
