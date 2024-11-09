@@ -27,7 +27,8 @@ CREATE TABLE Room (
     RoomID          INT NOT NULL PRIMARY KEY,
     RoomName        TEXT NOT NULL,
     RoomDescription TEXT NOT NULL,
-    RoomLevel       TEXT NOT NULL
+    RoomLevel       TEXT NOT NULL,
+    RoomHint        TEXT
 );
 
 CREATE TABLE Exit (

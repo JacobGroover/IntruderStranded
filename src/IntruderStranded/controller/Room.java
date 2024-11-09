@@ -20,6 +20,7 @@ public class Room {
 	private int roomID;
 	private String roomName;
 	private String roomDescription;
+	private String hint;
 	private boolean visited;
 	private RoomDB rdb;
 	private boolean teleport;
@@ -176,4 +177,11 @@ public class Room {
 		this.visited = visited;
 	}
 
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
+    }
 }
