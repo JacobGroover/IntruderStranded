@@ -82,23 +82,24 @@ CREATE TABLE Player (
     Weapon          INT NOT NULL,
     Health          INT NOT NULL,
     CurrentRoom     INT NOT NULL,
-    PreviousRoom    INT NOT NULL
+    PreviousRoom    INT NOT NULL,
+    Score           INT NOT NULL
 );
 
 INSERT INTO Room
 (RoomID, RoomLevel, RoomName, RoomDescription) VALUES
 (1, '-2', 'Cell', 'An empty cell with somewhat rusty bars, most of them are empty except a few of them filled with dangerous monsters'),
-(2, '-2', 'Alien Fight', 'A dimly lit, narrow hallway lined with cold metal walls, where the player encounters a tall alien guard. The atmosphere is tense, with the hum of distant machinery and the guard's heavy footsteps echoing through the hallway. This room is a test of combat skill, requiring the player to focus on precise timing and movement. The guard has a powerful presence, standing between the player and their escape.'),
+(2, '-2', 'Alien Fight', 'A dimly lit, narrow hallway lined with cold metal walls, where the player encounters a tall alien guard. The atmosphere is tense, with the hum of distant machinery and the guard''s heavy footsteps echoing through the hallway. This room is a test of combat skill, requiring the player to focus on precise timing and movement. The guard has a powerful presence, standing between the player and their escape.'),
 (3, '-2', 'Prison Escape Route', 'Narrow, winding passageway leading out of the prison block, dimly illuminated by flickering lights. As the player progresses, they come across a locked cell containing a friendly alien desperate for freedom. The cell lock is complex, requiring both skill and intuition to unlock. The choice to free the alien could provide valuable companionship or added difficulty during the escape.'),
 (4, '-2', 'Slime Dungeon', 'A vast, dark chamber dominated by a giant, ominous pit filled with hundreds of writhing, gelatinous slimes. The air is thick with the sound of slimy movement, and the pit''s depth is dizzying. With no railings or barriers, the slightest mistake could send the player tumbling into the pit. The ground is slippery, and the area feels hazardous, adding tension to every step. Monsters lurk in the shadows, waiting for the chance to ambush and shove the player toward the edge.'),
 (5, '-1', 'Experimental Weaponry Lab', 'A room dedicated to developing and testing advanced weaponry. The lab is equipped with prototype guns, energy weapons, and explosive devices. Be cautious as some of the experimental weapons might be unstable or highly dangerous.'),
-(6, '-1', 'Testing Labs', 'Before even entering the room, you feel a sense of eerie, like something is out of place. When finally entering and looking around you are faced with many different pods that hold different organisms. Some have monsters you''ve faced in previous rooms, while others have some of your kind making you wonder if you're the next victim. Suddenly, one of the pods with a monster forces you into a battle.'),
+(6, '-1', 'Testing Labs', 'Before even entering the room, you feel a sense of eerie, like something is out of place. When finally entering and looking around you are faced with many different pods that hold different organisms. Some have monsters you''ve faced in previous rooms, while others have some of your kind making you wonder if you''re the next victim. Suddenly, one of the pods with a monster forces you into a battle.'),
 (7, '-1', 'Armory', 'When first entering there are very few lights except for the ones that shine above the various sets of armor and weapons lining the wall. It''s a pale blue light that shines above them all from inside their casings. When approaching them, you get the feeling that even touching the glass will set off an alarm, so you stray away. When looking more around in a corner you notice a chest that appears to be left behind. You rush towards it, but a monster appears in front of you stopping you in your tracks.'),
 (8, '-1', 'Training Room', 'Looking around inside you see an occasional alien monster hitting a training dummy or shooting a target. They hardly take notice of you as you sneak around to see if there''s anything around. You eventually stumble upon a chest in the corner of the room. It looks like it requires a puzzle to unlock.'),
 (9, '-1', 'Clinic', 'When entering inside the smell of chemicals hits you. There are beds that have curtains separating each one, but all of them are empty. The shelves are filled with multiple bottles written in a language that you cannot read. When going through the shelves you find a little box that appears to have an item inside.'),
 (10, '0 (Inside)', 'Asteroid Mining Dock', 'You enter a vast area with multiple asteroids laying around from big to small. Some are even big enough to reach the top of the ship. There appears to be signs of the asteroids being mined at. The aliens are most likely trying to gain more materials to repair their ships or make new weapons. It''s very quiet except for an occasional pebble falling, almost too quiet.'),
 (11, '0 (Inside)', 'Escape Pod', 'You feel a sense of great hope when seeing all the escape pods. You finally feel as if you have a chance to get out of here, but hope is all lost when you approach one and realize it needs hand authorization to unlock. It can only be unlocked by a highly authorized personnel. You stare outside from the window nearby in sadness.'),
-(12, '0 (Inside)', 'Vehicle Storage', 'When entering inside you see many different ships varying in size and build. There are some that appear to go on the road while some appear to be mini ships that are suitable for only specific planets. Unfortunately, your ship is not around. You can also see a chest that's locked with a puzzle. '),
+(12, '0 (Inside)', 'Vehicle Storage', 'When entering inside you see many different ships varying in size and build. There are some that appear to go on the road while some appear to be mini ships that are suitable for only specific planets. Unfortunately, your ship is not around. You can also see a chest that''s locked with a puzzle. '),
 (13, '0 (Inside)', 'Energy Core Room', 'A room housing the main energy core of the space station or ship. The core glows with intense energy, and the room is filled with power conduits and high-voltage equipment. This room might be essential for powering up systems or fixing critical failures.'),
 (14, '0 (Inside)', 'Repair Bay', 'You step into a room filled with the scent of metal and oil. A high-tech repair station where tools and spare parts are scattered everywhere.'),
 (15, '0 (Inside)', 'Navigation Bridge', 'The command center for piloting and navigating spacecraft. The room is filled with star charts, control panels, and a massive viewport displaying the cosmos. Accessing the bridge could provide critical information on your location and potential escape routes.'),
@@ -116,7 +117,7 @@ INSERT INTO Room
 (27, '0 (Outside)', 'Alien Habitat', 'A room designed to mimic the natural environment of an alien species, complete with artificial vegetation, climate control, and ambient sounds. It''s a unique and potentially dangerous environment, with the alien life forms inside being unpredictable.'),
 (28, '0 (Outside)', 'Moving Sand', 'A vast, arid landscape covered with shifting dunes and treacherous patches of moving sand. The sky is bright, and the heat is palpable. In the center of the area, the player spots a crucial ship part slowly sinking into a deceptively calm pool of moving sand. The environment is harsh, and the player must act quickly and strategically to retrieve the part without getting trapped in the sand themselves.'),
 (29, '0 (Outside)', 'Rocky Mountain', 'A towering, jagged mountain rises from the desert landscape, its steep cliffs offering a challenging but faster route to the next area. The rocks are uneven, and the ascent requires careful coordination of both hands and feet. Strong winds sweep across the mountainside, making the climb even more perilous. However, for those who succeed, it is the quickest way to reach higher ground and continue their journey.'),
-(30, '0 (Outside)', 'Motorcycle', 'On the outskirts of the Moving Sand area, the player stumbles upon an abandoned, alien-designed motorcycle. The bike is weathered, covered in sand and dust, but still functional with the right know-how. It has a sleek, futuristic design, built for speed and capable of holding two characters. However, its fuel reserves are limited, allowing for just one trip before it's drained. The surrounding area is desolate, making the motorcycle the fastest means to move ahead.');
+(30, '0 (Outside)', 'Motorcycle', 'On the outskirts of the Moving Sand area, the player stumbles upon an abandoned, alien-designed motorcycle. The bike is weathered, covered in sand and dust, but still functional with the right know-how. It has a sleek, futuristic design, built for speed and capable of holding two characters. However, its fuel reserves are limited, allowing for just one trip before it''s drained. The surrounding area is desolate, making the motorcycle the fastest means to move ahead.');
 
 INSERT INTO Item
 (ItemID,ConsumableType, ItemName,                       ItemDescription) VALUES
@@ -134,7 +135,7 @@ INSERT INTO Item
 (12,    0,              'Missing Engine',               'It appears to be more compact than it would seem. You could easily carry it. There''s oil leaking out from some parts like it''s been recently removed.'),
 (13,    0,              'Missing Wing',                 'It''s almost as long as your body, but it''s also very light. It has a sleek design that shines against the dim lights in the alien''s spaceship. It appears to have been sawed off from something, but it is still fixable.'),
 (14,    0,              'Missing Chair',                'It looks like it''s been slightly roughed up with the leather seating scratched up. The bottom part appears to be in proper condition. It can still be connected to a certain attachment, like a ship.'),
-(15,    0,              'Alien Communication Device',   'Cell Phone-like device.')
+(15,    0,              'Alien Communication Device',   'Cell Phone-like device.'),
 (16,    0,              'Motorcycle Fuel',              'A canister of motorcycle fuel.');
 
 INSERT INTO Weapon
@@ -151,7 +152,7 @@ INSERT INTO Monster
 (3,         30,     10,     'Mole Man'),
 (4,         5,      2,      'Slime'),
 (5,         200,    25,     'Boss: Supreme Alien Commander'),
-(6,         30,     15,     'Robot'),
+(6,         30,     15,     'Robot');
 
 INSERT INTO Reward
 (RoomID,ItemID) VALUES
