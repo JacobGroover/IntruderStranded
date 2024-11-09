@@ -21,7 +21,9 @@ public class GameDBCreate {
 			String[] statements = Files.readString(Path.of(path)).split(";");
 
 			for (String statement : statements) {
-				DBService.getDB().updatePrepared(statement.trim(), parameters);
+				if (!statement.isBlank()) {
+					DBService.getDB().updatePrepared(statement.trim(), parameters);
+				}
 			}
 		} catch (IOException | SQLException exception) {
 			throw new GameException(exception.getMessage());
