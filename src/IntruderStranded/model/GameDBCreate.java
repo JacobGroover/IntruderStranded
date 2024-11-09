@@ -25,16 +25,24 @@ public class GameDBCreate {
 	 * @throws GameException
 	 */
 	private void executeSQLFromFile(String path, Object... parameters) throws GameException {
+		String currentStatement = null;
+
 		try {
-			String[] statements = Files.readString(Path.of(path)).split(";");
+			String[] statements = Files.readString(Path.of(path)).split(";\r?\n");
 
 			for (String statement : statements) {
 				if (!statement.isBlank()) {
-					DBService.getDB().updatePrepared(statement.trim(), parameters);
+					statement = statement.trim();
+					currentStatement = statement;
+					DBService.getDB().updatePrepared(statement, parameters);
 				}
 			}
 		} catch (IOException | SQLException exception) {
-			throw new GameException(exception.getMessage());
+			if (currentStatement != null) {
+				throw new GameException(exception.getMessage() + "\nWhile executing statement: " + currentStatement);
+			} else {
+				throw new GameException(exception.getMessage());
+			}
 		}
 	}
 
