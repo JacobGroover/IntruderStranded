@@ -75,7 +75,7 @@ CREATE TABLE VisitRoom (
 );
 
 CREATE TABLE Player (
-    PlayerID        INT NOT NULL PRIMARY KEY,
+    PlayerID        INTEGER NOT NULL PRIMARY KEY,
     Username        TEXT NOT NULL,
     Email           TEXT NOT NULL,
     Password        TEXT NOT NULL,
