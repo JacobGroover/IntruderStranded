@@ -1,3 +1,5 @@
+DELETE FROM MonsterRoom WHERE PlayerID = ?;
+
 INSERT INTO MonsterRoom
 (PlayerID, RoomID, MonsterID, MonsterQuantity) VALUES
 (?, 2, 1, 1),
@@ -15,6 +17,8 @@ INSERT INTO MonsterRoom
 (?, 21, 1, 1),
 (?, 26, 3, 1),
 (?, 27, 1, 1);
+
+DELETE FROM Puzzle WHERE PlayerID = ?;
 
 INSERT INTO Puzzle
 (PlayerID, RoomID, PuzzleID, PuzzleType) VALUES
