@@ -147,7 +147,7 @@ INSERT INTO Weapon
 INSERT INTO Monster
 (MonsterID, Health, Damage, Name) VALUES
 (1,         10,     10,     'Alien'),
-(2,         15,     8,      'Rabid Dog'),
+(2,         15,     10,     'Rabid Dog'),
 (3,         30,     10,     'Mole Man'),
 (4,         5,      2,      'Slime'),
 (5,         200,    25,     'Boss: Supreme Alien Commander'),
