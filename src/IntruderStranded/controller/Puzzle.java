@@ -21,6 +21,8 @@ public abstract class Puzzle implements RoomEvent {
 	 */
 	abstract void setupPuzzle();
 
+	abstract String getHint();
+
     public int getID() {
         return id;
     }

@@ -36,6 +36,11 @@ public class SandPuzzle extends Puzzle {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	String getHint() {
+		return "The first number is 9 and the second number is 4";
+	}
+
 	/**
 	 * Method: getRewards
 	 * Gets the rewards from completing this puzzle.

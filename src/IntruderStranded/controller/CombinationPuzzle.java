@@ -63,6 +63,11 @@ public class CombinationPuzzle extends Puzzle {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	String getHint() {
+		return "Pick a number between 0-9";
+	}
+
 	/**
 	 * Method: getRewards
 	 * Gets the rewards from completing this puzzle.

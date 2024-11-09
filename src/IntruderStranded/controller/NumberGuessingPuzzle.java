@@ -53,6 +53,11 @@ public class NumberGuessingPuzzle extends Puzzle {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	String getHint() {
+		return "Pick a number between 1-10";
+	}
+
 	/**
 	 * Method: getRewards
 	 * Gets the rewards from completing this puzzle.
