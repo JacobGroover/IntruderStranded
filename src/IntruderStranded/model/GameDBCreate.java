@@ -46,5 +46,12 @@ public class GameDBCreate {
 	 */
 	public void newGame(int playerId) throws GameException {
 		executeSQLFromFile(PLAYER_COMMANDS_PATH, playerId);
+
+		try {
+			int monsters = Math.random() < 0.5 ? 2 : 3;
+			DBService.getDB().updatePrepared("INSERT INTO MonsterRoom (PlayerID, RoomID, MonsterID, MonsterQuantity) VALUES (?, 18, 1, ?)", playerId, monsters);
+		} catch (SQLException exception) {
+			throw new GameException(exception.getMessage());
+		}
 	}
 }
