@@ -1,5 +1,7 @@
 package IntruderStranded.controller;
 
+import IntruderStranded.model.ItemDB;
+
 public class Item {
 
 	private int itemID;
@@ -10,8 +12,7 @@ public class Item {
 	 * Returns the name and description of the item as a string.
 	 */
 	String display() {
-		// TODO - implement Item.display
-		throw new UnsupportedOperationException();
+		return itemName + "- " + itemDescription;
 	}
 
 	/**
@@ -19,8 +20,8 @@ public class Item {
 	 * @param itemID
 	 */
 	public Item(int itemID) {
-		// TODO - implement Item.Item
-		throw new UnsupportedOperationException();
+		ItemDB idb = new ItemDB();
+		idb.getItem(itemID);
 	}
 
 	public String getItemName() {
@@ -36,6 +37,7 @@ public class Item {
 	}
 
 	public String getItemDescription() {
+
 		return this.itemDescription;
 	}
 
@@ -47,4 +49,7 @@ public class Item {
 		this.itemDescription = itemDescription;
 	}
 
+    public int getItemID() {
+        return itemID;
+    }
 }

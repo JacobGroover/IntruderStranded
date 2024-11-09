@@ -1,26 +1,17 @@
 package IntruderStranded.model;
 
-public class VisitRoomDB {
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-	/**
-	 * 
-	 * @param roomID
-	 * @param playerID
-	 */
-	public boolean getVisited(int roomID, int playerID) {
-		// TODO - implement VisitRoomDB.getVisited
-		throw new UnsupportedOperationException();
+public interface VisitRoomDB extends RoomDBInfoProvider {
+	default boolean getVisited() throws SQLException {
+		ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM VisitRoom WHERE PlayerID = ? AND RoomID = ?", playerID(), roomID());
+		boolean visited = resultSet.next();
+		resultSet.getStatement().close();
+		return visited;
 	}
 
-	/**
-	 * 
-	 * @param roomID
-	 * @param playerID
-	 * @param visited
-	 */
-	public void setVisited(int roomID, int playerID, boolean visited) {
-		// TODO - implement VisitRoomDB.setVisited
-		throw new UnsupportedOperationException();
+	default void setVisited() throws SQLException {
+		DBService.getDB().updatePrepared("INSERT OR REPLACE INTO VisitRoom (PlayerID, RoomID) VALUES (?, ?)", playerID(), roomID());
 	}
-
 }
