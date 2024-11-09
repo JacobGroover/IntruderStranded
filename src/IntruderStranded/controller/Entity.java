@@ -2,11 +2,15 @@ package IntruderStranded.controller;
 
 public abstract class Entity {
 
-	private int id;
+	private final int id;
 	private int health;
 
 	public int getHealth() {
 		return this.health;
+	}
+
+	public Entity(int id) {
+		this.id = id;
 	}
 
 	/**

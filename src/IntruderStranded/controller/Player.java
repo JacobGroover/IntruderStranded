@@ -16,7 +16,6 @@ import java.util.Optional;
  */
 public class Player extends Entity {
 
-	private int playerId;
 	private String username;
 	private int weapon;
 	private Room currentRoom;
@@ -30,7 +29,7 @@ public class Player extends Entity {
 	 * @param playerId The player id to use.
 	 */
 	public Player(int playerId) {
-		this.playerId = playerId;
+		super(playerId);
 	}
 
 	/**
@@ -53,7 +52,7 @@ public class Player extends Entity {
 	 */
 	void addItem(Item item) throws GameException {
 		currentRoom.removeItem(item);
-		pdb.addItem(playerId, item);
+		pdb.addItem(getID(), item);
 	}
 
 	/**
@@ -64,7 +63,7 @@ public class Player extends Entity {
 	 * @param item
 	 */
 	void removeItem(Item item) throws GameException {
-		pdb.removeItem(playerId, item);
+		pdb.removeItem(getID(), item);
 		currentRoom.addItem(item);
 	}
 
@@ -88,7 +87,7 @@ public class Player extends Entity {
 	 * Returns an ArrayList of Item objects by calling PlayerDB.getInventory method.
 	 */
 	List<Item> getInventory() throws GameException {
-		List<Item> inventory = pdb.getInventory(playerId);
+		List<Item> inventory = pdb.getInventory(getID());
 		return inventory;
 	}
 
@@ -139,8 +138,8 @@ public class Player extends Entity {
 	 * @param item
 	 */
 	String useItem(Item item) throws GameException {
-		// TODO: Fix implementation
-		pdb.removeItem(playerId, item);
+        // TODO: Fix implementation
+		pdb.removeItem(getID(), item);
 		return item.display();
 	}
 
