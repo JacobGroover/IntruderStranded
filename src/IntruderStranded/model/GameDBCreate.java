@@ -5,6 +5,7 @@ import IntruderStranded.gameExceptions.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -53,5 +54,19 @@ public class GameDBCreate {
 		} catch (SQLException exception) {
 			throw new GameException(exception.getMessage());
 		}
+	}
+
+	/**
+	 * Method: gameExists
+	 * Checks if the given player has created a new game and saved before.
+	 * @param playerId The player ID to check.
+	 * @return True if this player has created a new game and saved before, otherwise false.
+	 * @throws GameException
+	 */
+	public boolean gameExists(int playerId) throws SQLException {
+		ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM VisitRoom WHERE PlayerID = ?", playerId);
+		boolean exists = resultSet.next();
+		resultSet.getStatement().close();
+		return exists;
 	}
 }
