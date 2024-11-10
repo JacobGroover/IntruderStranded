@@ -23,8 +23,8 @@ public class Room {
 	private boolean visited;
 	private RoomDB rdb;
 	private boolean teleport;
-	private ArrayList<Exit> exits;
-	private ArrayList<RoomEvent> roomEvents;
+	private List<Exit> exits;
+	private List<RoomEvent> roomEvents;
 	private int level;
 	private int playerId;
 
@@ -66,7 +66,7 @@ public class Room {
 			status = "(Not Visited)";
 		}
 
-		ArrayList<Item> items = (ArrayList<Item>) rdb.getItems();
+		List<Item> items = rdb.getItems();
 		String itemList = "";
 		if (items.isEmpty()) {
 			itemList = "No items in this room.";
@@ -136,7 +136,7 @@ public class Room {
 		rdb.removeItem(item);
 	}
 
-	ArrayList<RoomEvent> getRoomEvents() {
+	List<RoomEvent> getRoomEvents() {
 		return this.roomEvents;
 	}
 

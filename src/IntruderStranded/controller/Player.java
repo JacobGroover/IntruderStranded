@@ -4,6 +4,7 @@ import IntruderStranded.model.*;
 import IntruderStranded.gameExceptions.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class: Room
@@ -67,7 +68,7 @@ public class Player extends Entity {
 	 * Calls getInventory method and uses it to return a String representation of Item objects.
 	 */
 	String displayInventory() {
-		ArrayList<Item> inventory = getInventory();
+		List<Item> inventory = getInventory();
 		String inventoryList = "INV \n";
 
 		for(Item item : inventory) {
@@ -81,9 +82,8 @@ public class Player extends Entity {
 	 * Method: getInventory
 	 * Returns an ArrayList of Item objects by calling PlayerDB.getInventory method.
 	 */
-	ArrayList<Item> getInventory() {
-		ArrayList<Item> inventory = pdb.getInventory(playerId);
-
+	List<Item> getInventory() {
+		List<Item> inventory = pdb.getInventory(playerId);
 		return inventory;
 	}
 
