@@ -20,6 +20,7 @@ public class Item {
 	 * @param itemID
 	 */
 	public Item(int itemID) {
+		// TODO: Fix implementation
 		ItemDB idb = new ItemDB();
 		idb.getItem(itemID);
 	}
