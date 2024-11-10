@@ -177,10 +177,20 @@ public class Room {
 		this.visited = visited;
 	}
 
+	/**
+	 * Method: getHint
+	 * Gets the room hint.
+	 * @return The room hint.
+	 */
     public String getHint() {
         return hint;
     }
 
+	/**
+	 * Method: setHint
+	 * Sets the room hint.
+	 * @param hint The room hint.
+	 */
     public void setHint(String hint) {
         this.hint = hint;
     }
