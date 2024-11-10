@@ -1,0 +1,35 @@
+DELETE FROM MonsterRoom WHERE PlayerID = ?;
+
+INSERT INTO MonsterRoom
+(PlayerID, RoomID, MonsterID, MonsterQuantity) VALUES
+(?, 2, 1, 1),
+(?, 4, 4, 1),
+(?, 5, 2, 1),
+(?, 6, 1, 1),
+(?, 7, 6, 1),
+(?, 10, 2, 1),
+(?, 11, 1, 1),
+(?, 13, 6, 1),
+(?, 14, 6, 1),
+(?, 16, 5, 1),
+(?, 19, 1, 1),
+(?, 20, 1, 1),
+(?, 21, 1, 1),
+(?, 26, 3, 1),
+(?, 27, 1, 1);
+
+DELETE FROM Puzzle WHERE PlayerID = ?;
+
+INSERT INTO Puzzle
+(PlayerID, RoomID, PuzzleID, PuzzleType) VALUES
+(?, 1, 1, 2),
+(?, 3, 2, 0),
+(?, 8, 3, 1),
+(?, 9, 4, 2),
+(?, 12, 5, 0),
+(?, 15, 6, 1),
+(?, 23, 7, 2),
+(?, 25, 8, 1),
+(?, 28, 9, 3),
+(?, 29, 10, 3),
+(?, 30, 11, 0);

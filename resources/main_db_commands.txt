@@ -1,0 +1,241 @@
+CREATE TABLE Item (
+    ItemID          INT NOT NULL PRIMARY KEY,
+    ItemName        TEXT NOT NULL,
+    ItemDescription TEXT NOT NULL,
+    ConsumableType  INT NOT NULL
+);
+
+CREATE TABLE Weapon (
+    ItemID          INT NOT NULL PRIMARY KEY,
+    Damage          INT NOT NULL
+);
+
+CREATE TABLE Monster (
+    MonsterID       INT NOT NULL PRIMARY KEY,
+    Name            TEXT NOT NULL,
+    Health          INT NOT NULL,
+    Damage          INT NOT NULL
+);
+
+CREATE TABLE Reward (
+    ItemID          INT NOT NULL,
+    RoomID          INT NOT NULL,
+    PRIMARY KEY     (RoomID, ItemID)
+);
+
+CREATE TABLE Room (
+    RoomID          INT NOT NULL PRIMARY KEY,
+    RoomName        TEXT NOT NULL,
+    RoomDescription TEXT NOT NULL,
+    RoomLevel       TEXT NOT NULL,
+    RoomHint        TEXT
+);
+
+CREATE TABLE Exit (
+    ExitID          INT NOT NULL PRIMARY KEY,
+    RoomID          INT NOT NULL,
+    Destination     INT NOT NULL,
+    Direction       INT NOT NULL
+);
+
+CREATE TABLE MonsterRoom (
+    RoomID          INT NOT NULL,
+    MonsterID       INT NOT NULL,
+    PlayerID        INT NOT NULL,
+    MonsterQuantity INT NOT NULL,
+    PRIMARY KEY     (RoomID, PlayerID, MonsterID)
+);
+
+CREATE TABLE Puzzle (
+    PuzzleID        INT NOT NULL PRIMARY KEY,
+    PuzzleType      INT NOT NULL,
+    RoomID          INT NOT NULL,
+    PlayerID        INT NOT NULL
+);
+
+CREATE TABLE Inventory (
+    PlayerID        INT NOT NULL,
+    ItemID          INT NOT NULL,
+    ItemQuantity    INT NOT NULL,
+    PRIMARY KEY     (PlayerID, ItemID)
+);
+
+CREATE TABLE ItemRoom (
+    ItemID          INT NOT NULL,
+    RoomID          INT NOT NULL,
+    PlayerID        INT NOT NULL,
+    ItemQuantity    INT NOT NULL,
+    PRIMARY KEY     (RoomID, PlayerID, ItemID)
+);
+
+CREATE TABLE VisitRoom (
+    RoomID          INT NOT NULL,
+    PlayerID        INT NOT NULL,
+    PRIMARY KEY     (RoomID, PlayerID)
+);
+
+CREATE TABLE Player (
+    PlayerID        INTEGER NOT NULL PRIMARY KEY,
+    Username        TEXT NOT NULL,
+    Email           TEXT NOT NULL,
+    Password        TEXT NOT NULL,
+    Weapon          INT NOT NULL,
+    Health          INT NOT NULL,
+    CurrentRoom     INT NOT NULL,
+    PreviousRoom    INT NOT NULL,
+    Score           INT NOT NULL
+);
+
+INSERT INTO Room
+(RoomID, RoomLevel, RoomName, RoomDescription) VALUES
+(1, '-2', 'Cell', 'An empty cell with somewhat rusty bars, most of them are empty except a few of them filled with dangerous monsters'),
+(2, '-2', 'Alien Fight', 'A dimly lit, narrow hallway lined with cold metal walls, where the player encounters a tall alien guard. The atmosphere is tense, with the hum of distant machinery and the guard''s heavy footsteps echoing through the hallway. This room is a test of combat skill, requiring the player to focus on precise timing and movement. The guard has a powerful presence, standing between the player and their escape.'),
+(3, '-2', 'Prison Escape Route', 'Narrow, winding passageway leading out of the prison block, dimly illuminated by flickering lights. As the player progresses, they come across a locked cell containing a friendly alien desperate for freedom. The cell lock is complex, requiring both skill and intuition to unlock. The choice to free the alien could provide valuable companionship or added difficulty during the escape.'),
+(4, '-2', 'Slime Dungeon', 'A vast, dark chamber dominated by a giant, ominous pit filled with hundreds of writhing, gelatinous slimes. The air is thick with the sound of slimy movement, and the pit''s depth is dizzying. With no railings or barriers, the slightest mistake could send the player tumbling into the pit. The ground is slippery, and the area feels hazardous, adding tension to every step. Monsters lurk in the shadows, waiting for the chance to ambush and shove the player toward the edge.'),
+(5, '-1', 'Experimental Weaponry Lab', 'A room dedicated to developing and testing advanced weaponry. The lab is equipped with prototype guns, energy weapons, and explosive devices. Be cautious as some of the experimental weapons might be unstable or highly dangerous.'),
+(6, '-1', 'Testing Labs', 'Before even entering the room, you feel a sense of eerie, like something is out of place. When finally entering and looking around you are faced with many different pods that hold different organisms. Some have monsters you''ve faced in previous rooms, while others have some of your kind making you wonder if you''re the next victim. Suddenly, one of the pods with a monster forces you into a battle.'),
+(7, '-1', 'Armory', 'When first entering there are very few lights except for the ones that shine above the various sets of armor and weapons lining the wall. It''s a pale blue light that shines above them all from inside their casings. When approaching them, you get the feeling that even touching the glass will set off an alarm, so you stray away. When looking more around in a corner you notice a chest that appears to be left behind. You rush towards it, but a monster appears in front of you stopping you in your tracks.'),
+(8, '-1', 'Training Room', 'Looking around inside you see an occasional alien monster hitting a training dummy or shooting a target. They hardly take notice of you as you sneak around to see if there''s anything around. You eventually stumble upon a chest in the corner of the room. It looks like it requires a puzzle to unlock.'),
+(9, '-1', 'Clinic', 'When entering inside the smell of chemicals hits you. There are beds that have curtains separating each one, but all of them are empty. The shelves are filled with multiple bottles written in a language that you cannot read. When going through the shelves you find a little box that appears to have an item inside.'),
+(10, '0 (Inside)', 'Asteroid Mining Dock', 'You enter a vast area with multiple asteroids laying around from big to small. Some are even big enough to reach the top of the ship. There appears to be signs of the asteroids being mined at. The aliens are most likely trying to gain more materials to repair their ships or make new weapons. It''s very quiet except for an occasional pebble falling, almost too quiet.'),
+(11, '0 (Inside)', 'Escape Pod', 'You feel a sense of great hope when seeing all the escape pods. You finally feel as if you have a chance to get out of here, but hope is all lost when you approach one and realize it needs hand authorization to unlock. It can only be unlocked by a highly authorized personnel. You stare outside from the window nearby in sadness.'),
+(12, '0 (Inside)', 'Vehicle Storage', 'When entering inside you see many different ships varying in size and build. There are some that appear to go on the road while some appear to be mini ships that are suitable for only specific planets. Unfortunately, your ship is not around. You can also see a chest that''s locked with a puzzle. '),
+(13, '0 (Inside)', 'Energy Core Room', 'A room housing the main energy core of the space station or ship. The core glows with intense energy, and the room is filled with power conduits and high-voltage equipment. This room might be essential for powering up systems or fixing critical failures.'),
+(14, '0 (Inside)', 'Repair Bay', 'You step into a room filled with the scent of metal and oil. A high-tech repair station where tools and spare parts are scattered everywhere.'),
+(15, '0 (Inside)', 'Navigation Bridge', 'The command center for piloting and navigating spacecraft. The room is filled with star charts, control panels, and a massive viewport displaying the cosmos. Accessing the bridge could provide critical information on your location and potential escape routes.'),
+(16, '0 (Inside)', 'Boss Room', 'You have reached the final room. You can see your ship waiting for you to repair it. Before doing that and escaping the planet, the Supreme Alien Commander of the planet is blocking your way. Defeat him to escape and end the game. '),
+(17, '0 (Inside)', 'Storage Area', 'Looking around inside it''s very cramped with the number of boxes and containers laying around. You can barely move but attempting to look through the boxes many of them are stuck closed and require a crowbar to open.'),
+(18, '0 (Inside)', 'Decontamination Chamber', 'A sterile, white-walled room filled with advanced cleaning systems, airlocks, and sterilization units. The chamber hums with the sounds of automated cleaning cycles, and the air is thick with disinfectant. This room is a vital part of the ship''s safety protocols, ensuring that no contaminants or hazardous organisms are brought into critical areas. However, it''s also vulnerable to alien intrusions, making it both a safe and dangerous place to pass through.'),
+(19, '0 (Inside)', 'Alien Communication Center', 'A high-tech room filled with communication arrays, signal interceptors, and alien translation devices. The room is buzzing with various signals and frequencies. Successfully interfacing with the equipment here could allow you to eavesdrop on important communications or decode alien languages.'),
+(20, '0 (Inside)', 'Alien Laboratory', 'A research lab dedicated to studying extraterrestrial biology and technology. The room is filled with specimen jars, alien samples, and experimental apparatus. Be cautious—some of the specimens might be alive or dangerous.'),
+(21, '0 (Inside)', 'Dining Hall', 'Entering inside while sneaking around there are multiple aliens around. Some are sitting at tables while others are standing in line to get their meals. You cannot possibly fight against all of them. Only two ways to sneak around, should you go "right" or "left"?'),
+(22, '0 (Inside)', 'Conference Room', 'You stand in front of a big door. You can hear shouting coming from the other side. Not knowing what to do, you push it. As you enter, you end up in the middle of a conference. "We need to find the intruder! They can''t be that far; it is one against all of us! Deploy the monsters! Deploy the military! And break the intruder''s ship, for they will be punished for their crime!". A roaring of cheering followed the speech. You really need to leave.'),
+(23, '0 (Inside)', 'Emergency Medical Bay', 'A critical medical facility equipped with advanced technology for treating injuries and illnesses. The room contains medical droids, diagnostic machines, and emergency supplies. It''s essential for recovering.'),
+(24, '0 (Inside)', 'Control Room', 'You find yourself in a room filled with complex control systems and displays. As you investigate, you think, "They might have some information about my spaceship in here."\nLooking around, you realize that the only exit is the way you came. You need to be quick. While looking, you discover a crucial document: \nIntruder''s spaceship: Boss''s Room\nParts stolen: Missing Wing-Moving Sand; Missing Control Panel-Testing Labs; Missing Wheel-Armory; Missing Chair-Vehicule Storage; Missing Engine-Repair Bay\n'),
+(25, '0 (Outside)', 'Galactic Market', 'A bustling area reminiscent of a spaceport marketplace, filled with stalls and vendors selling exotic goods, alien artifacts, and rare supplies. The room is lively and colorful, with various alien species trading and interacting. You might find valuable items or useful allies here.'),
+(26, '0 (Outside)', 'Garden', 'You step into what seemed to be a garden. The fresh breeze caressing your neck relaxes you, giving you some moment of peace. But that peace is quickly interrupted when you hear a grumble coming from the ground.'),
+(27, '0 (Outside)', 'Alien Habitat', 'A room designed to mimic the natural environment of an alien species, complete with artificial vegetation, climate control, and ambient sounds. It''s a unique and potentially dangerous environment, with the alien life forms inside being unpredictable.'),
+(28, '0 (Outside)', 'Moving Sand', 'A vast, arid landscape covered with shifting dunes and treacherous patches of moving sand. The sky is bright, and the heat is palpable. In the center of the area, the player spots a crucial ship part slowly sinking into a deceptively calm pool of moving sand. The environment is harsh, and the player must act quickly and strategically to retrieve the part without getting trapped in the sand themselves.'),
+(29, '0 (Outside)', 'Rocky Mountain', 'A towering, jagged mountain rises from the desert landscape, its steep cliffs offering a challenging but faster route to the next area. The rocks are uneven, and the ascent requires careful coordination of both hands and feet. Strong winds sweep across the mountainside, making the climb even more perilous. However, for those who succeed, it is the quickest way to reach higher ground and continue their journey.'),
+(30, '0 (Outside)', 'Motorcycle', 'On the outskirts of the Moving Sand area, the player stumbles upon an abandoned, alien-designed motorcycle. The bike is weathered, covered in sand and dust, but still functional with the right know-how. It has a sleek, futuristic design, built for speed and capable of holding two characters. However, its fuel reserves are limited, allowing for just one trip before it''s drained. The surrounding area is desolate, making the motorcycle the fastest means to move ahead.');
+
+INSERT INTO Item
+(ItemID,ConsumableType, ItemName,                       ItemDescription) VALUES
+(1,     0,              'Cell Door Key',                'A rusted key.'),
+(2,     0,              'Iron Sword',                   'A weapon made of iron that can slash through any foe.'),
+(3,     0,              'Crowbar',                      'It''s a red and black curved metal bar. On both ends there appears to be a ledge used to open objects, like crates.'),
+(4,     1,              'Med Pack',                     'It is a portable medical kit designed for rapid treatment in emergency situations. Can restore 20 health for the player.'),
+(5,     0,              'Rope',                         'An old but sturdy rope half covered in sand, located next to the moving sand.'),
+(6,     0,              'Flame Knife',                  'Even when it''s in your hand, you feel a slight warmth radiating from it. The shine of the blade itself has flames that emit from it. When touching it, you don''t feel any burn except small heat.'),
+(7,     0,              'Sneaky Shoes',                 'A pair of enchanted shoes that allows the player to move quietly.'),
+(8,     0,              'Boomerang Blade',              'Made from a special type of metal that seems to be something only the aliens on the ship are familiar with. It has a curved shape and will return to the user when used.'),
+(9,     2,              'Freezing Potion',              'A potion that freezes anything that it touches.'),
+(10,    0,              'Missing Wheel',                'It''s the wheel for a ship that''s been unscrewed.'),
+(11,    0,              'Missing Control Panel',        'It''s a screen that looks like it''s been carefully removed from somewhere. There are wires sticking out from the back but none of them appear to be damaged.'),
+(12,    0,              'Missing Engine',               'It appears to be more compact than it would seem. You could easily carry it. There''s oil leaking out from some parts like it''s been recently removed.'),
+(13,    0,              'Missing Wing',                 'It''s almost as long as your body, but it''s also very light. It has a sleek design that shines against the dim lights in the alien''s spaceship. It appears to have been sawed off from something, but it is still fixable.'),
+(14,    0,              'Missing Chair',                'It looks like it''s been slightly roughed up with the leather seating scratched up. The bottom part appears to be in proper condition. It can still be connected to a certain attachment, like a ship.'),
+(15,    0,              'Alien Communication Device',   'Cell Phone-like device.'),
+(16,    0,              'Motorcycle Fuel',              'A canister of motorcycle fuel.');
+
+INSERT INTO Weapon
+(ItemID,Damage) VALUES
+(2,     10),
+(3,     15),
+(6,     15),
+(8,     12);
+
+INSERT INTO Monster
+(MonsterID, Health, Damage, Name) VALUES
+(1,         10,     10,     'Alien'),
+(2,         15,     10,     'Rabid Dog'),
+(3,         30,     10,     'Mole Man'),
+(4,         5,      2,      'Slime'),
+(5,         200,    25,     'Boss: Supreme Alien Commander'),
+(6,         30,     15,     'Robot');
+
+INSERT INTO Reward
+(RoomID,ItemID) VALUES
+(1,     1),
+(1,     2),
+(3,     3),
+(3,     15),
+(5,     6),
+(5,     4),
+(6,     11),
+(7,     10),
+(8,     8),
+(9,     4),
+(10,    7),
+(11,    9),
+(12,    14),
+(14,    12),
+(15,    4),
+(17,    9),
+(18,    4),
+(21,    3),
+(23,    4),
+(25,    4),
+(27,    4),
+(28,    5),
+(28,    13),
+(29,    5),
+(30,    16);
+
+INSERT INTO Exit
+(ExitID, RoomID, Destination, Direction) VALUES
+(1, 1, 2, 2),
+(2, 2, 3, 2),
+(3, 2, 1, 3),
+(4, 3, 4, 2),
+(5, 3, 2, 3),
+(6, 4, 3, 3),
+(7, 5, 6, 2),
+(8, 5, 7, 1),
+(9, 6, 5, 3),
+(10, 7, 5, 0),
+(11, 7, 8, 2),
+(12, 7, 9, 1),
+(13, 8, 8, 3),
+(14, 9, 7, 0),
+(15, 10, 13, 1),
+(16, 11, 14, 1),
+(17, 12, 13, 2),
+(18, 12, 16, 1),
+(19, 13, 10, 0),
+(20, 13, 14, 2),
+(21, 13, 17, 1),
+(22, 13, 12, 3),
+(23, 14, 13, 3),
+(24, 14, 11, 0),
+(25, 14, 15, 2),
+(26, 15, 14, 3),
+(27, 15, 18, 1),
+(28, 16, 12, 0),
+(29, 17, 13, 0),
+(30, 18, 15, 0),
+(31, 18, 21, 1),
+(32, 19, 18, 3),
+(33, 19, 20, 2),
+(34, 19, 22, 1),
+(35, 20, 19, 3),
+(36, 21, 18, 0),
+(37, 21, 22, 2),
+(38, 22, 21, 3),
+(39, 22, 19, 0),
+(40, 22, 23, 2),
+(41, 22, 24, 1),
+(42, 23, 22, 3),
+(43, 24, 22, 0),
+(44, 25, 26, 2),
+(45, 25, 28, 1),
+(46, 26, 25, 3),
+(47, 26, 27, 2),
+(48, 26, 29, 1),
+(49, 27, 26, 3),
+(50, 28, 25, 0),
+(51, 28, 30, 1),
+(52, 28, 29, 2),
+(53, 29, 26, 0),
+(54, 29, 28, 3),
+(55, 30, 28, 0);
