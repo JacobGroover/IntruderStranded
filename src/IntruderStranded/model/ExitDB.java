@@ -1,6 +1,7 @@
 package IntruderStranded.model;
 
 import IntruderStranded.controller.*;
+import IntruderStranded.gameExceptions.GameException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,26 +13,30 @@ public interface ExitDB extends RoomDBInfoProvider {
 	 * Method: getExits
 	 * Returns an ArrayList of exits associated with a roomID.
 	 */
-	default List<Exit> getExits() throws SQLException {
-		ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Exit WHERE RoomID = ?", roomID());
-		List<Exit> exits = new ArrayList<>();
+	default List<Exit> getExits() throws GameException {
+		try {
+			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Exit WHERE RoomID = ?", roomID());
+			List<Exit> exits = new ArrayList<>();
 
-		while (resultSet.next())
-		{
-			Exit exit = new Exit();
-			exit.setRoomID(roomID());
-			exit.setDestinationID(resultSet.getInt("Destination"));
-			exit.setDirection(directionFromInt(resultSet.getInt("Direction")));
-			exits.add(exit);
+			while (resultSet.next()) {
+				Exit exit = new Exit();
+				exit.setRoomID(roomID());
+				exit.setDestinationID(resultSet.getInt("Destination"));
+				exit.setDirection(directionFromInt(resultSet.getInt("Direction")));
+				exits.add(exit);
+			}
+
+			resultSet.getStatement().close();
+			return exits;
+		} catch (SQLException exception) {
+			throw new GameException(exception.getMessage());
 		}
-
-		resultSet.getStatement().close();
-		return exits;
 	}
 
 	/**
 	 * Method: directionFromInt
 	 * Converts an integer into its corresponding direction.
+	 *
 	 * @param direction The integer to convert into a direction.
 	 * @return The direction value represented by the provided integer.
 	 */
