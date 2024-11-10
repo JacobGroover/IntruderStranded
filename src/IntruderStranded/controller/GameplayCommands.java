@@ -166,8 +166,39 @@ public class GameplayCommands extends Commands {
 	 */
 	@Override
 	String help() {
-		// TODO - implement GameplayCommands.help
-		throw new UnsupportedOperationException();
+		if (isManagingInventory) {
+			return """
+            Store
+            Use <item>
+            Discard <item>
+            Close
+            Exit""";
+		}
+		else if (currentMonster != null || currentPuzzle != null) {
+			return """
+            Hint
+            Look
+            Exit
+            Help
+            Save Game
+            Load Game
+            INV
+            Flee""";
+		}
+
+		return """
+            Hint
+            Look
+            Exit
+            Help
+            Save Game
+            Load Game
+            INV
+            TEL
+            North
+            South
+            East
+            West""";
 	}
 
 	/**
