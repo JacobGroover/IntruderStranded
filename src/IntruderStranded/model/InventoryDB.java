@@ -9,10 +9,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Interface: InventoryDB
+ * @author Fareed Ahmed
+ * @version 1.0
+ * Course: ITEC 3860 Fall 2024
+ * Written: November 10, 2024
+ *
+ * This class handles getting and setting the inventory data from the database.
+ */
 public interface InventoryDB {
 
 	/**
-	 * @param playerID
+	 * Method: getInventory
+	 * Gets the inventory of the player with the given player id.
+	 * @param playerID The id of the player.
 	 */
 	default List<Item> getInventory(int playerID) throws GameException {
 		try {
@@ -35,8 +46,10 @@ public interface InventoryDB {
 	}
 
 	/**
-	 * @param playerID
-	 * @param item
+	 * Method: addItem
+	 * Adds an item into the inventory of the player with the given player id.
+	 * @param playerID The id of the player.
+	 * @param item The item to add.
 	 */
 	default void addItem(int playerID, Item item) throws GameException {
 		try {
@@ -57,8 +70,10 @@ public interface InventoryDB {
 	}
 
 	/**
-	 * @param playerID
-	 * @param item
+	 * Method: removeItem
+	 * Removes an item from the inventory of the player with the given player id.
+	 * @param playerID The id of the player.
+	 * @param item The item to remove.
 	 */
 	default void removeItem(int playerID, Item item) throws GameException {
 		try {

@@ -136,6 +136,10 @@ public class Room {
 		this.visited = visited;
 	}
 
+	/**
+	 * Method: getID
+	 * Gets the ID of the room.
+	 */
     public int getID() {
         return roomID;
     }

@@ -7,10 +7,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Class: PlayerDB
+ * @author Fareed Ahmed
+ * @version 1.0
+ * Course: ITEC 3860 Fall 2024
+ * Written: November 10, 2024
+ *
+ * This class handles getting and setting player data from the database.
+ */
 public class PlayerDB implements InventoryDB {
 
 	/**
-	 * @param player
+	 * Method: updatePlayer
+	 * Updates the row in the database corresponding to the given player object.
+	 * @param player The player object whose information will be stored into the database.
 	 */
 	public void updatePlayer(Player player) throws GameException {
 		try {
@@ -22,7 +33,9 @@ public class PlayerDB implements InventoryDB {
 	}
 
 	/**
-	 * @param playerID
+	 * Method: getPlayer
+	 * Gets the player from the database with the given player id.
+	 * @param playerID The id of the player to get.
 	 */
 	public Player getPlayer(int playerID) throws GameException {
 		try {
@@ -47,9 +60,11 @@ public class PlayerDB implements InventoryDB {
 	}
 
 	/**
-	 * @param username
-	 * @param password
-	 * @param email
+	 * Method: addPlayer
+	 * Creates a new player in the database with the given username, password, and email.
+	 * @param username The username for the player.
+	 * @param password The password for the player.
+	 * @param email The email for the player.
 	 */
 	public void addPlayer(String username, String password, String email) throws GameException {
 		try {
@@ -61,8 +76,11 @@ public class PlayerDB implements InventoryDB {
 	}
 
 	/**
-	 * @param username
-	 * @param password
+	 * Method: checkLogin
+	 * Checks if a player exists in the database with a username and password equal to
+	 * the given username and password.
+	 * @param username The username to check for.
+	 * @param password The password to check for.
 	 */
 	public boolean checkLogin(String username, String password) throws GameException {
 		try {
