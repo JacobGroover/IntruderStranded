@@ -53,7 +53,7 @@ public class Room {
 	 * @param playerID
 	 * @return
 	 */
-	public static Room getById(int roomID, int playerID) throws SQLException {
+	public static Room getById(int roomID, int playerID) throws GameException {
 		RoomDB rdb = new RoomDB(roomID, playerID);
 		Room room = rdb.getRoom();
 		room.exits = rdb.getExits();
@@ -76,7 +76,7 @@ public class Room {
 	 * Returns a string representation of this room, with the room name, visited state, description, items and exits.
 	 * Calls rdb.getItems method to get a list of items in the room.
 	 */
-	String display() throws SQLException {
+	String display() throws GameException {
 		String status;
 
 		if (visited) {
@@ -142,7 +142,7 @@ public class Room {
 	 * Calls RoomDB.addItem method to add an item to the room.
 	 * @param item
 	 */
-	void addItem(Item item) throws GameException, SQLException {
+	void addItem(Item item) throws GameException {
 		rdb.addItem(item);
 	}
 
@@ -151,7 +151,7 @@ public class Room {
 	 * Calls RoomDB.removeItem to remove an item from this room.
 	 * @param item
 	 */
-	void removeItem(Item item) throws GameException, SQLException {
+	void removeItem(Item item) throws GameException {
 		rdb.removeItem(item);
 	}
 

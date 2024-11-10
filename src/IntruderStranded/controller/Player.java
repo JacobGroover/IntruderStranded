@@ -80,7 +80,7 @@ public class Player extends Entity {
 	 * Method: displayInventory
 	 * Calls getInventory method and uses it to return a String representation of Item objects.
 	 */
-	String displayInventory() {
+	String displayInventory() throws GameException {
 		List<Item> inventory = getInventory();
 		String inventoryList = "INV \n";
 
@@ -95,7 +95,7 @@ public class Player extends Entity {
 	 * Method: getInventory
 	 * Returns an ArrayList of Item objects by calling PlayerDB.getInventory method.
 	 */
-	List<Item> getInventory() {
+	List<Item> getInventory() throws GameException {
 		List<Item> inventory = pdb.getInventory(playerId);
 		return inventory;
 	}
@@ -136,7 +136,7 @@ public class Player extends Entity {
 	 * 
 	 * @param item
 	 */
-	String useItem(Item item) {
+	String useItem(Item item) throws GameException {
 		pdb.removeItem(playerId, item);
 		return item.display();
 	}
