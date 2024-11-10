@@ -26,7 +26,7 @@ public record RoomDB(int roomID, int playerID) implements VisitRoomDB, ItemRoomD
 		try {
 			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Room WHERE RoomID = ?", roomID);
 			resultSet.next();
-			Room room = new Room(roomID, playerID);
+			Room room = new Room(this, roomID);
 			room.setRoomName(resultSet.getString("RoomName"));
 			room.setRoomDescription(resultSet.getString("RoomDescription"));
 			room.setLevel(resultSet.getString("RoomLevel"));

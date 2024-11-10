@@ -3,28 +3,16 @@ package IntruderStranded.controller;
 import IntruderStranded.model.*;
 import IntruderStranded.gameExceptions.*;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class: Room
+ * Class: Player
  * @author Hannah Jensen
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
  * Written: November 5, 2024
  * This class handles business logic for Player objects.
  */
-
-/**
- * Class: Room
- * @author Hannah Jensen
- * @version 1.0
- * Course: ITEC 3860 Fall 2024
- * Written: November 5, 2024
- * This class handles business logic for Player objects.
- */
-
 public class Player extends Entity {
 
 	private int playerId;
@@ -32,24 +20,28 @@ public class Player extends Entity {
 	private int weapon;
 	private Room currentRoom;
 	private Room previousRoom;
-	private PlayerDB pdb = new PlayerDB();
 	private int score;
-
+	private static final PlayerDB pdb = new PlayerDB();
 
 	/**
 	 * One-argument Constructor for Player class
-	 * Instantiates a Player object with the given playerId by calling PlayerDB.getPlayer method.
+	 * Instantiates a Player object with the given playerId and source.
 	 * @param playerId
 	 */
 	public Player(int playerId) {
 		this.playerId = playerId;
 	}
 
-	public static Player getById(int playerId) {
+	/**
+	 * Method: getById
+	 * Gets a player by their id by calling the PlayerDB.getPlayer method.
+	 * @param playerId The player id.
+	 * @return The player object with the given id.
+	 * @throws GameException
+	 */
+	public static Player getById(int playerId) throws GameException {
 		return new PlayerDB().getPlayer(playerId);
 	}
-
-
 
 	/**
 	 * Method: addItem
@@ -73,7 +65,6 @@ public class Player extends Entity {
 	void removeItem(Item item) throws GameException {
 		pdb.removeItem(playerId, item);
 		currentRoom.addItem(item);
-
 	}
 
 	/**
@@ -101,18 +92,26 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * 
-	 * @param username
-	 * @param password
+	 * Method: checkLogin
+	 * Checks if a player exists in the database with a username and password equal to the given username and password.
+	 * @param username The username to check for.
+	 * @param password The password to check for.
 	 */
-	String checkLogin(String username, String password) throws GameException {
-		if (pdb.checkLogin(username, password)) {
-			return "Login Successful";
-		}
-		
-		return "Login Failed";
+	static boolean checkLogin(String username, String password) throws GameException {
+		return pdb.checkLogin(username, password);
 	}
 
+	/**
+	 * Method: createAccount
+	 * Creates a new player with the given username, password, and email.
+	 * @param username The username to use.
+	 * @param password The password to use.
+	 * @param email The email to use.
+	 * @throws GameException
+	 */
+	static void createAccount(String username, String password, String email) throws GameException {
+		pdb.addPlayer(username, password, email);
+	}
 
 	/**
 	 * Method: getCurrentRoom

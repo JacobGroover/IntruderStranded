@@ -3,7 +3,6 @@ package IntruderStranded.controller;
 import IntruderStranded.gameExceptions.GameException;
 import IntruderStranded.model.*;
 
-import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -26,7 +25,6 @@ public class Room {
 	private List<Exit> exits;
 	private List<RoomEvent> roomEvents;
 	private String level;
-	private int playerId;
 
 	/**
 	 * Two-argument Constructor for Room class
@@ -35,10 +33,9 @@ public class Room {
 	 * Instantiates a RoomDB object using this Room's roomID class attribute, assigns it to rdb.
 	 * @param roomID
 	 */
-	public Room(int roomID, int playerID) {
+	public Room(RoomDB source, int roomID) {
 		this.roomID = roomID;
-		this.playerId = playerID;
-		rdb = new RoomDB(roomID, playerID);
+		rdb = source;
 	}
 
 	/**
@@ -202,8 +199,13 @@ public class Room {
     public int getID() {
         return roomID;
     }
-    
-    public void setLevel(String level) {
+
+	/**
+	 * Method: setLevel
+	 * Sets the level of the room.
+	 * @param level The level to set.
+	 */
+	public void setLevel(String level) {
         this.level = level;
     }
 }
