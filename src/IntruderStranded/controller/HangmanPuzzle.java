@@ -1,5 +1,7 @@
 package IntruderStranded.controller;
 
+import java.util.List;
+
 /**
  * Class: HangmanPuzzle
  * @author
@@ -77,7 +79,7 @@ public class HangmanPuzzle extends Puzzle {
 	 * Gets the rewards from completing this puzzle.
 	 */
 	@Override()
-	public java.util.List<Item> getRewards() {
+	public List<Item> getRewards() {
 		// TODO - implement HangmanPuzzle.getRewards
 		throw new UnsupportedOperationException();
 	}

@@ -1,28 +1,35 @@
 package IntruderStranded.controller;
 
-public enum Direction {
-	NORTH("NORTH"),
-	SOUTH("SOUTH"),
-	EAST("EAST"),
-	WEST("WEST"),
-	TEL0IN("INSIDE"),
-	TEL0OUT("OUTSIDE"),
-	TEL1("-1"),
-	TEL2("-2");
+import java.util.HashMap;
+import java.util.Map;
 
-	private String description;
+public enum Direction {
+	NORTH,
+	SOUTH,
+	EAST,
+	WEST,
+	TEL0IN,
+	TEL0OUT,
+	TEL1,
+	TEL2;
+
+	private static final Map<String, Direction> directionMap = new HashMap<>();
+
+	static {
+		directionMap.put("NORTH", NORTH);
+		directionMap.put("SOUTH", SOUTH);
+		directionMap.put("EAST", EAST);
+		directionMap.put("WEST", WEST);
+	}
 
 	/**
-	 * 
-	 * @param description
+	 * Method: parseDirection
+	 * Converts a string value into a direction if the string is a valid direction.
+	 * @param direction The string to convert into a direction.
+	 * @return The direction value which represents the provided string, or null if the string
+	 * does not represent a direction.
 	 */
-	private Direction(String description) {
-		// TODO - implement Direction.Direction
-		throw new UnsupportedOperationException();
+	public static Direction parseDirection(String direction) {
+		return directionMap.get(direction);
 	}
-
-	String getDescription() {
-		return this.description;
-	}
-
 }

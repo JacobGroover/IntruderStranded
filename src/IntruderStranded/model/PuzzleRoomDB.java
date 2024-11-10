@@ -2,18 +2,37 @@ package IntruderStranded.model;
 
 import IntruderStranded.controller.*;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class PuzzleRoomDB {
+public interface PuzzleRoomDB extends RoomDBInfoProvider {
+	default List<Puzzle> getPuzzles() throws SQLException {
+		ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Puzzle WHERE RoomID = ? AND PlayerID = ?", roomID(), playerID());
+		List<Puzzle> puzzles = new ArrayList<>();
 
-	/**
-	 * 
-	 * @param roomID
-	 * @param playerID
-	 */
-	public List<Puzzle> getPuzzles(int roomID, int playerID) {
-		// TODO - implement PuzzleRoomDB.getPuzzles
-		throw new UnsupportedOperationException();
+		while (resultSet.next()) {
+			int id = resultSet.getInt("PuzzleID");
+
+			Puzzle puzzle = switch (resultSet.getInt("PuzzleType")) {
+				case 0 -> new CombinationPuzzle(id);
+				case 1 -> new UnscrambledWordsPuzzle(id);
+				case 2 -> new HangmanPuzzle(id);
+				case 3 -> new MathPuzzle(id);
+				case 4 -> new NumberGuessingPuzzle(id);
+				case 5 -> new SandPuzzle(id);
+				default -> throw new UnsupportedOperationException("Invalid Puzzle ID: " + id);
+			};
+
+			puzzles.add(puzzle);
+		}
+
+		resultSet.getStatement().close();
+		return puzzles;
 	}
 
+	default void removePuzzle(Puzzle puzzle) throws SQLException {
+		DBService.getDB().updatePrepared("DELETE FROM Puzzle WHERE PuzzleID = ?", puzzle.getID());
+	}
 }

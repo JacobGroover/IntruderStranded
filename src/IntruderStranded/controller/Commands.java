@@ -17,7 +17,7 @@ import IntruderStranded.gameExceptions.*;
 public abstract class Commands {
 
 	Player player;
-	private final Collection<Observer<Commands>> observers;
+	private final List<Observer<Commands>> observers;
 
 	/**
 	 * Method: Commands
