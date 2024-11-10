@@ -5,6 +5,7 @@ import IntruderStranded.gameExceptions.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class: Room
@@ -88,22 +89,17 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * 
-	 * @param username
-	 * @param password
+	 * Method: checkLogin
+	 * Checks if a player exists in the database with a username and password equal to
+	 * the given username and password.
+	 * @param username The username to check for.
+	 * @param password The password to check for.
+	 * @return An empty optional if the login is invalid, otherwise, an optional containing the
+	 * id of the player with that username and password.
 	 */
-	String checkLogin(String username, String password) throws GameException {
-		String login = "";
-		if(pdb.checkLogin(username, password)) {
-			login = "Login Successful";
-		}
-		else {
-			login = "Login Failed";
-		}
-
-		return login;
+	Optional<Integer> checkLogin(String username, String password) throws GameException {
+		return pdb.checkLogin(username, password);
 	}
-
 
 	/**
 	 * Method: getCurrentRoom

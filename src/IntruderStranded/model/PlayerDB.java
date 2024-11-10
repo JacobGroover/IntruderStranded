@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class: PlayerDB
@@ -82,13 +83,22 @@ public class PlayerDB implements InventoryDB {
 	 * the given username and password.
 	 * @param username The username to check for.
 	 * @param password The password to check for.
+	 * @return An empty optional if the login is invalid, otherwise, an optional containing the
+	 * id of the player with that username and password.
 	 */
-	public boolean checkLogin(String username, String password) throws GameException {
+	public Optional<Integer> checkLogin(String username, String password) throws GameException {
 		try {
 			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Player WHERE Username = ? AND Password = ?", username, password);
 			boolean exists = resultSet.next();
+
+			if (!exists) {
+				resultSet.getStatement().close();
+				return Optional.empty();
+			}
+
+			int playerID = resultSet.getInt("PlayerID");
 			resultSet.getStatement().close();
-			return exists;
+			return Optional.of(playerID);
 		} catch (SQLException exception) {
 			throw new GameException(exception.getMessage());
 		}
