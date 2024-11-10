@@ -3,17 +3,17 @@ package IntruderStranded.controller;
 import IntruderStranded.model.*;
 import IntruderStranded.gameExceptions.*;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * Class: Room
+ * Class: Player
  * @author Hannah Jensen
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
  * Written: November 5, 2024
  * This class handles business logic for Player objects.
  */
-
 public class Player extends Entity {
 
 	private int playerId;
@@ -21,21 +21,28 @@ public class Player extends Entity {
 	private int weapon;
 	private Room currentRoom;
 	private Room previousRoom;
-	private PlayerDB pdb;
 	private int score;
-
+	private static final PlayerDB pdb = new PlayerDB();
 
 	/**
 	 * One-argument Constructor for Player class
-	 * Instantiates a Player object with the given playerId by calling PlayerDB.getPlayer method.
-	 * @param playerId
+	 * Instantiates a Player object with the given playerId.
+	 * @param playerId The player id to use.
 	 */
 	public Player(int playerId) {
-		this.pdb = new PlayerDB();
-		Player player = pdb.getPlayer(playerId);
+		this.playerId = playerId;
 	}
 
-
+	/**
+	 * Method: getById
+	 * Gets a player by their id by calling the PlayerDB.getPlayer method.
+	 * @param playerId The player id.
+	 * @return The player object with the given id.
+	 * @throws GameException
+	 */
+	public static Player getById(int playerId) throws GameException {
+		return pdb.getPlayer(playerId);
+	}
 
 	/**
 	 * Method: addItem
@@ -59,15 +66,14 @@ public class Player extends Entity {
 	void removeItem(Item item) throws GameException {
 		pdb.removeItem(playerId, item);
 		currentRoom.addItem(item);
-
 	}
 
 	/**
 	 * Method: displayInventory
 	 * Calls getInventory method and uses it to return a String representation of Item objects.
 	 */
-	String displayInventory() {
-		ArrayList<Item> inventory = getInventory();
+	String displayInventory() throws GameException {
+		List<Item> inventory = getInventory();
 		String inventoryList = "INV \n";
 
 		for(Item item : inventory) {
@@ -81,40 +87,50 @@ public class Player extends Entity {
 	 * Method: getInventory
 	 * Returns an ArrayList of Item objects by calling PlayerDB.getInventory method.
 	 */
-	ArrayList<Item> getInventory() {
-		ArrayList<Item> inventory = pdb.getInventory(playerId);
-
+	List<Item> getInventory() throws GameException {
+		List<Item> inventory = pdb.getInventory(playerId);
 		return inventory;
 	}
 
 	/**
-	 * 
-	 * @param username
-	 * @param password
+	 * Method: createAccount
+	 * Creates a new player with the given username, password, and email.
+	 * @param username The username to use.
+	 * @param password The password to use.
+	 * @param email The email to use.
+	 * @throws GameException
 	 */
-	String checkLogin(String username, String password) throws GameException {
-		String login = "";
-		if(pdb.checkLogin(username, password)) {
-			login = "Login Successful";
-		}
-		else {
-			login = "Login Failed";
-		}
-
-		return login;
+	static void createAccount(String username, String password, String email) throws GameException {
+		pdb.addPlayer(username, password, email);
 	}
 
+	/**
+	 * Checks if a player exists in the database with a username and password equal to
+	 * the given username and password.
+	 * @param username The username to check for.
+	 * @param password The password to check for.
+	 * @return An empty optional if the login is invalid, otherwise, an optional containing the
+	 * id of the player with that username and password.
+	 */
+	Optional<Integer> checkLogin(String username, String password) throws GameException {
+		return pdb.checkLogin(username, password);
+	}
 
 	/**
 	 * Method: getCurrentRoom
 	 * Getter for the currentRoom class attribute.
 	 * Called by GameplayCommands class to access the player's current Room.
 	 */
-	Room getCurrentRoom() {
+	public Room getCurrentRoom() {
 		return this.currentRoom;
 	}
 
-	Room getPreviousRoom() {
+	/**
+	 * Method: getPreviousRoom
+	 * Getter for the previousRoom class attribute.
+	 * Called by GameplayCommands class to access the player's previous Room.
+	 */
+	public Room getPreviousRoom() {
 		return this.previousRoom;
 	}
 
@@ -122,7 +138,8 @@ public class Player extends Entity {
 	 * 
 	 * @param item
 	 */
-	String useItem(Item item) {
+	String useItem(Item item) throws GameException {
+		// TODO: Fix implementation
 		pdb.removeItem(playerId, item);
 		return item.display();
 	}

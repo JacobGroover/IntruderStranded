@@ -1,5 +1,7 @@
 package IntruderStranded.controller;
 
+import java.util.List;
+
 /**
  * Class: SandPuzzle
  * @author
@@ -39,7 +41,7 @@ public class SandPuzzle extends Puzzle {
 	 * Gets the rewards from completing this puzzle.
 	 */
 	@Override()
-	public java.util.List<Item> getRewards() {
+	public List<Item> getRewards() {
 		// TODO - implement SandPuzzle.getRewards
 		throw new UnsupportedOperationException();
 	}

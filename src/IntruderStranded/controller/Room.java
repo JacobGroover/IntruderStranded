@@ -3,7 +3,6 @@ package IntruderStranded.controller;
 import IntruderStranded.gameExceptions.GameException;
 import IntruderStranded.model.*;
 
-import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -24,26 +23,43 @@ public class Room {
 	private boolean visited;
 	private RoomDB rdb;
 	private boolean teleport;
-	private ArrayList<Exit> exits;
-	private ArrayList<RoomEvent> roomEvents;
-	private int level;
-	private int playerId;
+	private List<Exit> exits;
+	private List<RoomEvent> roomEvents;
+	private String level;
 
 	/**
-	 * One-argument Constructor for Room class
+	 * Two-argument Constructor for Room class
 	 * 
 	 * Sets roomID class attribute to input parameter.
 	 * Instantiates a RoomDB object using this Room's roomID class attribute, assigns it to rdb.
+	 * @param roomID
+	 */
+	public Room(RoomDB source, int roomID) {
+		this.roomID = roomID;
+		rdb = source;
+	}
+
+	/**
+	 * Method: getById
+	 * Gets a Room object by its ID.
 	 * Calls rdb.getExits method to assign exits class attribute.
 	 * Calls rdb.getRoomEvents method to assign roomEvents class attribute.
 	 * Calls canTeleport method to determine if this Room has teleport exits. This sets the teleport class
 	 * attribute to true or false.
 	 * Calls rdb.getVisited to assign the visited class attribute.
 	 * @param roomID
+	 * @param playerID
+	 * @return
 	 */
-	public Room(int roomID) throws GameException{
-		this.roomID = roomID;
-		RoomDB rdb = new RoomDB(roomID, playerId);
+	public static Room getById(int roomID, int playerID) throws GameException {
+		RoomDB rdb = new RoomDB(roomID, playerID);
+		Room room = rdb.getRoom();
+		room.exits = rdb.getExits();
+		room.roomEvents = new ArrayList<>(rdb.getMonsters());
+		room.roomEvents.addAll(rdb.getPuzzles());
+		room.teleport = room.canTeleport();
+		room.visited = rdb.getVisited();
+		return room;
 	}
 
 	/**
@@ -58,7 +74,7 @@ public class Room {
 	 * Returns a string representation of this room, with the room name, visited state, description, items and exits.
 	 * Calls rdb.getItems method to get a list of items in the room.
 	 */
-	String display() throws SQLException {
+	String display() throws GameException {
 		String status;
 
 		if (visited) {
@@ -67,7 +83,7 @@ public class Room {
 			status = "(Not Visited)";
 		}
 
-		ArrayList<Item> items = (ArrayList<Item>) rdb.getItems();
+		List<Item> items = rdb.getItems();
 		String itemList = "";
 		if (items.isEmpty()) {
 			itemList = "No items in this room.";
@@ -124,7 +140,7 @@ public class Room {
 	 * Calls RoomDB.addItem method to add an item to the room.
 	 * @param item
 	 */
-	void addItem(Item item) throws GameException, SQLException {
+	void addItem(Item item) throws GameException {
 		rdb.addItem(item);
 	}
 
@@ -133,11 +149,11 @@ public class Room {
 	 * Calls RoomDB.removeItem to remove an item from this room.
 	 * @param item
 	 */
-	void removeItem(Item item) throws GameException, SQLException {
+	void removeItem(Item item) throws GameException {
 		rdb.removeItem(item);
 	}
 
-	ArrayList<RoomEvent> getRoomEvents() {
+	List<RoomEvent> getRoomEvents() {
 		return this.roomEvents;
 	}
 
@@ -193,5 +209,22 @@ public class Room {
 	 */
     public void setHint(String hint) {
         this.hint = hint;
+    }
+
+    /**
+	 * Method: getID
+	 * Gets the ID of the room.
+	 */
+    public int getID() {
+        return roomID;
+    }
+
+	/**
+	 * Method: setLevel
+	 * Sets the level of the room.
+	 * @param level The level to set.
+	 */
+	public void setLevel(String level) {
+        this.level = level;
     }
 }
