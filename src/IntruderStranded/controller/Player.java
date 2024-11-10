@@ -26,8 +26,8 @@ public class Player extends Entity {
 
 	/**
 	 * One-argument Constructor for Player class
-	 * Instantiates a Player object with the given playerId and source.
-	 * @param playerId
+	 * Instantiates a Player object with the given playerId.
+	 * @param playerId The player id to use.
 	 */
 	public Player(int playerId) {
 		this.playerId = playerId;
@@ -41,7 +41,7 @@ public class Player extends Entity {
 	 * @throws GameException
 	 */
 	public static Player getById(int playerId) throws GameException {
-		return new PlayerDB().getPlayer(playerId);
+		return pdb.getPlayer(playerId);
 	}
 
 	/**
