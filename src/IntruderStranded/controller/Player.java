@@ -4,6 +4,7 @@ import IntruderStranded.model.*;
 import IntruderStranded.gameExceptions.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class: Player
@@ -92,16 +93,6 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * Method: checkLogin
-	 * Checks if a player exists in the database with a username and password equal to the given username and password.
-	 * @param username The username to check for.
-	 * @param password The password to check for.
-	 */
-	static boolean checkLogin(String username, String password) throws GameException {
-		return pdb.checkLogin(username, password);
-	}
-
-	/**
 	 * Method: createAccount
 	 * Creates a new player with the given username, password, and email.
 	 * @param username The username to use.
@@ -111,6 +102,18 @@ public class Player extends Entity {
 	 */
 	static void createAccount(String username, String password, String email) throws GameException {
 		pdb.addPlayer(username, password, email);
+	}
+
+	/**
+	 * Checks if a player exists in the database with a username and password equal to
+	 * the given username and password.
+	 * @param username The username to check for.
+	 * @param password The password to check for.
+	 * @return An empty optional if the login is invalid, otherwise, an optional containing the
+	 * id of the player with that username and password.
+	 */
+	Optional<Integer> checkLogin(String username, String password) throws GameException {
+		return pdb.checkLogin(username, password);
 	}
 
 	/**
