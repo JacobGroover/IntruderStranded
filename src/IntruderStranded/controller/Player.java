@@ -139,6 +139,7 @@ public class Player extends Entity {
 	 * @param item
 	 */
 	String useItem(Item item) throws GameException {
+		// TODO: Fix implementation
 		pdb.removeItem(playerId, item);
 		return item.display();
 	}
