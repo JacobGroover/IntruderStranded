@@ -1,6 +1,7 @@
 package IntruderStranded.view;
 
 import IntruderStranded.controller.*;
+import IntruderStranded.gameExceptions.GameException;
 
 import java.util.Scanner;
 
@@ -9,7 +10,7 @@ import java.util.Scanner;
  * @author Jacob Groover
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
- * Written: October 19th, 2024
+ * Written: November 6th, 2024
  * 
  * This class – is the UI class for Intruder Stranded, a text-based adventure game. This class
  * will control all user aspects of this game.
@@ -25,8 +26,7 @@ public class IntruderStranded {
 	 * Creates an instance of the GameController class which is the interface into the controller package
 	 */
 	public IntruderStranded() {
-		// TODO - implement IntruderStranded.IntruderStranded
-		throw new UnsupportedOperationException();
+		gc = new GameController();
 	}
 
 	/**
@@ -40,8 +40,20 @@ public class IntruderStranded {
 	 * handle all user commands.
 	 */
 	private void playGame() {
-		// TODO - implement IntruderStranded.playGame
-		throw new UnsupportedOperationException();
+		// call gc.executeCommand method with blank String parameter to trigger intro text for login screen
+		System.out.println(gc.displayIntroText());
+
+		// Begin game loop
+		String response = "";
+		do {
+			try {
+				String command = getCommand();
+				System.out.println(response = gc.executeCommand(command));
+			} catch (GameException ge) {
+				System.out.println(ge.getMessage());
+			}
+		} while (!response.equalsIgnoreCase("Exit"));
+		System.out.println("Exiting Game");
 	}
 
 	/**
@@ -49,8 +61,7 @@ public class IntruderStranded {
 	 * Prompts the user for their input and returns this to playGame method
 	 */
 	private String getCommand() {
-		// TODO - implement IntruderStranded.getCommand
-		throw new UnsupportedOperationException();
+		return input.nextLine().toUpperCase();
 	}
 
 	/**
@@ -63,8 +74,21 @@ public class IntruderStranded {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO - implement IntruderStranded.main
-		throw new UnsupportedOperationException();
+		IntruderStranded intruderStranded = new IntruderStranded();
+		boolean valid = true;
+		try {
+			intruderStranded.gc.start();
+		} catch (GameException ge) {
+			valid = false;
+			System.out.println(ge.getMessage());
+		}
+
+		if (valid) {
+			intruderStranded.input = new Scanner(System.in);
+			intruderStranded.playGame();
+			intruderStranded.input.close();
+			System.exit(0);
+		}
 	}
 
 }
