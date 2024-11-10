@@ -80,10 +80,14 @@ public class GameDBCreate {
 	 * @return True if this player has created a new game and saved before, otherwise false.
 	 * @throws GameException
 	 */
-	public boolean gameExists(int playerId) throws SQLException {
-		ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM VisitRoom WHERE PlayerID = ?", playerId);
-		boolean exists = resultSet.next();
-		resultSet.getStatement().close();
-		return exists;
+	public boolean gameExists(int playerId) throws GameException {
+		try {
+			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM VisitRoom WHERE PlayerID = ?", playerId);
+			boolean exists = resultSet.next();
+			resultSet.getStatement().close();
+			return exists;
+		} catch (SQLException exception) {
+			throw new GameException(exception.getMessage());
+		}
 	}
 }
