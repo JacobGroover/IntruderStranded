@@ -85,7 +85,7 @@ public class Room {
 			status = "(Not Visited)";
 		}
 
-		ArrayList<Item> items = (ArrayList<Item>) rdb.getItems();
+		List<Item> items = rdb.getItems();
 		String itemList = "";
 		if (items.isEmpty()) {
 			itemList = "No items in this room.";

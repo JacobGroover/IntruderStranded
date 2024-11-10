@@ -5,6 +5,16 @@ import IntruderStranded.gameExceptions.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Class: Room
+ * @author Hannah Jensen
+ * @version 1.0
+ * Course: ITEC 3860 Fall 2024
+ * Written: November 5, 2024
+ * This class handles business logic for Player objects.
+ */
 
 /**
  * Class: Room
@@ -39,6 +49,8 @@ public class Player extends Entity {
 		return new PlayerDB().getPlayer(playerId);
 	}
 
+
+
 	/**
 	 * Method: addItem
 	 * Removes item from currentRoom by calling currentRoom.removeItem method.
@@ -46,7 +58,7 @@ public class Player extends Entity {
 	 * PlayerDB.addItem method.
 	 * @param item
 	 */
-	void addItem(Item item) throws GameException, SQLException {
+	void addItem(Item item) throws GameException {
 		currentRoom.removeItem(item);
 		pdb.addItem(playerId, item);
 	}
@@ -58,7 +70,7 @@ public class Player extends Entity {
 	 * Adds item to currentRoom by calling currentRoom.addItem method.
 	 * @param item
 	 */
-	void removeItem(Item item) throws GameException, SQLException {
+	void removeItem(Item item) throws GameException {
 		pdb.removeItem(playerId, item);
 		currentRoom.addItem(item);
 
@@ -69,7 +81,7 @@ public class Player extends Entity {
 	 * Calls getInventory method and uses it to return a String representation of Item objects.
 	 */
 	String displayInventory() {
-		ArrayList<Item> inventory = getInventory();
+		List<Item> inventory = getInventory();
 		String inventoryList = "INV \n";
 
 		for(Item item : inventory) {
@@ -83,9 +95,8 @@ public class Player extends Entity {
 	 * Method: getInventory
 	 * Returns an ArrayList of Item objects by calling PlayerDB.getInventory method.
 	 */
-	ArrayList<Item> getInventory() {
-		ArrayList<Item> inventory = pdb.getInventory(playerId);
-
+	List<Item> getInventory() {
+		List<Item> inventory = pdb.getInventory(playerId);
 		return inventory;
 	}
 
