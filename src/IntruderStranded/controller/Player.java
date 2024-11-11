@@ -106,6 +106,7 @@ public class Player extends Entity {
 	}
 
 	/**
+	 * Method: checkLogin
 	 * Checks if a player exists in the database with a username and password equal to
 	 * the given username and password.
 	 * @param username The username to check for.
@@ -115,6 +116,43 @@ public class Player extends Entity {
 	 */
 	static Optional<Integer> checkLogin(String username, String password) throws GameException {
 		return pdb.checkLogin(username, password);
+	}
+
+	/**
+	 * Method: checkAccountField
+	 * Calls PlayerDB to check if a specific account field exists in the database. Used when a
+	 * player attempts to recover password or username from AuthenticationCommands.
+	 * @param input The text to look for in the given field.
+	 * @param field The player field to check in the database. 1 for Username, 2 for Email.
+	 * @return Boolean indicating if the text was found in the given field
+	 * @throws GameException
+	 */
+	static boolean checkAccountField(String input, int field) throws GameException {
+		return pdb.checkAccountField(input, field);
+	}
+
+	/**
+	 * Method: updatePassword
+	 * Updates the password for a player account. Called from AuthenticationCommands when
+	 * a player updates password for a specific username they forgot the password for.
+	 * @param username String
+	 * @param password String
+	 * @throws GameException
+	 */
+	static void updatePassword(String username, String password) throws GameException {
+		pdb.updatePassword(username, password);
+	}
+
+	/**
+	 * Method: retrieveUsername
+	 * Calls PlayerDB to retrieve a username from database associated with a given email. Used by AuthenticationCommands
+	 * to recover a username for a user.
+	 * @param email String
+	 * @return String
+	 * @throws GameException
+	 */
+	static String retrieveUsername(String email) throws GameException {
+		return pdb.retrieveUsername(email);
 	}
 
 	/**

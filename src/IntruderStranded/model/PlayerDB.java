@@ -5,8 +5,6 @@ import IntruderStranded.gameExceptions.GameException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -27,8 +25,8 @@ public class PlayerDB implements InventoryDB {
 	 */
 	public void updatePlayer(Player player) throws GameException {
 		try {
-			DBService.getDB().updatePrepared("UPDATE Player SET Health = ?, PreviousRoom = ?, CurrentRoom = ?, Weapon = ?",
-					player.getHealth(), player.getPreviousRoom().getID(), player.getCurrentRoom().getID(), player.getWeapon());
+			DBService.getDB().updatePrepared("UPDATE Player SET Health = ?, PreviousRoom = ?, CurrentRoom = ?, Weapon = ? WHERE PlayerID = ?",
+					player.getHealth(), player.getPreviousRoom().getID(), player.getCurrentRoom().getID(), player.getWeapon(), player.getID());
 		} catch (SQLException exception) {
 			throw new GameException(exception.getMessage());
 		}
@@ -114,6 +112,70 @@ public class PlayerDB implements InventoryDB {
 		} catch (SQLException exception) {
 			throw new GameException(exception.getMessage());
 		}
+	}
+
+	/**
+	 * Method: checkAccountField
+	 * Check if a specific username exists in the database. Used when a player attempts to
+	 * recover password from AuthenticationCommands
+	 * @param input The text to look for in the given field.
+	 * @param field The player field to check in the database. 1 for Username, 2 for Email.
+	 * @return Boolean indicating whether the given username was found
+	 * @throws GameException
+	 */
+	public boolean checkAccountField(String input, int field) throws GameException {
+		String playerField;
+		switch (field) {
+			case 1 -> playerField = "Username";
+			case 2 -> playerField = "Email";
+			default -> throw new GameException("Invalid player field requested by Authentication!");
+		}
+		try {
+			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Player WHERE ? = ?", playerField, input);
+			boolean exists = resultSet.next();
+			resultSet.getStatement().close();
+			return exists;
+		} catch (SQLException sqle) {
+			throw new GameException(sqle.getMessage());
+		}
+	}
+
+	/**
+	 * Method: updatePassword
+	 * Updates the password for a player account. Used when AuthenticationCommands allows
+	 * a player to update password for a specific username they forgot the password for.
+	 * @param username String
+	 * @param password String
+	 * @throws GameException
+	 */
+	public void updatePassword(String username, String password) throws GameException {
+		try {
+			DBService.getDB().updatePrepared("UPDATE Player SET Password = ? WHERE Username = ?", password, username);
+		} catch (SQLException sqle) {
+			throw new GameException(sqle.getMessage());
+		}
+	}
+
+	/**
+	 * Method: retrieveUsername
+	 * Retrieves a username from database associated with a given email. Used by AuthenticationCommands
+	 * to recover a username for a user.
+	 * @param email String
+	 * @return String
+	 * @throws GameException
+	 */
+	public String retrieveUsername(String email) throws GameException {
+		String username = "";
+		try {
+			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT Username FROM Player WHERE Email = ?", email);
+			if (resultSet.next()) {
+				username = resultSet.getString("Username");
+				resultSet.getStatement().close();
+			}
+		} catch (SQLException sqle) {
+			throw new GameException(sqle.getMessage());
+		}
+		return username;
 	}
 
 }

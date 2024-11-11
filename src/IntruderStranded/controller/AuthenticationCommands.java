@@ -121,7 +121,7 @@ public class AuthenticationCommands extends Commands {
 		StringBuilder text = new StringBuilder();
 		if (!isLoggingIn) {
 			isLoggingIn = true;
-			return text.append("Username: ").toString();
+			return text.append("\nUsername: ").toString();
 		} else if (username == null) {
 			username = command;
 			return text.append("Password: ").toString();
@@ -181,7 +181,7 @@ public class AuthenticationCommands extends Commands {
 		StringBuilder text = new StringBuilder();
 		if (!isCreatingAccount) {
 			isCreatingAccount = true;
-			text.append("Username: ");
+			text.append("\nUsername: ");
 		} else if (username == null) {
 			if (command.length() < 4 || command.length() > 10) {
 				text.append("Username must be between 4 and 10 characters long.\n\nUsername: ");
@@ -223,13 +223,36 @@ public class AuthenticationCommands extends Commands {
 	 * If password is not between 8 and 12 characters, return "Password must be between 8 and 12 characters long."
 	 * If valid password entry, set the new password to the account and return "Successfully reset password."
 	 * 
-	 * Sets isResettingPassword boolean to true when method begins. Sets it back to false on valid
-	 * password reset.
+	 * Sets isResettingPassword boolean to true when method begins. Sets it back to false after a
+	 * password reset attempt.
 	 * @param command
 	 */
 	private String resetPassword(String command) throws GameException {
-		// TODO - implement AuthenticationCommands.resetPassword
-		throw new UnsupportedOperationException();
+		StringBuilder text = new StringBuilder();
+		if (!isResettingPassword) {
+			isResettingPassword = true;
+			text.append("\nPlease Enter Username: ");
+		} else if (username == null) {
+			if (Player.checkAccountField(command, 1)) {
+				username = command;
+				text.append("Username found.\nPassword: ");
+			} else {
+				text.append("Username does not exist.");
+				isResettingPassword = false;
+			}
+		} else if (password == null) {
+			if (command.length() < 8 || command.length() > 12) {
+				text.append("Password must be between 8 and 12 characters long.\n\nPassword: ");
+			} else {
+				password = command;
+				Player.updatePassword(username, password);
+				text.append("Successfully reset password.");
+				isResettingPassword = false;
+				username = null;
+				password = null;
+			}
+		}
+		return text.toString();
 	}
 
 	/**
@@ -244,8 +267,23 @@ public class AuthenticationCommands extends Commands {
 	 * @param command
 	 */
 	private String retrieveUsername(String command) throws GameException {
-		// TODO - implement AuthenticationCommands.retrieveUsername
-		throw new UnsupportedOperationException();
+		StringBuilder text = new StringBuilder();
+		if (!isRetrievingUsername) {
+			isRetrievingUsername = true;
+			text.append("\nPlease Enter Email: ");
+		} else if (email == null) {
+			if (Player.checkAccountField(command, 2)) {
+				email = command;
+				// retrieve username associated with email from database
+				text.append("Your username is ");
+				text.append(Player.retrieveUsername(email));
+				isRetrievingUsername = false;
+			} else {
+				text.append("Username not found.");
+				isRetrievingUsername = false;
+			}
+		}
+		return text.toString();
 	}
 
 	/**
