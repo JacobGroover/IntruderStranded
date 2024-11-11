@@ -18,10 +18,10 @@ public interface PuzzleRoomDB extends RoomDBInfoProvider {
 				int id = resultSet.getInt("PuzzleID");
 
 				Puzzle puzzle = switch (resultSet.getInt("PuzzleType")) {
-					case 0 -> new CombinationPuzzle(id);
-					case 1 -> new UnscrambledWordsPuzzle(id);
-					case 2 -> new NumberGuessingPuzzle(id);
-					case 3 -> new SandPuzzle(id);
+					case 0 -> new CombinationPuzzle(id, roomID(), playerID());
+					case 1 -> new UnscrambledWordsPuzzle(id, roomID(), playerID());
+					case 2 -> new NumberGuessingPuzzle(id, roomID(), playerID());
+					case 3 -> new SandPuzzle(id, roomID(), playerID());
 					default -> throw new UnsupportedOperationException("Invalid Puzzle ID: " + id);
 				};
 
