@@ -250,8 +250,15 @@ public class AuthenticationCommands extends Commands {
 	 * list of available commands
 	 */
 	protected String getIntroText() {
-		// TODO - implement AuthenticationCommands.getIntroText
-		throw new UnsupportedOperationException();
+		return """
+                Intruder Stranded
+
+                Please enter the command "Login" or "Create Account"
+                Forgot Password "Forgot Password"
+                Forgot Username "Retrieve Username"
+                If you need help, please enter "HELP" to find more commands.
+                
+                """;
 	}
 
 }
