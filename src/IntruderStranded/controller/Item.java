@@ -1,10 +1,8 @@
 package IntruderStranded.controller;
 
-import IntruderStranded.model.ItemDB;
-
 public class Item {
 
-	private int itemID;
+	private final int itemID;
 	private String itemName;
 	private String itemDescription;
 
@@ -20,9 +18,7 @@ public class Item {
 	 * @param itemID
 	 */
 	public Item(int itemID) {
-		// TODO: Fix implementation
-		ItemDB idb = new ItemDB();
-		idb.getItem(itemID);
+		this.itemID = itemID;
 	}
 
 	public String getItemName() {

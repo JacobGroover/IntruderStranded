@@ -63,6 +63,11 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	String getHint() {
+		return "The word is based on a planet in our solar system";
+	}
+
 	/**
 	 * Method: getRewards
 	 * Gets the rewards from completing this puzzle.

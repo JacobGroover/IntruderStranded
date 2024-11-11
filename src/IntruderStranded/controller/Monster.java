@@ -7,6 +7,10 @@ public class Monster extends Entity implements RoomEvent {
 	private String name;
 	private List<Item> rewards;
 
+	public Monster(int id) {
+		super(id);
+	}
+
 	public List<Item> getRewards() {
 		return this.rewards;
 	}
