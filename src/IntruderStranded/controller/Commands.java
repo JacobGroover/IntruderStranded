@@ -36,8 +36,8 @@ public abstract class Commands {
 	 * @param player
 	 */
 	Commands(Player player) {
-		// TODO - implement Commands.Commands
-		throw new UnsupportedOperationException();
+		this();
+		this.player = player;
 	}
 
 	/**
