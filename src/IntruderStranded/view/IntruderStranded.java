@@ -75,20 +75,17 @@ public class IntruderStranded {
 	 */
 	public static void main(String[] args) {
 		IntruderStranded intruderStranded = new IntruderStranded();
-		boolean valid = true;
 		try {
 			intruderStranded.gc.start();
 		} catch (GameException ge) {
-			valid = false;
 			System.out.println(ge.getMessage());
+			System.exit(-1);
 		}
 
-		if (valid) {
-			intruderStranded.input = new Scanner(System.in);
-			intruderStranded.playGame();
-			intruderStranded.input.close();
-			System.exit(0);
-		}
+		intruderStranded.input = new Scanner(System.in);
+		intruderStranded.playGame();
+		intruderStranded.input.close();
+		System.exit(0);
 	}
 
 }
