@@ -55,6 +55,17 @@ public class GameController implements Observer<Commands> {
 	}
 
 	/**
+	 * Method: displayIntroText
+	 * Returns a String displaying the intro text. Used to display Login screen intro text before the game
+	 * loop begins, and to append intro text after game state changes.
+	 */
+	public String displayIntroText() {
+		String text = introText;
+		introText = null;
+		return text;
+	}
+
+	/**
 	 * Method: executeCommand
 	 * Handles the user input from IntruderStranded
 	 * Determines the current GameState and Sends the user's command to the appropriate Commands
