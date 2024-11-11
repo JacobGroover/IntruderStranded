@@ -60,8 +60,10 @@ public abstract class Commands {
 	 * @param command
 	 */
 	String exit(String command) throws GameException {
-		// TODO - implement Commands.exit
-		throw new UnsupportedOperationException();
+		if (command.equals("EXIT")) {
+			return command;
+		}
+		throw new GameException("Unrecognized command!");
 	}
 
 	/**
