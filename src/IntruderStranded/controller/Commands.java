@@ -74,8 +74,9 @@ public abstract class Commands {
 	 * @param command
 	 */
 	void changeGameState(Commands command) {
-		// TODO - implement Commands.changeGameState
-		throw new UnsupportedOperationException();
+		for (Observer<Commands> observer : observers) {
+			observer.onUpdate(command);
+		}
 	}
 
 	/**
