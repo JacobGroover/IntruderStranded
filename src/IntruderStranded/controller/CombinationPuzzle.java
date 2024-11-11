@@ -26,26 +26,27 @@ public class CombinationPuzzle extends Puzzle {
 	}
 
 	/**
-	 * Method: run
-	 * If puzzleCounter is -1, returns unknownNumber + "\nEnter a number between 0 and 9 to guess
-	 * the combination: " and increments puzzleCounter.
-	 * If puzzleCounter is not -1, check if the input parameter equals a digit in answerNumber. If it is
-	 * not equal, increment the puzzleCounter and return "Incorrect number, try again. You have " +
-	 * (5 - puzzleCounter) + " guesses left." If the input parameter was one of the numbers in the
-	 * digit +/- 1, then also return "You were close to a digit in the combination." Otherwise,
-	 * also return "You were not close to a digit in the combination."
-	 * If the player enters text that is not a number between 0 and 9, throw a GameException with the
-	 * message, "Please enter a number between 0 and 9."
-	 * After every guess, unknownNumber is displayed again.
-	 * When a correct letter is guessed, unknownNumber is updated to show everywhere that digit appears
-	 * in answerNumber.
-	 * If the puzzleCounter reaches 5, call setupPuzzle method and return "You lost the puzzle."
-	 * If all digits are guessed, return "You have successfully solved the puzzle!" and call getRewards
-	 * method from the implemented RoomEvent interface.
-	 * @param cmd
-	 */
+     * Method: run
+     * If puzzleCounter is -1, returns unknownNumber + "\nEnter a number between 0 and 9 to guess
+     * the combination: " and increments puzzleCounter.
+     * If puzzleCounter is not -1, check if the input parameter equals a digit in answerNumber. If it is
+     * not equal, increment the puzzleCounter and return "Incorrect number, try again. You have " +
+     * (5 - puzzleCounter) + " guesses left." If the input parameter was one of the numbers in the
+     * digit +/- 1, then also return "You were close to a digit in the combination." Otherwise,
+     * also return "You were not close to a digit in the combination."
+     * If the player enters text that is not a number between 0 and 9, throw a GameException with the
+     * message, "Please enter a number between 0 and 9."
+     * After every guess, unknownNumber is displayed again.
+     * When a correct letter is guessed, unknownNumber is updated to show everywhere that digit appears
+     * in answerNumber.
+     * If the puzzleCounter reaches 5, call setupPuzzle method and return "You lost the puzzle."
+     * If all digits are guessed, return "You have successfully solved the puzzle!" and call getRewards
+     * method from the implemented RoomEvent interface.
+     *
+     * @param cmd
+     */
 	@Override()
-	String run(String cmd) {
+    void run(String cmd) {
 		// TODO - implement CombinationPuzzle.run
 		throw new UnsupportedOperationException();
 	}
