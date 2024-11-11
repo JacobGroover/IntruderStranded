@@ -85,8 +85,7 @@ public abstract class Commands {
 	 * @param observer
 	 */
 	void addObserver(Observer<Commands> observer) {
-		// TODO - implement Commands.addObserver
-		throw new UnsupportedOperationException();
+		observers.add(observer);
 	}
 
 	/**
