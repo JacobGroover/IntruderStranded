@@ -96,15 +96,18 @@ public class GameController implements Observer<Commands> {
 
 	/**
 	 * Method: onUpdate
-	 * Updates the GameController to subscribe to the new game state by setting its commands class variable to this method's input parameter, then adding this GameController to the commands variable's list of observers by calling the commands.addObserver method.
+	 * Updates the GameController to subscribe to the new game state by setting its commands class variable to
+	 * this method's input parameter, then adding this GameController to the commands variable's list of observers by
+	 * calling the commands.addObserver method.
 	 * 
 	 * Calls the GameController.getIntroText to update the introText String for the new game state.
 	 * @param newGameState
 	 */
 	@Override()
 	public void onUpdate(Commands newGameState) {
-		// TODO - implement GameController.onUpdate
-		throw new UnsupportedOperationException();
+		commands = newGameState;
+		commands.addObserver(this);
+		getIntroText();
 	}
 
 }
