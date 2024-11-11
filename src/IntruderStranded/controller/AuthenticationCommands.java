@@ -7,7 +7,7 @@ import IntruderStranded.gameExceptions.*;
  * @author Jacob Groover
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
- * Written: October 19th, 2024
+ * Written: November 8th, 2024
  * 
  * This class – Is the Commands subclass for Authentication Commands. Handles all user commands
  * sent from GameController and returns appropriate replies or exceptions.
@@ -29,11 +29,18 @@ public class AuthenticationCommands extends Commands {
 	 * Method: AuthenticationCommands
 	 * No-Argument Constructor for the AuthenticationCommands class
 	 * Calls parent no-argument constructor, then initializes counters to 0 and booleans to false.
-	 * Sets username, password, and email Strings to ""
+	 * Sets username, password, and email Strings to null
 	 */
 	AuthenticationCommands() {
-		// TODO - implement AuthenticationCommands.AuthenticationCommands
-		throw new UnsupportedOperationException();
+		super();
+		loginCounter = 0;
+		isLoggingIn = false;
+		isCreatingAccount = false;
+		isResettingPassword = false;
+		isRetrievingUsername = false;
+		username = null;
+		password = null;
+		email = null;
 	}
 
 	/**
