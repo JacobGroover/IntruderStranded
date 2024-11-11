@@ -6,25 +6,25 @@ import IntruderStranded.gameExceptions.GameException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public interface MonsterRoomDB extends RoomDBInfoProvider {
 	default List<Monster> getMonsters() throws GameException {
 		try {
-			ResultSet monstersResultSet = DBService.getDB().queryPrepared("SELECT * FROM MonsterRoom WHERE RoomID = ? AND PlayerID = ?", roomID(), playerID());
+			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT Monster.*, MonsterRoom.MonsterQuantity FROM MonsterRoom LEFT JOIN Monster ON MonsterRoom.MonsterID = Monster.MonsterID WHERE RoomID = ? AND PlayerID = ?", roomID(), playerID());
 			List<Monster> monsters = new ArrayList<>();
 
-			while (monstersResultSet.next()) {
-				int monsterID = monstersResultSet.getInt("MonsterID");
-				ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Monster WHERE MonsterID = ?", monsterID);
-				resultSet.next();
-				resultSet.getString("Name");
-				resultSet.getInt("Health");
+			while (resultSet.next()) {
+				Monster monster = new Monster(resultSet.getInt("MonsterID"), roomID(), playerID());
+				monster.setName(resultSet.getString("Name"));
+				monster.setHealth(resultSet.getInt("Health"));
+				monster.setDamage(resultSet.getInt("Damage"));
 
-				resultSet.getStatement().close();
+				monsters.addAll(Collections.nCopies(resultSet.getInt("MonsterQuantity"), monster));
 			}
 
-			monstersResultSet.getStatement().close();
+			resultSet.getStatement().close();
 			return monsters;
 		} catch (SQLException exception) {
 			throw new GameException(exception.getMessage());
