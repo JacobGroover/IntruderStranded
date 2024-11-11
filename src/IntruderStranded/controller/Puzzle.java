@@ -1,19 +1,24 @@
 package IntruderStranded.controller;
 
+import IntruderStranded.model.RoomDB;
+
 public abstract class Puzzle implements RoomEvent {
 	private int id;
 	int puzzleCounter;
 
+
 	public Puzzle(int id) {
 		this.id = id;
+
 	}
 
 	/**
-	 * Method: run
-	 * Abstract method to be implemented in child classes. Runs the primary functionality of a puzzle.
-	 * @param cmd
-	 */
-	abstract String run(String cmd);
+     * Method: run
+     * Abstract method to be implemented in child classes. Runs the primary functionality of a puzzle.
+     *
+     * @param cmd
+     */
+	abstract void run(String cmd);
 
 	/**
 	 * Method: setupPuzzle
