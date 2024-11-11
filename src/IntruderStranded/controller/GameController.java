@@ -5,7 +5,6 @@ import IntruderStranded.model.DBService;
 import IntruderStranded.model.GameDBCreate;
 import IntruderStranded.model.SQLiteDB;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
@@ -36,7 +35,7 @@ public class GameController implements Observer<Commands> {
 	 */
 	public GameController() {
 		commands = new AuthenticationCommands();
-		getIntroText();
+		storeIntroText();
 	}
 
 	/**
@@ -93,7 +92,7 @@ public class GameController implements Observer<Commands> {
 	 * Calls commands.getIntroText() to retrieve the intro text for a Commands class.
 	 * Stores the text in the introText class variable.
 	 */
-	private void getIntroText() {introText = commands.getIntroText();}
+	private void storeIntroText() {introText = commands.getIntroText();}
 
 	/**
 	 * Method: onUpdate
@@ -108,7 +107,7 @@ public class GameController implements Observer<Commands> {
 	public void onUpdate(Commands newGameState) {
 		commands = newGameState;
 		commands.addObserver(this);
-		getIntroText();
+		storeIntroText();
 	}
 
 }
