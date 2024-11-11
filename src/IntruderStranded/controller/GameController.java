@@ -91,8 +91,7 @@ public class GameController implements Observer<Commands> {
 	 * Stores the text in the introText class variable.
 	 */
 	private void getIntroText() {
-		// TODO - implement GameController.getIntroText
-		throw new UnsupportedOperationException();
+		introText = commands.getIntroText();
 	}
 
 	/**
