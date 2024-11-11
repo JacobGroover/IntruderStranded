@@ -102,7 +102,7 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 		answerWord = planets.get(random.nextInt(planets.size()));
 
 		scrambledWord = scrambleWord(answerWord);
-		
+
 		puzzleCounter = -1;
 	}
 
