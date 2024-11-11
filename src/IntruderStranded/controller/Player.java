@@ -111,7 +111,7 @@ public class Player extends Entity {
 	 * @return An empty optional if the login is invalid, otherwise, an optional containing the
 	 * id of the player with that username and password.
 	 */
-	Optional<Integer> checkLogin(String username, String password) throws GameException {
+	static Optional<Integer> checkLogin(String username, String password) throws GameException {
 		return pdb.checkLogin(username, password);
 	}
 

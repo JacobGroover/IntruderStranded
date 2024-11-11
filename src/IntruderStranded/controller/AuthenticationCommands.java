@@ -2,6 +2,8 @@ package IntruderStranded.controller;
 
 import IntruderStranded.gameExceptions.*;
 
+import java.util.Optional;
+
 /**
  * Class: Authentication
  * @author Jacob Groover
@@ -116,8 +118,35 @@ public class AuthenticationCommands extends Commands {
 	 * @param command
 	 */
 	private String login(String command) throws GameException {
-		// TODO - implement AuthenticationCommands.login
-		throw new UnsupportedOperationException();
+		StringBuilder text = new StringBuilder();
+		if (!isLoggingIn) {
+			isLoggingIn = true;
+			return text.append("Username: ").toString();
+		} else if (username == null) {
+			username = command;
+			return text.append("Password: ").toString();
+		} else {
+			password = command;
+
+			Optional<Integer> pID = Player.checkLogin(username, password);
+			if (pID.isPresent()) {
+				player = Player.getById(pID.get());
+				changeGameState(new MainMenuCommands(player));		// No need to reset boolean and counter, since game state changes
+				return text.append("Login Successful").toString();
+			} else {
+				text.append("Login Failed. Please Try Again.");
+				username = null;
+				password = null;
+				loginCounter++;
+				if (loginCounter == 3) {
+					text.append("If you have forgotten your user account please enter “Retrieve Username” to retrieve \n" +
+							"username, or “Forgot Password” to reset password.");
+				}
+				loginCounter = 0;
+				isLoggingIn = false;
+				return text.toString();
+			}
+		}
 	}
 
 	/**
