@@ -241,6 +241,7 @@ public class AuthenticationCommands extends Commands {
 				Retrieve Username - Get user's username with email
 				Exit - Exits the application
 				Help - This command, displays available commands
+				
 				""";
 	}
 
