@@ -241,10 +241,7 @@ public class AuthenticationCommands extends Commands {
 	 * Overrides the parent method to ensure a game cannot be loaded from the Authentication game state.
 	 */
 	@Override()
-	String loadGame() throws GameException {
-		// TODO - implement AuthenticationCommands.loadGame
-		throw new UnsupportedOperationException();
-	}
+	String loadGame() throws GameException {throw new GameException("Unrecognized command!");}
 
 	/**
 	 * Method: getIntroText
