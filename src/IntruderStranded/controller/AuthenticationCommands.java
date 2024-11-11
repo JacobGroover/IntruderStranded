@@ -60,8 +60,41 @@ public class AuthenticationCommands extends Commands {
 	 */
 	@Override()
 	String executeCommand(String command) throws GameException {
-		// TODO - implement AuthenticationCommands.executeCommand
-		throw new UnsupportedOperationException();
+		if (!isLoggingIn && !isCreatingAccount && !isResettingPassword && !isRetrievingUsername) {
+			switch (command) {
+				case "LOGIN" -> {
+					return login(command);
+				}
+				case "CREATE ACCOUNT" -> {
+					return createAccount(command);
+				}
+				case "FORGOT PASSWORD" -> {
+					return resetPassword(command);
+				}
+				case "RETRIEVE USERNAME" -> {
+					return retrieveUsername(command);
+				}
+				case "HELP" -> {
+					return help();
+				}
+				case "EXIT" -> {
+					return exit(command);
+				}
+				default -> throw new GameException("Unrecognized command!");
+			}
+		} else if (command.equals("EXIT")) {
+			return exit(command);
+		} else if (isLoggingIn) {
+			return login(command);
+		} else if (isCreatingAccount) {
+			return createAccount(command);
+		} else if (isResettingPassword) {
+			return resetPassword(command);
+		} else if (isRetrievingUsername) {
+			return retrieveUsername(command);
+		} else {
+			throw new GameException("Unrecognized command!");
+		}
 	}
 
 	/**
