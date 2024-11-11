@@ -77,8 +77,12 @@ public class GameController implements Observer<Commands> {
 	 * @param command
 	 */
 	public String executeCommand(String command) throws GameException {
-		// TODO - implement GameController.executeCommand
-		throw new UnsupportedOperationException();
+		// Instantiate String for storing return String from controller package
+		StringBuilder response = new StringBuilder(commands.executeCommand(command));
+		if (!(introText == null)) {
+			response.append(displayIntroText());
+		}
+		return response.toString();
 	}
 
 	/**
