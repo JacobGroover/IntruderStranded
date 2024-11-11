@@ -93,14 +93,16 @@ public class Player extends Entity {
 
 	/**
 	 * Method: createAccount
-	 * Creates a new player with the given username, password, and email.
+	 * Calls PlayerDB to create a new player with the given username, password, and email.
+	 * Returns a boolean indicating true if the account was successfully created, or false if the account
+	 * already exists.
 	 * @param username The username to use.
 	 * @param password The password to use.
 	 * @param email The email to use.
 	 * @throws GameException
 	 */
-	static void createAccount(String username, String password, String email) throws GameException {
-		pdb.addPlayer(username, password, email);
+	static boolean createAccount(String username, String password, String email) throws GameException {
+		return pdb.addPlayer(username, password, email);
 	}
 
 	/**

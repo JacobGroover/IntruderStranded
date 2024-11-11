@@ -166,25 +166,53 @@ public class AuthenticationCommands extends Commands {
 	 * If email is null, player is prompted for an email address. If email address is more than 20
 	 * characters or does not contain both a "." character and an "@" character, then return "Email
 	 * must contain a '.' and '@' character, and be at most 20 characters long."
-	 * On valid email entry, set isCreatingAccount boolean to false
+	 * On valid email entry, sets isCreatingAccount boolean to false and
+	 * sets username, password, and email back to null
 	 * 
 	 * On valid email entry, create the account by calling
-	 * GameDBCreate.createAccount(username, password, email) and return
+	 * Player.createAccount(username, password, email) and return
 	 * "Successfully created account. Please login to continue."
-	 * If an account with the same username or email already exists, then
-	 * GameDBCreate.createAccount should throw a GameException "Account already exists,
-	 * please try logging in."
-	 * This GameException is caught in AuthenticationCommands createAccount method. When
-	 * caught, sets username, password, and email back to null
-	 * 
-	 * 
-	 * During this process, valid username, password, and email are stored in class Strings.
-	 * When all are valid, stores them in the database, then sets them back to null
+	 * If an account with the same username or email already exists, return
+	 * "Account already exists, please try logging in."
+	 *
 	 * @param command
 	 */
 	private String createAccount(String command) throws GameException {
-		// TODO - implement AuthenticationCommands.createAccount
-		throw new UnsupportedOperationException();
+		StringBuilder text = new StringBuilder();
+		if (!isCreatingAccount) {
+			isCreatingAccount = true;
+			text.append("Username: ");
+		} else if (username == null) {
+			if (command.length() < 4 || command.length() > 10) {
+				text.append("Username must be between 4 and 10 characters long.\n\nUsername: ");
+			} else {
+				username = command;
+				text.append("Password: ");
+			}
+		} else if (password == null) {
+			if (command.length() < 8 || command.length() > 12) {
+				text.append("Password must be between 8 and 12 characters long.\n\nPassword: ");
+			} else {
+				password = command;
+				text.append("Email: ");
+			}
+		} else if (email == null) {
+			if (command.length() > 20 || !command.contains("@") || !command.contains(".")) {
+				text.append("Email must be 20 characters or less and contain a '.' and a '@'\n\nEmail: ");
+			} else {
+				email = command;
+				if (Player.createAccount(username, password, email)) {
+					text.append("Successfully created account. Please login to continue.");
+				} else {
+					text.append("Account already exists, please try logging in.");
+				}
+				username = null;
+				password = null;
+				email = null;
+				isCreatingAccount = false;
+			}
+		}
+		return text.toString();
 	}
 
 	/**
