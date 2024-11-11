@@ -1,6 +1,7 @@
 package IntruderStranded.controller;
 
 import IntruderStranded.gameExceptions.*;
+import IntruderStranded.model.GameDBCreate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,15 +91,23 @@ public abstract class Commands {
 
 	/**
 	 * Method: loadGame
-	 * Loads a saved game from the database for the current player.
+	 * Loads a saved game from the database for the current player after calling GameDBCreate gameExists method.
 	 * If the database does not have a saved game for the current player, return "No save has been made."
-	 * If the database has a saved game for the current player, then load that saved game by calling
-	 * GameDBCreate.loadGame method, and call the changeGameState method to change the game state
-	 * to GameplayCommands if it is not already.
+	 * If the database has a saved game for the current player, then gameExists method will load that saved game.
+	 * This method will then call the changeGameState method to change the game state
+	 * to GameplayCommands.
 	 */
 	String loadGame() throws GameException {
-		// TODO - implement Commands.loadGame
-		throw new UnsupportedOperationException();
+		GameDBCreate gdb = new GameDBCreate();
+
+		if (gdb.gameExists(player.getID())) {
+			changeGameState(new GameplayCommands(player));
+
+			// return a blank String to trigger GameController to append new intro text for the changed game state
+			return "";
+		} else {
+			return "No save has been made.";
+		}
 	}
 
 	/**
