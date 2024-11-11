@@ -6,6 +6,8 @@ import IntruderStranded.model.GameDBCreate;
 import IntruderStranded.model.SQLiteDB;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.SQLException;
 
 /**
@@ -23,6 +25,8 @@ public class GameController implements Observer<Commands> {
 
 	private Commands commands;
 	private String introText;
+
+	private static final String DB_PATH = "IntruderStranded.db";
 
 	/**
 	 * No-Argument Constructor for the GameController class
@@ -42,13 +46,12 @@ public class GameController implements Observer<Commands> {
 	 * by calling GameDBCreate buildTables().
 	 */
 	public void start() throws GameException {
-		File dbFile = new File("IntruderStranded.db");
         try {
-            DBService.start(new SQLiteDB(dbFile.getPath(), false));
+            DBService.start(new SQLiteDB(DB_PATH, false));
         } catch (SQLException sqle) {
             throw new GameException(sqle.getMessage());
         }
-        if (!dbFile.exists()) {
+        if (Files.notExists(Path.of(DB_PATH))) {
 			GameDBCreate gdb = new GameDBCreate();
 			gdb.buildTables();
 		}
@@ -79,7 +82,7 @@ public class GameController implements Observer<Commands> {
 	public String executeCommand(String command) throws GameException {
 		// Instantiate String for storing return String from controller package
 		StringBuilder response = new StringBuilder(commands.executeCommand(command));
-		if (!(introText == null)) {
+		if (introText != null) {
 			response.append(displayIntroText());
 		}
 		return response.toString();
@@ -90,9 +93,7 @@ public class GameController implements Observer<Commands> {
 	 * Calls commands.getIntroText() to retrieve the intro text for a Commands class.
 	 * Stores the text in the introText class variable.
 	 */
-	private void getIntroText() {
-		introText = commands.getIntroText();
-	}
+	private void getIntroText() {introText = commands.getIntroText();}
 
 	/**
 	 * Method: onUpdate

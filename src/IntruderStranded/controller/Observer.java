@@ -18,6 +18,6 @@ public interface Observer<T> {
 	 * Updates subscribers to this Observer interface. Implementation varies between subscribers.
 	 * @param arg
 	 */
-	abstract void onUpdate(T arg);
+	void onUpdate(T arg);
 
 }
