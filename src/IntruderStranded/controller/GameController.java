@@ -1,13 +1,19 @@
 package IntruderStranded.controller;
 
 import IntruderStranded.gameExceptions.*;
+import IntruderStranded.model.DBService;
+import IntruderStranded.model.GameDBCreate;
+import IntruderStranded.model.SQLiteDB;
+
+import java.io.File;
+import java.sql.SQLException;
 
 /**
  * Class: GameController
  * @author Jacob Groover
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
- * Written: October 19th, 2024
+ * Written: November 6th, 2024
  * 
  * This class – Is the UI to controller interface for Intruder Stranded.
  * All user interactions will be sent to this class to be sent on to Commands for further processing.
@@ -15,28 +21,37 @@ import IntruderStranded.gameExceptions.*;
  */
 public class GameController implements Observer<Commands> {
 
-	private Commands commands = new AuthenticationCommands();
+	private Commands commands;
 	private String introText;
 
 	/**
-	 * Method: GameController
 	 * No-Argument Constructor for the GameController class
 	 * Instantiates the Commands object for the game as an Authentication object to force login authentication
 	 * from the user after the user launches the game application.
+	 * Calls getIntroText method to assign introText from AuthenticationCommands.
 	 */
 	public GameController() {
-		// TODO - implement GameController.GameController
-		throw new UnsupportedOperationException();
+		commands = new AuthenticationCommands();
+		getIntroText();
 	}
 
 	/**
 	 * Method : start
+	 * Assigns the filepath for the database and starts DBService.
 	 * Checks to see if the DB field exists and if not creates it
 	 * by calling GameDBCreate buildTables().
 	 */
 	public void start() throws GameException {
-		// TODO - implement GameController.start
-		throw new UnsupportedOperationException();
+		File dbFile = new File("IntruderStranded.db");
+        try {
+            DBService.start(new SQLiteDB(dbFile.getPath(), false));
+        } catch (SQLException sqle) {
+            throw new GameException(sqle.getMessage());
+        }
+        if (!dbFile.exists()) {
+			GameDBCreate gdb = new GameDBCreate();
+			gdb.buildTables();
+		}
 	}
 
 	/**
