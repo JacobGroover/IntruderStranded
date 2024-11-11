@@ -232,8 +232,16 @@ public class AuthenticationCommands extends Commands {
 	 */
 	@Override()
 	String help() {
-		// TODO - implement AuthenticationCommands.help
-		throw new UnsupportedOperationException();
+		return """
+				Account Management Commands
+				
+				Login - Enter your username and password
+				Create Account - Sign up with username, password, and email
+				Forgot Password - Reset user's password
+				Retrieve Username - Get user's username with email
+				Exit - Exits the application
+				Help - This command, displays available commands
+				""";
 	}
 
 	/**
