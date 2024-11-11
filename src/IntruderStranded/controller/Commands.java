@@ -1,14 +1,16 @@
 package IntruderStranded.controller;
 
-import java.util.*;
 import IntruderStranded.gameExceptions.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class: Commands
  * @author Jacob Groover
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
- * Written: Oct 20, 2024
+ * Written: November 7th, 2024
  * 
  * This class – Handles commands from the user. The command is parsed, type of command determined and
  * then routed to correct methods to handle the command.
@@ -25,8 +27,7 @@ public abstract class Commands {
 	 * Instantiates the observers List as an ArrayList
 	 */
 	Commands() {
-		// TODO - implement Commands.Commands
-		throw new UnsupportedOperationException();
+		observers = new ArrayList<Observer<Commands>>();
 	}
 
 	/**
