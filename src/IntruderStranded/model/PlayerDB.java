@@ -81,6 +81,7 @@ public class PlayerDB implements InventoryDB {
 			}
 			DBService.getDB().updatePrepared("INSERT INTO Player (Username, Password, Email, CurrentRoom, PreviousRoom, Weapon, Health, Score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
 					username, password, email, 1, -1, -1, 100, 0);
+			DBService.getDB().commitTransaction();
 			return true;
 		} catch (SQLException exception) {
 			throw new GameException(exception.getMessage());
@@ -163,6 +164,7 @@ public class PlayerDB implements InventoryDB {
 	public void updatePassword(String username, String password) throws GameException {
 		try {
 			DBService.getDB().updatePrepared("UPDATE Player SET Password = ? WHERE Username = ?", password, username);
+			DBService.getDB().commitTransaction();
 		} catch (SQLException sqle) {
 			throw new GameException(sqle.getMessage());
 		}
