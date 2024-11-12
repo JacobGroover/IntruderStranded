@@ -1,28 +1,37 @@
 package IntruderStranded.controller;
 
+import IntruderStranded.gameExceptions.GameException;
+import IntruderStranded.model.RewardDB;
+import IntruderStranded.model.RoomDB;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 
 /**
  * Class: CombinationPuzzle
- * @author
+ * @author Hannah Jensen
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
- * Written: October 25th, 2024
+ * Written: November 12th, 2024
  * This class details the implementation for the CombinationPuzzle
  */
 public class CombinationPuzzle extends Puzzle {
 
 	private String answerNumber;
-	private String unknownNumber;
+	private List<String> guessArray;
+	private List<String> answerArray;
+	private final RoomDB roomDB;
 
 	/**
 	 * No-argument Constructor for CombinationPuzzle class
 	 * Calls setupPuzzle() method to assign the numberX, answerNumber, and puzzleCounter class attributes.
 	 */
-	public CombinationPuzzle(int id) {
+	public CombinationPuzzle(int id, int roomID, int playerID) {
 		super(id);
-		// TODO - implement CombinationPuzzle.CombinationPuzzle
-		throw new UnsupportedOperationException();
+		roomDB = new RoomDB(roomID, playerID);
+		setupPuzzle();
 	}
 
 	/**
@@ -37,31 +46,117 @@ public class CombinationPuzzle extends Puzzle {
      * If the player enters text that is not a number between 0 and 9, throw a GameException with the
      * message, "Please enter a number between 0 and 9."
      * After every guess, unknownNumber is displayed again.
-     * When a correct letter is guessed, unknownNumber is updated to show everywhere that digit appears
+     * When a correct letter is guessed, guessArray is updated to show everywhere that digit appears
      * in answerNumber.
      * If the puzzleCounter reaches 5, call setupPuzzle method and return "You lost the puzzle."
      * If all digits are guessed, return "You have successfully solved the puzzle!" and call getRewards
      * method from the implemented RoomEvent interface.
      *
-     * @param cmd
      */
 	@Override()
     void run(String cmd) {
-		// TODO - implement CombinationPuzzle.run
-		throw new UnsupportedOperationException();
+		Scanner input = new Scanner(System.in);
+		String guess = input.nextLine();
+
+		if(puzzleCounter == -1) {
+			System.out.println("To open the chest, enter a number between 0 and 9 to guess\n" +
+					"the combination: ___");
+			puzzleCounter++;
+		}
+
+		if(puzzleCounter >= 5) {
+			System.out.println("You've lost the puzzle, and cannot open the chest.");
+			setupPuzzle();
+		}
+
+		try {
+			int guessInt = Integer.parseInt(guess);
+			boolean guessIsHot = isHot(guessInt);
+
+			if (guessInt < 0 || guessInt > 9) {
+				throw new GameException("Please enter a number between 0 and 9.");
+			}
+
+			boolean correctGuess = false;
+
+
+			while (puzzleCounter <= 5) {
+				for (int i = 0; i < answerNumber.length(); i++) {
+					if (answerNumber.charAt(i) == guess.charAt(i)) {
+						guessArray.set(i, answerNumber.substring(i, i + 1));
+						correctGuess = true;
+					}
+				}
+
+				puzzleCounter++;
+
+
+				if (!correctGuess) {
+					System.out.println("Incorrect number, try again. \n You have " + (puzzleCounter-1) + " guesses left.");
+					if(guessIsHot) {
+						System.out.println("You were close to a digit in the combination");
+					}else {
+						System.out.println("You were not close to a digit in the combination.");
+					}
+					System.out.print(guessArray);
+					System.out.println("Enter a number between 0 and 9:");
+
+				} else if (answerArray.equals(guessArray)) {
+					System.out.println("You've solved the puzzle, and can now open the chest!");
+					getRewards();
+					break;
+
+				} else {
+					System.out.print(guessArray);
+					System.out.println("Enter a number between 0 and 9:");
+				}
+
+			}
+
+		} catch (NumberFormatException | GameException ex) {
+			System.out.println("Please enter a valid number.");
+		}
+
+	}
+
+	/**
+	 * Method: isHot
+	 * @return boolean
+	 * Checks to see if guessInt is +- one of the numbers in answerArray
+	 */
+	private boolean isHot(int guessInt) {
+        for (String s : answerArray) {
+            int number = Integer.parseInt(s);
+            if (number + 1 == guessInt || number - 1 == guessInt) {
+                return true;
+            }
+        }
+		return false;
 	}
 
 	/**
 	 * Method: setupPuzzle
 	 * Generates a random integer between 100 and 999 and assigns it to the answerNumber class attribute after converting it to a String.
-	 * Once the number String is assigned, that number is then replaced with underscores and saved to the
-	 * unknownNumber class attribute, separated by spaces.
+	 * answerNumber is put into an ArrayList, answerArray.
+	 * guessArray is set to "_", "_", "_"
 	 * Sets the puzzleCounter class attribute to -1.
 	 */
 	@Override()
 	void setupPuzzle() {
-		// TODO - implement CombinationPuzzle.setupPuzzle
-		throw new UnsupportedOperationException();
+		Random random = new Random();
+		answerNumber = String.valueOf(random.nextInt(900) + 100);
+		puzzleCounter = -1;
+
+		answerArray = new ArrayList<>();
+		for(int i = 0; i < answerNumber.length(); i++) {
+			answerArray.add(String.valueOf(answerNumber.charAt(i)));
+		}
+
+		guessArray = new ArrayList<>();
+		guessArray.add("_");
+		guessArray.add("_");
+		guessArray.add("_");
+
 	}
 
 	@Override
@@ -75,8 +170,11 @@ public class CombinationPuzzle extends Puzzle {
 	 */
 	@Override()
 	public List<Item> getRewards() {
-		// TODO - implement CombinationPuzzle.getRewards
-		throw new UnsupportedOperationException();
-	}
+        try {
+            return RewardDB.getRewards();
+        } catch (GameException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
