@@ -93,17 +93,20 @@ public class Player extends Entity {
 
 	/**
 	 * Method: createAccount
-	 * Creates a new player with the given username, password, and email.
+	 * Calls PlayerDB to create a new player with the given username, password, and email.
+	 * Returns a boolean indicating true if the account was successfully created, or false if the account
+	 * already exists.
 	 * @param username The username to use.
 	 * @param password The password to use.
 	 * @param email The email to use.
 	 * @throws GameException
 	 */
-	static void createAccount(String username, String password, String email) throws GameException {
-		pdb.addPlayer(username, password, email);
+	static boolean createAccount(String username, String password, String email) throws GameException {
+		return pdb.addPlayer(username, password, email);
 	}
 
 	/**
+	 * Method: checkLogin
 	 * Checks if a player exists in the database with a username and password equal to
 	 * the given username and password.
 	 * @param username The username to check for.
@@ -111,8 +114,57 @@ public class Player extends Entity {
 	 * @return An empty optional if the login is invalid, otherwise, an optional containing the
 	 * id of the player with that username and password.
 	 */
-	Optional<Integer> checkLogin(String username, String password) throws GameException {
+	static Optional<Integer> checkLogin(String username, String password) throws GameException {
 		return pdb.checkLogin(username, password);
+	}
+
+	/**
+	 * Method: checkUsernameField
+	 * Calls PlayerDB to check if a specific username exists in the database. Used when a
+	 * player attempts to recover password from AuthenticationCommands.
+	 * @param username The text to look for in the username field.
+	 * @return Boolean indicating if the text was found in the given field
+	 * @throws GameException
+	 */
+	static boolean checkUsernameField(String username) throws GameException {
+		return pdb.checkUsernameField(username);
+	}
+
+	/**
+	 * Method: checkEmailField
+	 * Calls PlayerDB to check if a specific email associated with a username
+	 * exists in the database. Used when a player attempts to recover username
+	 * from AuthenticationCommands.
+	 * @param email The text to look for in the email field.
+	 * @return Boolean indicating if the text was found in the given field
+	 * @throws GameException
+	 */
+	static boolean checkEmailField(String email) throws GameException {
+		return pdb.checkEmailField(email);
+	}
+
+	/**
+	 * Method: updatePassword
+	 * Updates the password for a player account. Called from AuthenticationCommands when
+	 * a player updates password for a specific username they forgot the password for.
+	 * @param username Username to update password for
+	 * @param password New password
+	 * @throws GameException
+	 */
+	static void updatePassword(String username, String password) throws GameException {
+		pdb.updatePassword(username, password);
+	}
+
+	/**
+	 * Method: retrieveUsername
+	 * Calls PlayerDB to retrieve a username from database associated with a given email. Used by AuthenticationCommands
+	 * to recover a username for a user.
+	 * @param email Email associated with a username in database
+	 * @return Username associated with the email
+	 * @throws GameException
+	 */
+	static String retrieveUsername(String email) throws GameException {
+		return pdb.retrieveUsername(email);
 	}
 
 	/**

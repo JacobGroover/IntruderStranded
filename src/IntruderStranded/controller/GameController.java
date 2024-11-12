@@ -35,6 +35,7 @@ public class GameController implements Observer<Commands> {
 	 */
 	public GameController() {
 		commands = new AuthenticationCommands();
+		commands.addObserver(this);
 		storeIntroText();
 	}
 
@@ -45,12 +46,13 @@ public class GameController implements Observer<Commands> {
 	 * by calling GameDBCreate buildTables().
 	 */
 	public void start() throws GameException {
+		boolean notExists = Files.notExists(Path.of(DB_PATH));
         try {
             DBService.start(new SQLiteDB(DB_PATH, false));
         } catch (SQLException sqle) {
             throw new GameException(sqle.getMessage());
         }
-        if (Files.notExists(Path.of(DB_PATH))) {
+        if (notExists) {
 			GameDBCreate gdb = new GameDBCreate();
 			gdb.buildTables();
 		}

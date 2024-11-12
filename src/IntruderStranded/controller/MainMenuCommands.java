@@ -7,13 +7,21 @@ import IntruderStranded.gameExceptions.*;
  * @author Jacob Groover
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
- * Written: October 19th, 2024
+ * Written: November 8th, 2024
  * 
  * This class – Is the Commands subclass for Main Menu Commands. Handles all user commands sent
  * from GameController and returns appropriate replies or exceptions.
  * Relevant while the player is logged in, but not yet in an active game session.
  */
 public class MainMenuCommands extends Commands {
+
+	/**
+	 * 1-argument constructor for MainMenuCommands
+	 * @param player
+	 */
+	public MainMenuCommands(Player player) {
+		super(player);
+	}
 
 	/**
 	 * Method: executeCommand

@@ -52,8 +52,7 @@ public class IntruderStranded {
 			} catch (GameException ge) {
 				System.out.println(ge.getMessage());
 			}
-		} while (!response.equalsIgnoreCase("Exit"));
-		System.out.println("Exiting Game");
+		} while (!response.equalsIgnoreCase("Exiting Game"));
 	}
 
 	/**

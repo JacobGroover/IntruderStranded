@@ -1,14 +1,17 @@
 package IntruderStranded.controller;
 
-import java.util.*;
 import IntruderStranded.gameExceptions.*;
+import IntruderStranded.model.GameDBCreate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class: Commands
  * @author Jacob Groover
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
- * Written: Oct 20, 2024
+ * Written: November 7th, 2024
  * 
  * This class – Handles commands from the user. The command is parsed, type of command determined and
  * then routed to correct methods to handle the command.
@@ -25,8 +28,7 @@ public abstract class Commands {
 	 * Instantiates the observers List as an ArrayList
 	 */
 	Commands() {
-		// TODO - implement Commands.Commands
-		throw new UnsupportedOperationException();
+		observers = new ArrayList<>();
 	}
 
 	/**
@@ -35,8 +37,8 @@ public abstract class Commands {
 	 * @param player
 	 */
 	Commands(Player player) {
-		// TODO - implement Commands.Commands
-		throw new UnsupportedOperationException();
+		this();
+		this.player = player;
 	}
 
 	/**
@@ -59,8 +61,7 @@ public abstract class Commands {
 	 * @param command
 	 */
 	String exit(String command) throws GameException {
-		// TODO - implement Commands.exit
-		throw new UnsupportedOperationException();
+		return "\nExiting Game";
 	}
 
 	/**
@@ -71,8 +72,9 @@ public abstract class Commands {
 	 * @param command
 	 */
 	void changeGameState(Commands command) {
-		// TODO - implement Commands.changeGameState
-		throw new UnsupportedOperationException();
+		for (Observer<Commands> observer : observers) {
+			observer.onUpdate(command);
+		}
 	}
 
 	/**
@@ -81,21 +83,28 @@ public abstract class Commands {
 	 * @param observer
 	 */
 	void addObserver(Observer<Commands> observer) {
-		// TODO - implement Commands.addObserver
-		throw new UnsupportedOperationException();
+		observers.add(observer);
 	}
 
 	/**
 	 * Method: loadGame
-	 * Loads a saved game from the database for the current player.
+	 * Loads a saved game from the database for the current player after calling GameDBCreate gameExists method.
 	 * If the database does not have a saved game for the current player, return "No save has been made."
-	 * If the database has a saved game for the current player, then load that saved game by calling
-	 * GameDBCreate.loadGame method, and call the changeGameState method to change the game state
-	 * to GameplayCommands if it is not already.
+	 * If the database has a saved game for the current player, then gameExists method will load that saved game.
+	 * This method will then call the changeGameState method to change the game state
+	 * to GameplayCommands.
 	 */
 	String loadGame() throws GameException {
-		// TODO - implement Commands.loadGame
-		throw new UnsupportedOperationException();
+		GameDBCreate gdb = new GameDBCreate();
+
+		if (gdb.gameExists(player.getID())) {
+			changeGameState(new GameplayCommands(player));
+
+			// return a blank String to trigger GameController to append new intro text for the changed game state
+			return "";
+		} else {
+			return "No save has been made.";
+		}
 	}
 
 	/**
