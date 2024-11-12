@@ -70,7 +70,7 @@ public class PlayerDB implements InventoryDB {
 	 */
 	public void addPlayer(String username, String password, String email) throws GameException {
 		try {
-			DBService.getDB().updatePrepared("INSERT INTO Player (Username, Password, Email, CurrentRoom, PreviousRoom, Weapon, Health, Score) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			DBService.getDB().updatePrepared("INSERT INTO Player (Username, Password, Email, CurrentRoom, PreviousRoom, Weapon, Health, Score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
 					username, password, email, 1, -1, -1, 100, 0);
 		} catch (SQLException exception) {
 			throw new GameException(exception.getMessage());
