@@ -30,19 +30,10 @@ public class AuthenticationCommands extends Commands {
 	/**
 	 * Method: AuthenticationCommands
 	 * No-Argument Constructor for the AuthenticationCommands class
-	 * Calls parent no-argument constructor, then initializes counters to 0 and booleans to false.
-	 * Sets username, password, and email Strings to null
+	 * Calls parent no-argument constructor
 	 */
 	AuthenticationCommands() {
 		super();
-		loginCounter = 0;
-		isLoggingIn = false;
-		isCreatingAccount = false;
-		isResettingPassword = false;
-		isRetrievingUsername = false;
-		username = null;
-		password = null;
-		email = null;
 	}
 
 	/**
@@ -63,29 +54,15 @@ public class AuthenticationCommands extends Commands {
 	@Override()
 	String executeCommand(String command) throws GameException {
 		if (!isLoggingIn && !isCreatingAccount && !isResettingPassword && !isRetrievingUsername) {
-			switch (command) {
-				case "LOGIN" -> {
-					return login(command);
-				}
-				case "CREATE ACCOUNT" -> {
-					return createAccount(command);
-				}
-				case "FORGOT PASSWORD" -> {
-					return resetPassword(command);
-				}
-				case "RETRIEVE USERNAME" -> {
-					return retrieveUsername(command);
-				}
-				case "HELP" -> {
-					return help();
-				}
-				case "EXIT" -> {
-					return exit(command);
-				}
-				default -> throw new GameException("Unrecognized command!");
-			}
-		} else if (command.equals("EXIT")) {
-			return exit(command);
+            return switch (command) {
+                case "LOGIN" -> login(command);
+                case "CREATE ACCOUNT" -> createAccount(command);
+                case "FORGOT PASSWORD" -> resetPassword(command);
+                case "RETRIEVE USERNAME" -> retrieveUsername(command);
+                case "HELP" -> help();
+                case "EXIT" -> exit(command);
+                default -> throw new GameException("Unrecognized command!");
+            };
 		} else if (isLoggingIn) {
 			return login(command);
 		} else if (isCreatingAccount) {
@@ -97,6 +74,9 @@ public class AuthenticationCommands extends Commands {
 		} else {
 			throw new GameException("Unrecognized command!");
 		}
+//		else {
+//			return retrieveUsername(command);
+//		}
 	}
 
 	/**
@@ -118,13 +98,12 @@ public class AuthenticationCommands extends Commands {
 	 * @param command
 	 */
 	private String login(String command) throws GameException {
-		StringBuilder text = new StringBuilder();
 		if (!isLoggingIn) {
 			isLoggingIn = true;
-			return text.append("\nUsername: ").toString();
+			return "\nUsername: ";
 		} else if (username == null) {
 			username = command;
-			return text.append("Password: ").toString();
+			return "Password: ";
 		} else {
 			password = command;
 
@@ -132,17 +111,17 @@ public class AuthenticationCommands extends Commands {
 			if (pID.isPresent()) {
 				player = Player.getById(pID.get());
 				changeGameState(new MainMenuCommands(player));		// No need to reset boolean and counter, since game state changes
-				return text.append("Login Successful").toString();
+				return "Login Successful";
 			} else {
-				text.append("Login Failed. Please Try Again.");
+				StringBuilder text = new StringBuilder("Login Failed. Please Try Again.");
 				username = null;
 				password = null;
 				loginCounter++;
 				if (loginCounter == 3) {
 					text.append("If you have forgotten your user account please enter “Retrieve Username” to retrieve \n" +
 							"username, or “Forgot Password” to reset password.");
+					loginCounter = 0;
 				}
-				loginCounter = 0;
 				isLoggingIn = false;
 				return text.toString();
 			}
@@ -178,33 +157,34 @@ public class AuthenticationCommands extends Commands {
 	 * @param command
 	 */
 	private String createAccount(String command) throws GameException {
-		StringBuilder text = new StringBuilder();
+//		StringBuilder text = new StringBuilder();
+		String text = "";
 		if (!isCreatingAccount) {
 			isCreatingAccount = true;
-			text.append("\nUsername: ");
+			text += "\nUsername: ";
 		} else if (username == null) {
 			if (command.length() < 4 || command.length() > 10) {
-				text.append("Username must be between 4 and 10 characters long.\n\nUsername: ");
+				text += "Username must be between 4 and 10 characters long.\n\nUsername: ";
 			} else {
 				username = command;
-				text.append("Password: ");
+				text += "Password: ";
 			}
 		} else if (password == null) {
 			if (command.length() < 8 || command.length() > 12) {
-				text.append("Password must be between 8 and 12 characters long.\n\nPassword: ");
+				text += "Password must be between 8 and 12 characters long.\n\nPassword: ";
 			} else {
 				password = command;
-				text.append("Email: ");
+				text += "Email: ";
 			}
 		} else if (email == null) {
 			if (command.length() > 20 || !command.contains("@") || !command.contains(".")) {
-				text.append("Email must be 20 characters or less and contain a '.' and a '@'\n\nEmail: ");
+				text += "Email must be 20 characters or less and contain a '.' and a '@'\n\nEmail: ";
 			} else {
 				email = command;
 				if (Player.createAccount(username, password, email)) {
-					text.append("Successfully created account. Please login to continue.");
+					text += "Successfully created account. Please login to continue.";
 				} else {
-					text.append("Account already exists, please try logging in.");
+					text += "Account already exists, please try logging in.";
 				}
 				username = null;
 				password = null;
@@ -212,7 +192,7 @@ public class AuthenticationCommands extends Commands {
 				isCreatingAccount = false;
 			}
 		}
-		return text.toString();
+		return text;
 	}
 
 	/**
@@ -228,31 +208,31 @@ public class AuthenticationCommands extends Commands {
 	 * @param command
 	 */
 	private String resetPassword(String command) throws GameException {
-		StringBuilder text = new StringBuilder();
+		String text = "";
 		if (!isResettingPassword) {
 			isResettingPassword = true;
-			text.append("\nPlease Enter Username: ");
+			text += "\nPlease Enter Username: ";
 		} else if (username == null) {
 			if (Player.checkAccountField(command, 1)) {
 				username = command;
-				text.append("Username found.\nPassword: ");
+				text += "Username found.\\nPassword: ";
 			} else {
-				text.append("Username does not exist.");
 				isResettingPassword = false;
+				text += "Username does not exist.";
 			}
 		} else if (password == null) {
 			if (command.length() < 8 || command.length() > 12) {
-				text.append("Password must be between 8 and 12 characters long.\n\nPassword: ");
+				text += "Password must be between 8 and 12 characters long.\n\nPassword: ";
 			} else {
 				password = command;
 				Player.updatePassword(username, password);
-				text.append("Successfully reset password.");
+				text += "Successfully reset password.";
 				isResettingPassword = false;
 				username = null;
 				password = null;
 			}
 		}
-		return text.toString();
+		return text;
 	}
 
 	/**
@@ -267,23 +247,21 @@ public class AuthenticationCommands extends Commands {
 	 * @param command
 	 */
 	private String retrieveUsername(String command) throws GameException {
-		StringBuilder text = new StringBuilder();
+		String text = "";
 		if (!isRetrievingUsername) {
 			isRetrievingUsername = true;
-			text.append("\nPlease Enter Email: ");
+			text += "\nPlease Enter Email: ";
 		} else if (email == null) {
 			if (Player.checkAccountField(command, 2)) {
-				email = command;
 				// retrieve username associated with email from database
-				text.append("Your username is ");
-				text.append(Player.retrieveUsername(email));
-				isRetrievingUsername = false;
+				text += "Your username is ";
+				text += Player.retrieveUsername(command);
 			} else {
-				text.append("Username not found.");
-				isRetrievingUsername = false;
+				text += "Username not found.";
 			}
+			isRetrievingUsername = false;
 		}
-		return text.toString();
+		return text;
 	}
 
 	/**
@@ -307,16 +285,8 @@ public class AuthenticationCommands extends Commands {
 				Retrieve Username - Get user's username with email
 				Exit - Exits the application
 				Help - This command, displays available commands
-				
 				""";
 	}
-
-	/**
-	 * Method: loadGame
-	 * Overrides the parent method to ensure a game cannot be loaded from the Authentication game state.
-	 */
-	@Override()
-	String loadGame() throws GameException {throw new GameException("Unrecognized command!");}
 
 	/**
 	 * Method: getIntroText

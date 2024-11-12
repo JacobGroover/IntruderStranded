@@ -135,8 +135,8 @@ public class Player extends Entity {
 	 * Method: updatePassword
 	 * Updates the password for a player account. Called from AuthenticationCommands when
 	 * a player updates password for a specific username they forgot the password for.
-	 * @param username String
-	 * @param password String
+	 * @param username Username to update password for
+	 * @param password New password
 	 * @throws GameException
 	 */
 	static void updatePassword(String username, String password) throws GameException {
@@ -147,8 +147,8 @@ public class Player extends Entity {
 	 * Method: retrieveUsername
 	 * Calls PlayerDB to retrieve a username from database associated with a given email. Used by AuthenticationCommands
 	 * to recover a username for a user.
-	 * @param email String
-	 * @return String
+	 * @param email Email associated with a username in database
+	 * @return Username associated with the email param
 	 * @throws GameException
 	 */
 	static String retrieveUsername(String email) throws GameException {

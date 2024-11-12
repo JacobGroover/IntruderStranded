@@ -28,7 +28,7 @@ public abstract class Commands {
 	 * Instantiates the observers List as an ArrayList
 	 */
 	Commands() {
-		observers = new ArrayList<Observer<Commands>>();
+		observers = new ArrayList<>();
 	}
 
 	/**
@@ -61,10 +61,7 @@ public abstract class Commands {
 	 * @param command
 	 */
 	String exit(String command) throws GameException {
-		if (command.equals("EXIT")) {
-			return command;
-		}
-		throw new GameException("Unrecognized command!");
+		return "Exiting Game";
 	}
 
 	/**

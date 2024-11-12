@@ -68,20 +68,20 @@ public class PlayerDB implements InventoryDB {
 	 * with that username and email has been created.
 	 * @param username The username for the player.
 	 * @param password The password for the player.
+	 * @return Boolean indicating whether the account was created or already exists
 	 * @param email The email for the player.
 	 */
 	public boolean addPlayer(String username, String password, String email) throws GameException {
 		try {
-			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Player WHERE Username = ? AND Email = ?", username, email);
-			boolean canCreateAccount = !resultSet.next();
+			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Player WHERE Username = ? OR Email = ?", username, email);
+			boolean exists = resultSet.next();
 			resultSet.getStatement().close();
-			if (!canCreateAccount) {
+			if (exists) {
 				return false;
-			} else {
-				DBService.getDB().updatePrepared("INSERT INTO Player (Username, Password, Email, CurrentRoom, PreviousRoom, Weapon, Health, Score) VALUES (?, ?, ?, ?, ?, ?, ?)",
-						username, password, email, 1, -1, -1, 100, 0);
-				return true;
 			}
+			DBService.getDB().updatePrepared("INSERT INTO Player (Username, Password, Email, CurrentRoom, PreviousRoom, Weapon, Health, Score) VALUES (?, ?, ?, ?, ?, ?, ?)",
+					username, password, email, 1, -1, -1, 100, 0);
+			return true;
 		} catch (SQLException exception) {
 			throw new GameException(exception.getMessage());
 		}
