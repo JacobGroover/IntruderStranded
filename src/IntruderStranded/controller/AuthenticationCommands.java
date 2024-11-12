@@ -2,12 +2,14 @@ package IntruderStranded.controller;
 
 import IntruderStranded.gameExceptions.*;
 
+import java.util.Optional;
+
 /**
  * Class: Authentication
  * @author Jacob Groover
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
- * Written: October 19th, 2024
+ * Written: November 8th, 2024
  * 
  * This class – Is the Commands subclass for Authentication Commands. Handles all user commands
  * sent from GameController and returns appropriate replies or exceptions.
@@ -28,12 +30,10 @@ public class AuthenticationCommands extends Commands {
 	/**
 	 * Method: AuthenticationCommands
 	 * No-Argument Constructor for the AuthenticationCommands class
-	 * Calls parent no-argument constructor, then initializes counters to 0 and booleans to false.
-	 * Sets username, password, and email Strings to ""
+	 * Calls parent no-argument constructor
 	 */
 	AuthenticationCommands() {
-		// TODO - implement AuthenticationCommands.AuthenticationCommands
-		throw new UnsupportedOperationException();
+		super();
 	}
 
 	/**
@@ -53,8 +53,27 @@ public class AuthenticationCommands extends Commands {
 	 */
 	@Override()
 	String executeCommand(String command) throws GameException {
-		// TODO - implement AuthenticationCommands.executeCommand
-		throw new UnsupportedOperationException();
+		if (!isLoggingIn && !isCreatingAccount && !isResettingPassword && !isRetrievingUsername) {
+            return switch (command) {
+                case "LOGIN" -> login(command);
+                case "CREATE ACCOUNT" -> createAccount(command);
+                case "FORGOT PASSWORD" -> resetPassword(command);
+                case "RETRIEVE USERNAME" -> retrieveUsername(command);
+                case "HELP" -> help();
+                case "EXIT" -> exit(command);
+                default -> throw new GameException("Unrecognized command!");
+            };
+		} else if (isLoggingIn) {
+			return login(command);
+		} else if (isCreatingAccount) {
+			return createAccount(command);
+		} else if (isResettingPassword) {
+			return resetPassword(command);
+		} else if (isRetrievingUsername) {
+			return retrieveUsername(command);
+		} else {
+			throw new GameException("Unrecognized command!");
+		}
 	}
 
 	/**
@@ -76,8 +95,34 @@ public class AuthenticationCommands extends Commands {
 	 * @param command
 	 */
 	private String login(String command) throws GameException {
-		// TODO - implement AuthenticationCommands.login
-		throw new UnsupportedOperationException();
+		if (!isLoggingIn) {
+			isLoggingIn = true;
+			return "\nUsername: ";
+		} else if (username == null) {
+			username = command;
+			return "Password: ";
+		} else {
+			password = command;
+
+			Optional<Integer> pID = Player.checkLogin(username, password);
+			if (pID.isPresent()) {
+				player = Player.getById(pID.get());
+				changeGameState(new MainMenuCommands(player));		// No need to reset boolean and counter, since game state changes
+				return "Login Successful";
+			} else {
+				StringBuilder text = new StringBuilder("Login Failed. Please Try Again.");
+				username = null;
+				password = null;
+				loginCounter++;
+				if (loginCounter == 3) {
+					text.append("If you have forgotten your user account please enter “Retrieve Username” to retrieve \n" +
+							"username, or “Forgot Password” to reset password.");
+					loginCounter = 0;
+				}
+				isLoggingIn = false;
+				return text.toString();
+			}
+		}
 	}
 
 	/**
@@ -97,25 +142,53 @@ public class AuthenticationCommands extends Commands {
 	 * If email is null, player is prompted for an email address. If email address is more than 20
 	 * characters or does not contain both a "." character and an "@" character, then return "Email
 	 * must contain a '.' and '@' character, and be at most 20 characters long."
-	 * On valid email entry, set isCreatingAccount boolean to false
+	 * On valid email entry, sets isCreatingAccount boolean to false and
+	 * sets username, password, and email back to null
 	 * 
 	 * On valid email entry, create the account by calling
-	 * GameDBCreate.createAccount(username, password, email) and return
+	 * Player.createAccount(username, password, email) and return
 	 * "Successfully created account. Please login to continue."
-	 * If an account with the same username or email already exists, then
-	 * GameDBCreate.createAccount should throw a GameException "Account already exists,
-	 * please try logging in."
-	 * This GameException is caught in AuthenticationCommands createAccount method. When
-	 * caught, sets username, password, and email back to null
-	 * 
-	 * 
-	 * During this process, valid username, password, and email are stored in class Strings.
-	 * When all are valid, stores them in the database, then sets them back to null
+	 * If an account with the same username or email already exists, return
+	 * "Account already exists, please try logging in."
+	 *
 	 * @param command
 	 */
 	private String createAccount(String command) throws GameException {
-		// TODO - implement AuthenticationCommands.createAccount
-		throw new UnsupportedOperationException();
+		String text = "";
+		if (!isCreatingAccount) {
+			isCreatingAccount = true;
+			text += "\nUsername: ";
+		} else if (username == null) {
+			if (command.length() < 4 || command.length() > 10) {
+				text += "Username must be between 4 and 10 characters long.\n\nUsername: ";
+			} else {
+				username = command;
+				text += "Password: ";
+			}
+		} else if (password == null) {
+			if (command.length() < 8 || command.length() > 12) {
+				text += "Password must be between 8 and 12 characters long.\n\nPassword: ";
+			} else {
+				password = command;
+				text += "Email: ";
+			}
+		} else if (email == null) {
+			if (command.length() > 20 || !command.contains("@") || !command.contains(".")) {
+				text += "Email must be 20 characters or less and contain a '.' and a '@'\n\nEmail: ";
+			} else {
+				email = command;
+				if (Player.createAccount(username, password, email)) {
+					text += "Successfully created account. Please login to continue.";
+				} else {
+					text += "Account already exists, please try logging in.";
+				}
+				username = null;
+				password = null;
+				email = null;
+				isCreatingAccount = false;
+			}
+		}
+		return text;
 	}
 
 	/**
@@ -126,13 +199,36 @@ public class AuthenticationCommands extends Commands {
 	 * If password is not between 8 and 12 characters, return "Password must be between 8 and 12 characters long."
 	 * If valid password entry, set the new password to the account and return "Successfully reset password."
 	 * 
-	 * Sets isResettingPassword boolean to true when method begins. Sets it back to false on valid
-	 * password reset.
+	 * Sets isResettingPassword boolean to true when method begins. Sets it back to false after a
+	 * password reset attempt.
 	 * @param command
 	 */
 	private String resetPassword(String command) throws GameException {
-		// TODO - implement AuthenticationCommands.resetPassword
-		throw new UnsupportedOperationException();
+		String text = "";
+		if (!isResettingPassword) {
+			isResettingPassword = true;
+			text += "\nPlease Enter Username: ";
+		} else if (username == null) {
+			if (Player.checkUsernameField(command)) {
+				username = command;
+				text += "Username found.\nPassword: ";
+			} else {
+				isResettingPassword = false;
+				text += "Username does not exist.";
+			}
+		} else if (password == null) {
+			if (command.length() < 8 || command.length() > 12) {
+				text += "Password must be between 8 and 12 characters long.\n\nPassword: ";
+			} else {
+				password = command;
+				Player.updatePassword(username, password);
+				text += "Successfully reset password.";
+				isResettingPassword = false;
+				username = null;
+				password = null;
+			}
+		}
+		return text;
 	}
 
 	/**
@@ -147,8 +243,21 @@ public class AuthenticationCommands extends Commands {
 	 * @param command
 	 */
 	private String retrieveUsername(String command) throws GameException {
-		// TODO - implement AuthenticationCommands.retrieveUsername
-		throw new UnsupportedOperationException();
+		String text = "";
+		if (!isRetrievingUsername) {
+			isRetrievingUsername = true;
+			text += "\nPlease Enter Email: ";
+		} else if (email == null) {
+			if (Player.checkEmailField(command)) {
+				// retrieve username associated with email from database
+				text += "Your username is ";
+				text += Player.retrieveUsername(command);
+			} else {
+				text += "Cannot find Username.";
+			}
+			isRetrievingUsername = false;
+		}
+		return text;
 	}
 
 	/**
@@ -163,18 +272,16 @@ public class AuthenticationCommands extends Commands {
 	 */
 	@Override()
 	String help() {
-		// TODO - implement AuthenticationCommands.help
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Method: loadGame
-	 * Overrides the parent method to ensure a game cannot be loaded from the Authentication game state.
-	 */
-	@Override()
-	String loadGame() throws GameException {
-		// TODO - implement AuthenticationCommands.loadGame
-		throw new UnsupportedOperationException();
+		return """
+				Account Management Commands
+				
+				Login - Enter your username and password
+				Create Account - Sign up with username, password, and email
+				Forgot Password - Reset user's password
+				Retrieve Username - Get user's username with email
+				Exit - Exits the application
+				Help - This command, displays available commands
+				""";
 	}
 
 	/**
@@ -184,8 +291,15 @@ public class AuthenticationCommands extends Commands {
 	 * list of available commands
 	 */
 	protected String getIntroText() {
-		// TODO - implement AuthenticationCommands.getIntroText
-		throw new UnsupportedOperationException();
+		return """
+                Intruder Stranded
+
+                Please enter the command "Login" or "Create Account"
+                Forgot Password "Forgot Password"
+                Forgot Username "Retrieve Username"
+                If you need help, please enter "HELP" to find more commands.
+                
+                """;
 	}
 
 }
