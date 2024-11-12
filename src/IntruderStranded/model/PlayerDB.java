@@ -73,6 +73,12 @@ public class PlayerDB implements InventoryDB {
 	 */
 	public boolean addPlayer(String username, String password, String email) throws GameException {
 		try {
+			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Player WHERE Username = ? OR Email = ?", username, email);
+			boolean exists = resultSet.next();
+			resultSet.getStatement().close();
+			if (exists) {
+				return false;
+			}
 			DBService.getDB().updatePrepared("INSERT INTO Player (Username, Password, Email, CurrentRoom, PreviousRoom, Weapon, Health, Score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
 					username, password, email, 1, -1, -1, 100, 0);
 			return true;
