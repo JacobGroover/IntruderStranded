@@ -18,7 +18,6 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 
 	private String answerWord;
 	private String scrambledWord;
-	private final RoomDB roomDB;
 
 
 	/**
@@ -26,8 +25,7 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 	 * Calls setupPuzzle() method to assign the answerWord, scrambledWord, and puzzleCounter class attributes.
 	 */
 	public UnscrambledWordsPuzzle(int id, int roomID, int playerID) {
-		super(id);
-		roomDB = new RoomDB(roomID, playerID);
+		super(id, roomID, playerID);
 		setupPuzzle();
 	}
 
@@ -127,17 +125,5 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 		return "The word is based on a planet in our solar system";
 	}
 
-	/**
-	 * Method: getRewards
-	 * Gets the rewards from completing this puzzle.
-	 */
-	@Override()
-	public List<Item> getRewards() {
-        try {
-            return RewardDB.getRewards();
-        } catch (GameException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 }

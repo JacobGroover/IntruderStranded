@@ -22,15 +22,13 @@ public class CombinationPuzzle extends Puzzle {
 	private String answerNumber;
 	private List<String> guessArray;
 	private List<String> answerArray;
-	private final RoomDB roomDB;
 
 	/**
 	 * No-argument Constructor for CombinationPuzzle class
 	 * Calls setupPuzzle() method to assign the numberX, answerNumber, and puzzleCounter class attributes.
 	 */
 	public CombinationPuzzle(int id, int roomID, int playerID) {
-		super(id);
-		roomDB = new RoomDB(roomID, playerID);
+		super(id, roomID, playerID);
 		setupPuzzle();
 	}
 
@@ -159,22 +157,14 @@ public class CombinationPuzzle extends Puzzle {
 
 	}
 
+	/**
+	 * Method: getHint
+	 * @return String hint
+	 * Returns a hint for the puzzle
+	 */
 	@Override
 	String getHint() {
 		return "Pick a number between 0-9";
 	}
-
-	/**
-	 * Method: getRewards
-	 * Gets the rewards from completing this puzzle.
-	 */
-	@Override()
-	public List<Item> getRewards() {
-        try {
-            return RewardDB.getRewards();
-        } catch (GameException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 }

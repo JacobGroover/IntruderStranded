@@ -17,12 +17,8 @@ import java.util.Scanner;
  */
 public class SandPuzzle extends Puzzle {
 
-	private final RoomDB roomDB;
-
-
 	public SandPuzzle(int id, int roomId, int playerId) {
-		super(id);
-		roomDB = new RoomDB(roomId, playerId);
+		super(id, roomId, playerId);
 		setupPuzzle();
 	}
 
@@ -76,14 +72,6 @@ public class SandPuzzle extends Puzzle {
 	 * Method: getRewards
 	 * Gets the rewards from completing this puzzle.
 	 */
-	@Override()
-	public List<Item> getRewards() {
-		System.out.println("You retrieved the Missing Wing part from the sand.");
-        try {
-            return RewardDB.getRewards();
-        } catch (GameException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
 }

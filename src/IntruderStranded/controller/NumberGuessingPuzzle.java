@@ -19,15 +19,13 @@ import java.util.Scanner;
 public class NumberGuessingPuzzle extends Puzzle {
 
 	private int answerNumber;
-	private final RoomDB roomDB;
 
     /**
 	 * No-argument Constructor for NumberGuessingPuzzle class
 	 * Calls setupPuzzle() method to assign the answerNumber and puzzleCounter class attributes.
 	 */
 	public NumberGuessingPuzzle(int id, int roomID, int playerID) {
-        super(id);
-        roomDB = new RoomDB(roomID, playerID);
+        super(id, roomID, playerID);
         setupPuzzle();
 	}
 
@@ -91,18 +89,5 @@ public class NumberGuessingPuzzle extends Puzzle {
 	String getHint() {
 		return "Pick a number between 1-10";
 	}
-
-	/**
-	 * Method: getRewards
-	 * Gets the rewards from completing this puzzle.
-	 */
-	@Override()
-	public List<Item> getRewards()  {
-        try {
-            return RewardDB.getRewards();
-        } catch (GameException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 }
