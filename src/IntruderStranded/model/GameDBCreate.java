@@ -54,6 +54,12 @@ public class GameDBCreate {
 	 */
 	public void buildTables() throws GameException {
 		executeSQLFromFile(MAIN_COMMANDS_PATH);
+
+		try {
+			DBService.getDB().commitTransaction();
+		} catch (SQLException exception) {
+			throw new GameException(exception.getMessage());
+		}
 	}
 
 	/**
