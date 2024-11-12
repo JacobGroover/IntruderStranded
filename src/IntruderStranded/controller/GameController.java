@@ -84,6 +84,7 @@ public class GameController implements Observer<Commands> {
 		// Instantiate String for storing return String from controller package
 		StringBuilder response = new StringBuilder(commands.executeCommand(command));
 		if (introText != null) {
+			response.append('\n');
 			response.append(displayIntroText());
 		}
 		return response.toString();
