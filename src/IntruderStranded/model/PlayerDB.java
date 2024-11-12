@@ -47,10 +47,11 @@ public class PlayerDB implements InventoryDB {
 			player.setWeapon(resultSet.getInt("Weapon"));
 			player.setHealth(resultSet.getInt("Health"));
 
-			RoomDB currentRoomDB = new RoomDB(resultSet.getInt("CurrentRoom"), playerID);
-			RoomDB previousRoomDB = new RoomDB(resultSet.getInt("PreviousRoom"), playerID);
-			player.setCurrentRoom(currentRoomDB.getRoom());
-			player.setPreviousRoom(previousRoomDB.getRoom());
+			player.setCurrentRoom(Room.getById(resultSet.getInt("CurrentRoom"), playerID));
+			int previousRoomId = resultSet.getInt("PreviousRoom");
+			if (previousRoomId != -1) {
+				player.setPreviousRoom(Room.getById(previousRoomId, playerID));
+			}
 
 			resultSet.getStatement().close();
 			return player;
