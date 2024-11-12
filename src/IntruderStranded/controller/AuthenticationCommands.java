@@ -115,8 +115,10 @@ public class AuthenticationCommands extends Commands {
 				password = null;
 				loginCounter++;
 				if (loginCounter == 3) {
-					text.append("If you have forgotten your user account please enter “Retrieve Username” to retrieve \n" +
-							"username, or “Forgot Password” to reset password.");
+					text.append("""
+                            
+                            If you have forgotten your user account please enter "Retrieve Username" to retrieve
+                            username, or "Forgot Password" to reset password.""");
 					loginCounter = 0;
 				}
 				isLoggingIn = false;
