@@ -1,6 +1,7 @@
 package IntruderStranded.controller;
 
 import IntruderStranded.gameExceptions.*;
+import IntruderStranded.model.GameDBCreate;
 
 /**
  * Class: MainMenu
@@ -52,8 +53,12 @@ public class MainMenuCommands extends Commands {
 	 * Calls the changeGameState method and changes the game state to GameplayCommands.
 	 */
 	private String newGame() throws GameException {
-		// TODO - implement MainMenuCommands.newGame
-		throw new UnsupportedOperationException();
+		GameDBCreate gdb = new GameDBCreate();
+		gdb.newGame(player.getID());
+		changeGameState(new GameplayCommands(player));
+
+		// return a blank String to trigger GameController to append new intro text for the changed game state
+		return "";
 	}
 
 	/**
