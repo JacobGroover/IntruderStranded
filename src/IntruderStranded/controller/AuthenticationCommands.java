@@ -74,9 +74,6 @@ public class AuthenticationCommands extends Commands {
 		} else {
 			throw new GameException("Unrecognized command!");
 		}
-//		else {
-//			return retrieveUsername(command);
-//		}
 	}
 
 	/**
@@ -157,7 +154,6 @@ public class AuthenticationCommands extends Commands {
 	 * @param command
 	 */
 	private String createAccount(String command) throws GameException {
-//		StringBuilder text = new StringBuilder();
 		String text = "";
 		if (!isCreatingAccount) {
 			isCreatingAccount = true;
@@ -213,7 +209,7 @@ public class AuthenticationCommands extends Commands {
 			isResettingPassword = true;
 			text += "\nPlease Enter Username: ";
 		} else if (username == null) {
-			if (Player.checkAccountField(command, 1)) {
+			if (Player.checkUsernameField(command)) {
 				username = command;
 				text += "Username found.\\nPassword: ";
 			} else {
@@ -252,12 +248,12 @@ public class AuthenticationCommands extends Commands {
 			isRetrievingUsername = true;
 			text += "\nPlease Enter Email: ";
 		} else if (email == null) {
-			if (Player.checkAccountField(command, 2)) {
+			if (Player.checkEmailField(command)) {
 				// retrieve username associated with email from database
 				text += "Your username is ";
 				text += Player.retrieveUsername(command);
 			} else {
-				text += "Username not found.";
+				text += "Cannot find Username.";
 			}
 			isRetrievingUsername = false;
 		}

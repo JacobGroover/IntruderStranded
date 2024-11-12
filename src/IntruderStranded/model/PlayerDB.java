@@ -115,23 +115,35 @@ public class PlayerDB implements InventoryDB {
 	}
 
 	/**
-	 * Method: checkAccountField
+	 * Method: checkUsernameField
 	 * Check if a specific username exists in the database. Used when a player attempts to
 	 * recover password from AuthenticationCommands
-	 * @param input The text to look for in the given field.
-	 * @param field The player field to check in the database. 1 for Username, 2 for Email.
+	 * @param username The text to look for in the given field.
 	 * @return Boolean indicating whether the given username was found
 	 * @throws GameException
 	 */
-	public boolean checkAccountField(String input, int field) throws GameException {
-		String playerField;
-		switch (field) {
-			case 1 -> playerField = "Username";
-			case 2 -> playerField = "Email";
-			default -> throw new GameException("Invalid player field requested by Authentication!");
-		}
+	public boolean checkUsernameField(String username) throws GameException {
 		try {
-			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Player WHERE ? = ?", playerField, input);
+			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Player WHERE Username = ?", username);
+			boolean exists = resultSet.next();
+			resultSet.getStatement().close();
+			return exists;
+		} catch (SQLException sqle) {
+			throw new GameException(sqle.getMessage());
+		}
+	}
+
+	/**
+	 * Method: checkEmailField
+	 * Check if a specific username exists in the database. Used when a player attempts to
+	 * recover password from AuthenticationCommands
+	 * @param email The text to look for in the given field.
+	 * @return Boolean indicating whether the given username was found
+	 * @throws GameException
+	 */
+	public boolean checkEmailField(String email) throws GameException {
+		try {
+			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Player WHERE Email = ?", email);
 			boolean exists = resultSet.next();
 			resultSet.getStatement().close();
 			return exists;

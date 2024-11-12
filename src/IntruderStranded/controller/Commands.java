@@ -61,7 +61,7 @@ public abstract class Commands {
 	 * @param command
 	 */
 	String exit(String command) throws GameException {
-		return "Exiting Game";
+		return "\nExiting Game";
 	}
 
 	/**
