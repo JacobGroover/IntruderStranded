@@ -1,9 +1,7 @@
 package IntruderStrandedTests.controller;
 
-import IntruderStranded.controller.GameplayCommands;
-import IntruderStranded.controller.Monster;
-import IntruderStranded.controller.Player;
-import IntruderStranded.controller.SandPuzzle;
+import IntruderStranded.controller.*;
+import IntruderStranded.gameExceptions.GameException;
 import IntruderStranded.model.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -11,10 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,11 +45,16 @@ class GameplayCommandsTest {
         Files.deleteIfExists(Path.of("test.db"));
     }
 
-    private String callExecuteCommand(String command) throws Exception {
+    private <T> T callGameplayCommandsMethod(String methodName, Object... parameters) throws Throwable {
         Class<? extends GameplayCommands> gcClass = commands.getClass();
-        Method method = gcClass.getDeclaredMethod("executeCommand", String.class);
+        Method method = gcClass.getDeclaredMethod(methodName, Arrays.stream(parameters).map(Object::getClass).toArray(Class[]::new));
         method.setAccessible(true);
-        return (String) method.invoke(commands, command);
+
+        try {
+            return (T) method.invoke(commands, parameters);
+        } catch (InvocationTargetException exception) {
+            throw exception.getCause();
+        }
     }
 
     private <T> void setGameplayCommandsField(String fieldName, T value) throws Exception {
@@ -57,8 +63,12 @@ class GameplayCommandsTest {
         field.set(commands, value);
     }
 
+    private String callExecuteCommand(String command) throws Throwable {
+        return callGameplayCommandsMethod("executeCommand", command.toUpperCase());
+    }
+
     @Test
-    void help() throws Exception {
+    void help() throws Throwable {
         assertEquals("""
             Hint
             Look
@@ -71,7 +81,7 @@ class GameplayCommandsTest {
             North
             South
             East
-            West""", callExecuteCommand("HELP"));
+            West""", callExecuteCommand("help"));
 
         setGameplayCommandsField("isManagingInventory", true);
 
@@ -80,10 +90,10 @@ class GameplayCommandsTest {
             Use <item>
             Discard <item>
             Close
-            Exit""", callExecuteCommand("HELP"));
+            Exit""", callExecuteCommand("help"));
 
         setGameplayCommandsField("isManagingInventory", false);
-        setGameplayCommandsField("currentPuzzle", new SandPuzzle(1));
+        setGameplayCommandsField("currentPuzzle", new SandPuzzle(1, 1, 1));
 
         String roomEventHelp = """
             Hint
@@ -95,16 +105,26 @@ class GameplayCommandsTest {
             INV
             Flee""";
 
-        assertEquals(roomEventHelp, callExecuteCommand("HELP"));
+        assertEquals(roomEventHelp, callExecuteCommand("help"));
 
         setGameplayCommandsField("currentPuzzle", null);
-        setGameplayCommandsField("currentMonster", new Monster(1));
-        assertEquals(roomEventHelp, callExecuteCommand("HELP"));
+        setGameplayCommandsField("currentMonster", new Monster(1, 1, 1));
+        assertEquals(roomEventHelp, callExecuteCommand("help"));
     }
 
     @Test
-    void exit() throws Exception {
+    void exit() throws Throwable {
+        assertEquals("Do you want to save your game?", callExecuteCommand("exit"));
+        assertThrows(GameException.class, () -> callExecuteCommand(""));
 
+        assertEquals("Do you want to save your game?", callExecuteCommand("exit"));
+        assertThrows(GameException.class, () -> callExecuteCommand("aaaaaaaa"));
+
+        for (String command : List.of("yes", "y", "no", "n")) {
+            assertEquals("Do you want to save your game?", callExecuteCommand("exit"));
+            assertEquals("", callExecuteCommand(command));
+            beforeEach();
+        }
     }
 
     @Test
