@@ -218,8 +218,25 @@ public class GameplayCommands extends Commands {
 	 */
 	@Override
 	String exit(String command) throws GameException {
-		// TODO - implement GameplayCommands.exit
-		throw new UnsupportedOperationException();
+		if (!isExiting) {
+			isExiting = true;
+			return "Do you want to save your game?";
+		}
+
+		isExiting = false;
+
+		if (command.equals("YES") || command.equals("Y")) {
+			SaveManager.saveGame();
+			changeGameState(new MainMenuCommands(player));
+			return "";
+		}
+
+		if (command.equals("NO") || command.equals("N")) {
+			changeGameState(new MainMenuCommands(player));
+			return "";
+		}
+
+		throw new GameException("Invalid command");
 	}
 
 	private String attack() {
