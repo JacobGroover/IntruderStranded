@@ -4,6 +4,7 @@ import IntruderStranded.gameExceptions.GameException;
 import IntruderStranded.model.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class: Room
@@ -94,11 +95,39 @@ public class Room {
 			itemList = itemList.substring(0, itemList.length() - 2);
 		}
 
+		String exitList;
+		if (exits.size() == 1) {
+			exitList = "You can go " + exits.get(0).getDirection().toString().toLowerCase();
+		} else {
+			exitList = "You can go either " + exits.stream().map(e -> e.getDirection().toString().toLowerCase()).collect(Collectors.joining(" or "));
+		}
 
-		String display = roomName + " " + status + "\n Current Level: " + level +
-				"\n" + roomDescription + "\n" + itemList;
+		String display = roomName + " " + status + "\nCurrent Level: " + level +
+				"\n" + limitStringWidth(roomDescription, 80) + "\n" + itemList
+				+ "\n" + exitList;
 
 		return display;
+	}
+
+	/**
+	 * Method: limitStringWidth
+	 * Breaks up a string into lines with a limited number of characters.
+	 * @param str The string to limit.
+	 * @param lineLimit The minimum number of characters a line will have (except for the last line).
+	 * @return The string with its width limited.
+	 */
+	private String limitStringWidth(String str, int lineLimit) {
+		StringBuilder stringBuilder = new StringBuilder(str);
+		int breakIndex = lineLimit;
+
+		for (int i = 0; i != -1; i = stringBuilder.indexOf(" ", i + 1)) {
+			if (i >= breakIndex) {
+				stringBuilder.replace(i, i + 1, "\n");
+				breakIndex += lineLimit;
+			}
+		}
+
+		return stringBuilder.toString();
 	}
 
 	/**
