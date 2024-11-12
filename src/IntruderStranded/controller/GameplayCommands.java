@@ -1,6 +1,7 @@
 package IntruderStranded.controller;
 
 import IntruderStranded.gameExceptions.*;
+import IntruderStranded.model.SaveManager;
 
 /**
  * Class: GameplayCommands
@@ -17,11 +18,11 @@ public class GameplayCommands extends Commands {
 
 	private boolean isExiting;
 	private boolean isManagingInventory;
-	private Puzzle currentPuzzle;
-	private Monster currentMonster;
 	private boolean isTeleporting;
 	private int teleportCounter;
 	private String teleportLevel;
+	private Puzzle currentPuzzle;
+	private Monster currentMonster;
 
 	/**
 	 * Method: GameplayCommands
@@ -43,7 +44,7 @@ public class GameplayCommands extends Commands {
 	 * Help [calls the help method]
 	 * Save Commands for saving game - Save Game, Save [calls the saveGame method]
 	 * Load Commands for loading game - Load Game, Load [calls the loadGame method]
-	 * Inventory commands - INV, Store, Use <item>, Discard <item>, Close [calls the inventory method]
+	 * Inventory commands - INV, Store, Use &lt;item&gt;, Discard &lt;item&gt;, Close [calls the inventory method]
 	 * Movement Commands - TEL, North, South, East, West, Flee [calls the move method]
 	 * Battle commands - Attack, Defend
 	 *
@@ -52,26 +53,29 @@ public class GameplayCommands extends Commands {
 	 */
 	@Override
 	String executeCommand(String command) throws GameException {
-		return switch (command) {
+		if (isExiting) {
+			return exit(command);
+		} else if (isManagingInventory) {
+			return inventory(command);
+		} else if (isTeleporting) {
+			return teleport(command);
+		} else if (currentPuzzle != null) {
+			return currentPuzzle.run();
+		} else if (Direction.parseDirection(command) != null) {
+			return move(command);
+		} else return switch (command) {
 			case "HELP" -> help();
 			case "HINT" -> hint();
 			case "LOOK" -> look();
 			case "SAVE" -> saveGame();
 			case "INV" -> inventory(command);
-			case "MOVE" -> move(command);
 			case "EXIT" -> exit(command);
 			case "ATTACK" -> attack();
 			case "DEFEND" -> defend();
 			case "FLEE" -> flee();
 			case "USE" -> useItem();
 			case "TEL" -> teleport(command);
-			default -> {
-				if (Direction.parseDirection(command) != null) {
-					yield move(command);
-				}
-
-				throw new GameException("Invalid command");
-			}
+			default -> throw new GameException("Invalid command");
 		};
 	}
 
@@ -143,8 +147,9 @@ public class GameplayCommands extends Commands {
 	 * @param command
 	 */
 	private String move(String command) throws GameException {
-		// TODO - implement GameplayCommands.move
-		throw new UnsupportedOperationException();
+		int destinationId = player.getCurrentRoom().leaveRoom(command);
+		player.setCurrentRoom(Room.getById(destinationId, player.getID()));
+		return player.getCurrentRoom().display();
 	}
 
 	/**
