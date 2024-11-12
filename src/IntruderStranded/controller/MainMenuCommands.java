@@ -1,13 +1,14 @@
 package IntruderStranded.controller;
 
 import IntruderStranded.gameExceptions.*;
+import IntruderStranded.model.GameDBCreate;
 
 /**
  * Class: MainMenu
  * @author Jacob Groover
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
- * Written: November 8th, 2024
+ * Written: November 12th, 2024
  * 
  * This class – Is the Commands subclass for Main Menu Commands. Handles all user commands sent
  * from GameController and returns appropriate replies or exceptions.
@@ -37,8 +38,13 @@ public class MainMenuCommands extends Commands {
 	 */
 	@Override()
 	String executeCommand(String command) throws GameException {
-		// TODO - implement MainMenuCommands.executeCommand
-		throw new UnsupportedOperationException();
+		return switch (command) {
+			case "NEW" -> newGame();
+			case "LOAD" -> loadGame();
+			case "HELP" -> help();
+			case "EXIT" -> exit(command);
+			default -> "Unrecognized command!";
+		};
 	}
 
 	/**
@@ -47,8 +53,12 @@ public class MainMenuCommands extends Commands {
 	 * Calls the changeGameState method and changes the game state to GameplayCommands.
 	 */
 	private String newGame() throws GameException {
-		// TODO - implement MainMenuCommands.newGame
-		throw new UnsupportedOperationException();
+		GameDBCreate gdb = new GameDBCreate();
+		gdb.newGame(player.getID());
+		changeGameState(new GameplayCommands(player));
+
+		// return a blank String to trigger GameController to append new intro text for the changed game state
+		return "";
 	}
 
 	/**
@@ -61,8 +71,14 @@ public class MainMenuCommands extends Commands {
 	 */
 	@Override()
 	String help() {
-		// TODO - implement MainMenuCommands.help
-		throw new UnsupportedOperationException();
+		return """
+				Main Menu Commands
+				
+				New - Start a new game
+				Load - Load a saved game
+				Exit - Exits the application
+				Help - This command, displays available commands
+				""";
 	}
 
 	/**
@@ -72,8 +88,14 @@ public class MainMenuCommands extends Commands {
 	 * list of available commands
 	 */
 	protected String getIntroText() {
-		// TODO - implement MainMenuCommands.getIntroText
-		throw new UnsupportedOperationException();
+		return """
+                Intruder Stranded
+
+                Please select an option "New" Game or "Load" Game
+                If you need help, please enter "HELP" to find more commands.
+                Please enter "exit" to end the game.
+                
+                """;
 	}
 
 }
