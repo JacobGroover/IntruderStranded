@@ -97,11 +97,11 @@ public class GameplayCommands extends Commands {
 
 	/**
 	 * Method: saveGame
-	 * Saves the player's game to the database by calling GameDBCreate.saveGame method.
+	 * Saves the player's game to the database by calling the SaveManager.saveGame method.
 	 */
 	private String saveGame() throws GameException {
-		// TODO - implement GameplayCommands.saveGame
-		throw new UnsupportedOperationException();
+		SaveManager.saveGame();
+		return "Game Saved";
 	}
 
 	/**
