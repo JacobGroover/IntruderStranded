@@ -273,9 +273,17 @@ public class GameplayCommands extends Commands {
 	 * Room details for first room
 	 */
 	protected String getIntroText() {
-		// TODO - implement GameplayCommands.getIntroText
-		throw new UnsupportedOperationException();
-	}
+        try {
+            return """
+            Welcome to Intruder Stranded
+            Enter north, south, east, or west to move
+            Enter help for more commands
+            
+            """ + player.getCurrentRoom().display() + "\n";
+        } catch (GameException exception) {
+            return exception.getMessage();
+        }
+    }
 
 	/**
 	 * Method: teleport

@@ -128,11 +128,6 @@ class GameplayCommandsTest {
     }
 
     @Test
-    void getIntroText() {
-
-    }
-
-    @Test
     void teleport() {
 
     }
