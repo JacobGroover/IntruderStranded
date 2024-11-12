@@ -83,8 +83,14 @@ public class MainMenuCommands extends Commands {
 	 * list of available commands
 	 */
 	protected String getIntroText() {
-		// TODO - implement MainMenuCommands.getIntroText
-		throw new UnsupportedOperationException();
+		return """
+                Intruder Stranded
+
+                Please select an option "New" Game or "Load" Game
+                If you need help, please enter "HELP" to find more commands.
+                Please enter "exit" to end the game.
+                
+                """;
 	}
 
 }
