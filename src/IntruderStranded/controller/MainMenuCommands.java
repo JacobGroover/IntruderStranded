@@ -7,7 +7,7 @@ import IntruderStranded.gameExceptions.*;
  * @author Jacob Groover
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
- * Written: November 8th, 2024
+ * Written: November 12th, 2024
  * 
  * This class – Is the Commands subclass for Main Menu Commands. Handles all user commands sent
  * from GameController and returns appropriate replies or exceptions.
@@ -37,8 +37,13 @@ public class MainMenuCommands extends Commands {
 	 */
 	@Override()
 	String executeCommand(String command) throws GameException {
-		// TODO - implement MainMenuCommands.executeCommand
-		throw new UnsupportedOperationException();
+		return switch (command) {
+			case "NEW" -> newGame();
+			case "LOAD" -> loadGame();
+			case "HELP" -> help();
+			case "EXIT" -> exit(command);
+			default -> "Unrecognized command!";
+		};
 	}
 
 	/**
