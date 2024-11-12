@@ -211,7 +211,7 @@ public class AuthenticationCommands extends Commands {
 		} else if (username == null) {
 			if (Player.checkUsernameField(command)) {
 				username = command;
-				text += "Username found.\\nPassword: ";
+				text += "Username found.\nPassword: ";
 			} else {
 				isResettingPassword = false;
 				text += "Username does not exist.";
