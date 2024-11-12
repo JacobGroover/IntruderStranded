@@ -79,7 +79,7 @@ public class PlayerDB implements InventoryDB {
 			if (exists) {
 				return false;
 			}
-			DBService.getDB().updatePrepared("INSERT INTO Player (Username, Password, Email, CurrentRoom, PreviousRoom, Weapon, Health, Score) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			DBService.getDB().updatePrepared("INSERT INTO Player (Username, Password, Email, CurrentRoom, PreviousRoom, Weapon, Health, Score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
 					username, password, email, 1, -1, -1, 100, 0);
 			return true;
 		} catch (SQLException exception) {
