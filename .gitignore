@@ -29,3 +29,7 @@ replay_pid*
 
 # Out directory
 /out/
+
+# DB Files
+*.db
+*.db-journal
