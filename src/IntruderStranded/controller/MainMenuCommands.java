@@ -66,8 +66,14 @@ public class MainMenuCommands extends Commands {
 	 */
 	@Override()
 	String help() {
-		// TODO - implement MainMenuCommands.help
-		throw new UnsupportedOperationException();
+		return """
+				Main Menu Commands
+				
+				New - Start a new game
+				Load - Load a saved game
+				Exit - Exits the application
+				Help - This command, displays available commands
+				""";
 	}
 
 	/**
