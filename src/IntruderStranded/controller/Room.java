@@ -180,6 +180,16 @@ public class Room {
 		rdb.removeItem(item);
 	}
 
+	/**
+	 * Method: getItems
+	 * Gets the items in this room.
+	 * @return The list of items in this room.
+	 * @throws GameException
+	 */
+	List<Item> getItems() throws GameException {
+		return rdb.getItems();
+	}
+
 	List<RoomEvent> getRoomEvents() {
 		return this.roomEvents;
 	}
