@@ -22,7 +22,6 @@ public class GameplayCommands extends Commands {
 	private boolean isExiting;
 	private boolean isManagingInventory;
 	private int teleportCounter;
-	private String teleportLevel;
 	private Direction teleportDirection;
 	private Puzzle currentPuzzle;
 	private Monster currentMonster;
@@ -425,7 +424,6 @@ public class GameplayCommands extends Commands {
 				throw new GameException("You are already in this level.");
 			}
 
-			teleportLevel = command;
 			teleportCounter++;
 
 			if (command.equals("0")) {
