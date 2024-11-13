@@ -247,6 +247,15 @@ public class Room {
     }
 
 	/**
+	 * Method: getLevel
+	 * Gets the level of the room.
+	 * @return The level of the room.
+	 */
+	public String getLevel() {
+		return level;
+	}
+
+	/**
 	 * Method: setLevel
 	 * Sets the level of the room.
 	 * @param level The level to set.
