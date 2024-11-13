@@ -21,10 +21,10 @@ public class GameDBCreate {
 	 * Method: executeSQLFromFile
 	 * Executes SQL statements seperated by semicolons in a text file.
 	 * @param path The path to the file.
-	 * @param parameters Parameters to pass into each SQL statement.
+	 * @param parameter A parameter to pass into each SQL statement, or null for no parameter.
 	 * @throws GameException
 	 */
-	private void executeSQLFromFile(String path, Object... parameters) throws GameException {
+	private void executeSQLFromFile(String path, Object parameter) throws GameException {
 		String currentStatement = null;
 
 		try {
@@ -33,8 +33,13 @@ public class GameDBCreate {
 			for (String statement : statements) {
 				if (!statement.isBlank()) {
 					statement = statement.trim();
+
+					if (parameter != null) {
+						statement = statement.replace("?", parameter.toString());
+					}
+
 					currentStatement = statement;
-					DBService.getDB().updatePrepared(statement, parameters);
+					DBService.getDB().update(statement);
 				}
 			}
 		} catch (IOException | SQLException exception) {
@@ -53,7 +58,7 @@ public class GameDBCreate {
 	 * Creates an empty Player, MonsterRoom, ItemRoom, Puzzle, VisitRoom, Exit, Item, Reward, Room, Weapon, and Inventory table in the database
 	 */
 	public void buildTables() throws GameException {
-		executeSQLFromFile(MAIN_COMMANDS_PATH);
+		executeSQLFromFile(MAIN_COMMANDS_PATH, null);
 
 		try {
 			DBService.getDB().commitTransaction();
@@ -88,7 +93,7 @@ public class GameDBCreate {
 	 */
 	public boolean gameExists(int playerId) throws GameException {
 		try {
-			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM VisitRoom WHERE PlayerID = ?", playerId);
+			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT PlayerID FROM (SELECT PlayerID FROM VisitRoom UNION ALL SELECT PlayerID FROM MonsterRoom) WHERE PlayerID = ?", playerId);
 			boolean exists = resultSet.next();
 			resultSet.getStatement().close();
 			return exists;
