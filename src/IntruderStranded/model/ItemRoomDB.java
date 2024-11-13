@@ -5,26 +5,13 @@ import IntruderStranded.gameExceptions.GameException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public record ItemRoomDB(int roomID, int playerID) {
 	List<Item> getItems() throws GameException {
 		try {
 			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT Item.*, ItemRoom.ItemQuantity FROM ItemRoom LEFT JOIN Item ON ItemRoom.ItemID = Item.ItemID WHERE PlayerID = ? AND RoomID = ?", playerID(), roomID());
-
-			List<Item> items = new ArrayList<>();
-			while (resultSet.next()) {
-				Item item = new Item(resultSet.getInt("ItemID"));
-				item.setItemName(resultSet.getString("ItemName"));
-				item.setItemDescription(resultSet.getString("ItemDescription"));
-
-				items.addAll(Collections.nCopies(resultSet.getInt("ItemQuantity"), item));
-			}
-
-			resultSet.getStatement().close();
-			return items;
+			return ItemDB.itemsFromResultSet(resultSet, true);
 		} catch (SQLException exception) {
 			throw new GameException(exception.getMessage());
 		}
