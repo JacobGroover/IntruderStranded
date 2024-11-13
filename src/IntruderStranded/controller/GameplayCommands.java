@@ -147,7 +147,16 @@ public class GameplayCommands extends Commands {
 	 * @throws IllegalArgumentException If the command is blank.
 	 */
 	private String getCommandArgument(String command) throws GameException {
-		return "";
+		if (command.isBlank()) {
+			throw new IllegalArgumentException("Empty command.");
+		}
+
+		String[] strings = command.split(" ", 2);
+		if (strings.length == 1 || strings[1].isBlank()) {
+			throw new GameException("No argument given.");
+		}
+
+		return strings[1];
 	}
 
 	/**
