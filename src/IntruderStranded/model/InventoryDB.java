@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Interface: InventoryDB
+ * Class: InventoryDB
  * @author Fareed Ahmed
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
@@ -18,14 +18,14 @@ import java.util.List;
  *
  * This class handles getting and setting the inventory data from the database.
  */
-public interface InventoryDB {
+public class InventoryDB {
 
 	/**
 	 * Method: getInventory
 	 * Gets the inventory of the player with the given player id.
 	 * @param playerID The id of the player.
 	 */
-	default List<Item> getInventory(int playerID) throws GameException {
+	List<Item> getInventory(int playerID) throws GameException {
 		try {
 			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT Item.*, Inventory.ItemQuantity FROM Inventory LEFT JOIN Item ON Inventory.ItemID = Item.ItemID WHERE PlayerID = ?", playerID);
 
@@ -51,7 +51,7 @@ public interface InventoryDB {
 	 * @param playerID The id of the player.
 	 * @param item The item to add.
 	 */
-	default void addItem(int playerID, Item item) throws GameException {
+	void addItem(int playerID, Item item) throws GameException {
 		try {
 			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Inventory WHERE ItemID = ? AND PlayerID = ?", item.getItemID(), playerID);
 			boolean exists = resultSet.next();
@@ -75,7 +75,7 @@ public interface InventoryDB {
 	 * @param playerID The id of the player.
 	 * @param item The item to remove.
 	 */
-	default void removeItem(int playerID, Item item) throws GameException {
+	void removeItem(int playerID, Item item) throws GameException {
 		try {
 			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Inventory WHERE ItemID = ? AND PlayerID = ?", item.getItemID(), playerID);
 			resultSet.next();
