@@ -4,6 +4,7 @@ import IntruderStranded.gameExceptions.*;
 import IntruderStranded.model.SaveManager;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class: GameplayCommands
@@ -119,17 +120,17 @@ public class GameplayCommands extends Commands {
 	 *
 	 * If isManagingInventory boolean is already true:
 	 *
-	 * If the command parameter equals "Use <item>" where <item> is an item in the player's inventory,
+	 * If the command parameter equals "Use &lt;item&gt;" where &lt;item&gt; is an item in the player's inventory,
 	 * then uses the item by calling player.useItem method. Otherwise returns a String indicating
 	 * the item is not in the player's inventory.
 	 *
-	 * If the command parameter equals "Discard <item>" where <item> is an item in the player's
+	 * If the command parameter equals "Discard &lt;item&gt;" where &lt;item&gt; is an item in the player's
 	 * inventory, then removes the item from inventory and adds it to the room by calling
 	 * player.removeItem method and player.getCurrentRoom.addItem method. Otherwise, returns
 	 * a String indicating the item is not in the player's inventory (this is checked using the
 	 * player.getInventory method).
 	 *
-	 * If the command parameter equals "Help" then return a String listing the available commands (Use <item>, Discard <item>, Close, Help).
+	 * If the command parameter equals "Help" then return a String listing the available commands (Use &lt;item&gt;, Discard &lt;item&gt;, Close, Help).
 	 * If the command parameter equals "Close" then close the inventory menu by setting the isManagingInventory
 	 * boolean to false.
 	 * If the command parameter equals any other String, then throw a GameException indicating
@@ -137,8 +138,56 @@ public class GameplayCommands extends Commands {
 	 * @param command
 	 */
 	private String inventory(String command) throws GameException {
-		// TODO - implement GameplayCommands.inventory
-		throw new UnsupportedOperationException();
+		if (!isManagingInventory) {
+			isManagingInventory = true;
+			return player.displayInventory();
+		}
+
+		if (command.startsWith("USE")) {
+			String itemName = getCommandArgument(command);
+			Optional<Item> item = player.getInventory().stream()
+					.filter(i -> i.getItemName().equalsIgnoreCase(itemName))
+					.findAny();
+
+			if (item.isEmpty()) {
+				throw new GameException("You do not have " + itemName);
+			}
+
+			return player.useItem(item.get());
+		} else if (command.startsWith("STORE")) {
+			String itemName = getCommandArgument(command);
+			Optional<Item> item = player.getCurrentRoom().getItems().stream()
+					.filter(i -> i.getItemName().equalsIgnoreCase(itemName))
+					.findAny();
+
+			if (item.isEmpty()) {
+				throw new GameException("This room does not have " + itemName);
+			}
+
+			player.getCurrentRoom().removeItem(item.get());
+			player.addItem(item.get());
+		} else if (command.startsWith("DISCARD")) {
+			String itemName = getCommandArgument(command);
+			Optional<Item> item = player.getInventory().stream()
+					.filter(i -> i.getItemName().equalsIgnoreCase(itemName))
+					.findAny();
+
+			if (item.isEmpty()) {
+				throw new GameException("You do not have " + itemName);
+			}
+
+			player.removeItem(item.get());
+			player.getCurrentRoom().addItem(item.get());
+		} else if (command.equals("HELP")) {
+			return help();
+		} else if (command.equals("CLOSE")) {
+			isManagingInventory = false;
+			return "";
+		}
+
+		throw new GameException("Invalid command");
+	}
+
 	/**
 	 * Method: getCommandArgument
 	 * Gets the argument to a command, if it has one.
