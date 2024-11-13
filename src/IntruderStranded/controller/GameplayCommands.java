@@ -21,13 +21,12 @@ public class GameplayCommands extends Commands {
 
 	private boolean isExiting;
 	private boolean isManagingInventory;
+	private boolean introTextPrinted;
 	private int teleportCounter;
 	private Direction teleportDirection;
 	private Puzzle currentPuzzle;
-	private Monster currentMonster;
 
 	/**
-	 * Method: GameplayCommands
 	 * One-Argument Constructor for the GameplayCommands class
 	 * Calls parent one-argument constructor, then initializes booleans to false.
 	 * @param player
@@ -71,11 +70,9 @@ public class GameplayCommands extends Commands {
 			case "HINT" -> hint();
 			case "LOOK" -> look();
 			case "SAVE" -> saveGame();
+			case "LOAD" -> loadGame();
 			case "INV" -> inventory(command);
 			case "EXIT" -> exit(command);
-			case "ATTACK" -> attack();
-			case "DEFEND" -> defend();
-			case "FLEE" -> flee();
 			case "USE" -> useItem();
 			case "TEL" -> teleport(command);
 			default -> throw new GameException("Invalid command");
@@ -113,7 +110,7 @@ public class GameplayCommands extends Commands {
 	 * Method: saveGame
 	 * Saves the player's game to the database by calling the SaveManager.saveGame method.
 	 */
-	private String saveGame() throws GameException {
+	protected String saveGame() throws GameException {
 		SaveManager.saveGame();
 		return "Game Saved";
 	}
@@ -143,7 +140,7 @@ public class GameplayCommands extends Commands {
 	 * an unrecognized command.
 	 * @param command
 	 */
-	private String inventory(String command) throws GameException {
+	protected String inventory(String command) throws GameException {
 		if (!isManagingInventory) {
 			isManagingInventory = true;
 			return player.displayInventory();
@@ -227,10 +224,50 @@ public class GameplayCommands extends Commands {
 		return moveInDirection(Direction.parseDirection(command));
 	}
 
+	/**
+	 * Method: moveInDirection
+	 * Moves in a direction.
+	 * @param direction The direction to move.
+	 * @return The text returned by the move.
+	 * @throws GameException
+	 */
 	private String moveInDirection(Direction direction) throws GameException {
 		int destinationId = player.getCurrentRoom().leaveRoom(direction);
+		return moveTo(destinationId);
+	}
+
+	/**
+	 * Method: moveTo
+	 * Moves to the given room.
+	 * @param destinationId The id of the room to move to.
+	 * @return The text returned by the move.
+	 * @throws GameException
+	 */
+	protected String moveTo(int destinationId) throws GameException {
 		player.setCurrentRoom(Room.getById(destinationId, player.getID()));
-		return player.getCurrentRoom().display();
+		player.update();
+		return player.getCurrentRoom().display() + enterRoom();
+	}
+
+	/**
+	 * Method: enterRoom
+	 * Called when the player enters a room; Handles entering rooms with
+	 * monsters in them.
+	 * @return An empty string if the room does not have any monsters, otherwise
+	 * the monster encounter string.
+	 */
+	private String enterRoom() {
+		List<Monster> monsters = player.getCurrentRoom().getRoomEvents().stream()
+				.filter(e -> e instanceof Monster).map(e -> (Monster) e)
+				.toList();
+
+		if (monsters.isEmpty()) {
+			return "";
+		}
+
+		changeGameState(new BattleCommands(this, monsters));
+
+		return "\n\n" + monsters.getFirst().getName() + " is blocking your path.";
 	}
 
 	/**
@@ -264,18 +301,18 @@ public class GameplayCommands extends Commands {
             Help - This command, displays available commands
             """;
 		}
-		else if (currentMonster != null || currentPuzzle != null) {
+		else if (currentPuzzle != null) {
 			return """
             Gameplay Commands
             
-            Hint - Get a hint about the current monster/puzzle
+            Hint - Get a hint about the current puzzle
             Look - Print the room description again
             Exit - Exit to the main menu
             Help - This command, displays available commands
-            Save Game - Save the game
-            Load Game - Load a save
+            Save - Save the game
+            Load - Load a save
             INV - Open inventory
-            Flee - Flee from the current monster/puzzle
+            Flee - Flee from the current puzzle
             """;
 		}
 
@@ -286,8 +323,8 @@ public class GameplayCommands extends Commands {
             Look - Print the room description again
             Exit - Exit to the main menu
             Help - This command, displays available commands
-            Save Game - Save the game
-            Load Game - Load a save
+            Save - Save the game
+            Load - Load a save
             INV - Open inventory
             North - Move north
             South - Move south
@@ -334,15 +371,6 @@ public class GameplayCommands extends Commands {
 		throw new GameException("Invalid command");
 	}
 
-	private String attack() {
-		// TODO - implement GameplayCommands.attack
-		throw new UnsupportedOperationException();
-	}
-
-	private String defend() {
-		// TODO - implement GameplayCommands.defend
-		throw new UnsupportedOperationException();
-	}
 
 	private String flee() {
 		// TODO - implement GameplayCommands.flee
@@ -363,6 +391,12 @@ public class GameplayCommands extends Commands {
 	 * Room details for first room
 	 */
 	protected String getIntroText() {
+		if (introTextPrinted) {
+			return "";
+		}
+
+		introTextPrinted = true;
+
         try {
             return """
             Welcome to Intruder Stranded
