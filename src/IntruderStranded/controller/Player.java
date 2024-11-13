@@ -195,6 +195,10 @@ public class Player extends Entity {
 		return item.display();
 	}
 
+	void update() throws GameException {
+		pdb.updatePlayer(this);
+	}
+
 	public int getScore() {
 		return this.score;
 	}
@@ -236,6 +240,7 @@ public class Player extends Entity {
 	 * @param currentRoom
 	 */
 	public void setCurrentRoom(Room currentRoom) {
+		previousRoom = this.currentRoom;
 		this.currentRoom = currentRoom;
 	}
 
