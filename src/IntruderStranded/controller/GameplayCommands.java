@@ -138,6 +138,16 @@ public class GameplayCommands extends Commands {
 	private String inventory(String command) throws GameException {
 		// TODO - implement GameplayCommands.inventory
 		throw new UnsupportedOperationException();
+	/**
+	 * Method: getCommandArgument
+	 * Gets the argument to a command, if it has one.
+	 * @param command The command to read.
+	 * @return The argument to the given command.
+	 * @throws GameException If no argument is given to the command, or the argument is blank.
+	 * @throws IllegalArgumentException If the command is blank.
+	 */
+	private String getCommandArgument(String command) throws GameException {
+		return "";
 	}
 
 	/**

@@ -67,6 +67,10 @@ class GameplayCommandsTest {
         return callGameplayCommandsMethod("executeCommand", command.toUpperCase());
     }
 
+    private String callGetCommandArgument(String command) throws Throwable {
+        return callGameplayCommandsMethod("getCommandArgument", command.toUpperCase());
+    }
+
     @Test
     void help() throws Throwable {
         assertEquals("""
@@ -125,6 +129,22 @@ class GameplayCommandsTest {
             assertEquals("", callExecuteCommand(command));
             beforeEach();
         }
+    }
+
+    @Test
+    void getCommandArgument() throws Throwable {
+        assertEquals("ITEM", callGetCommandArgument("use item"));
+        assertEquals("ITEM 2", callGetCommandArgument("use item 2"));
+        assertEquals(" THIS", callGetCommandArgument("use  this"));
+        assertEquals(" THIS  ", callGetCommandArgument("use  this  "));
+        assertEquals("ITEM TEST 2 ARG", callGetCommandArgument("use Item test 2 Arg"));
+
+        assertThrows(GameException.class, () -> callGetCommandArgument("use"));
+        assertThrows(GameException.class, () -> callGetCommandArgument("use "));
+        assertThrows(GameException.class, () -> callGetCommandArgument("use  "));
+
+        assertThrows(IllegalArgumentException.class, () -> callGetCommandArgument(""));
+        assertThrows(IllegalArgumentException.class, () -> callGetCommandArgument(" "));
     }
 
     @Test
