@@ -8,12 +8,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface ExitDB extends RoomDBInfoProvider {
+public record ExitDB(int roomID) {
 	/**
 	 * Method: getExits
 	 * Returns an ArrayList of exits associated with a roomID.
 	 */
-	default List<Exit> getExits() throws GameException {
+	List<Exit> getExits() throws GameException {
 		try {
 			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Exit WHERE RoomID = ?", roomID());
 			List<Exit> exits = new ArrayList<>();

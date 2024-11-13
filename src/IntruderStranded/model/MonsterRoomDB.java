@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public interface MonsterRoomDB extends RoomDBInfoProvider {
-	default List<Monster> getMonsters() throws GameException {
+public record MonsterRoomDB(int roomID, int playerID) {
+	List<Monster> getMonsters() throws GameException {
 		try {
 			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT Monster.*, MonsterRoom.MonsterQuantity FROM MonsterRoom LEFT JOIN Monster ON MonsterRoom.MonsterID = Monster.MonsterID WHERE RoomID = ? AND PlayerID = ?", roomID(), playerID());
 			List<Monster> monsters = new ArrayList<>();
@@ -31,7 +31,7 @@ public interface MonsterRoomDB extends RoomDBInfoProvider {
 		}
 	}
 
-	default void removeMonster(Monster monster) throws GameException {
+	void removeMonster(Monster monster) throws GameException {
 		try {
 			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM MonsterRoom WHERE MonsterID = ? AND RoomID = ? AND PlayerID = ?", monster.getID(), roomID(), playerID());
 			resultSet.next();

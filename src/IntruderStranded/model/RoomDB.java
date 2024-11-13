@@ -5,6 +5,7 @@ import IntruderStranded.gameExceptions.GameException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Class: RoomDB
@@ -15,10 +16,34 @@ import java.sql.SQLException;
  * Written: October 22, 2024
  * This class – Holds the Room data for the Intruder Stranded game.
  */
-public record RoomDB(int roomID, int playerID) implements VisitRoomDB, ItemRoomDB, ExitDB, MonsterRoomDB, PuzzleRoomDB, RewardDB {
+public class RoomDB {
+	int roomID;
+	VisitRoomDB visitRoomDB;
+	ItemRoomDB itemRoomDB;
+	ExitDB exitDB;
+	MonsterRoomDB monsterRoomDB;
+	PuzzleRoomDB puzzleRoomDB;
+	RewardDB rewardDB;
+
+	public RoomDB(int roomID) {
+		this.roomID = roomID;
+		exitDB = new ExitDB(roomID);
+		rewardDB = new RewardDB(roomID);
+	}
+
+	public RoomDB(int roomID, int playerID) {
+		this.roomID = roomID;
+		visitRoomDB = new VisitRoomDB(roomID, playerID);
+		itemRoomDB = new ItemRoomDB(roomID, playerID);
+		exitDB = new ExitDB(roomID);
+		monsterRoomDB = new MonsterRoomDB(roomID, playerID);
+		puzzleRoomDB = new PuzzleRoomDB(roomID, playerID);
+		rewardDB = new RewardDB(roomID);
+	}
+
 	public void updateRoom(Room room) throws GameException {
 		if (room.getVisited()) {
-			setVisited();
+			visitRoomDB.setVisited();
 		}
 	}
 
@@ -36,5 +61,49 @@ public record RoomDB(int roomID, int playerID) implements VisitRoomDB, ItemRoomD
 		} catch (SQLException exception) {
 			throw new GameException(exception.getMessage());
 		}
+	}
+
+	public boolean getVisited() throws GameException {
+		return visitRoomDB.getVisited();
+	}
+
+	public void setVisited() throws GameException {
+		visitRoomDB.setVisited();
+	}
+
+	public List<Puzzle> getPuzzles() throws GameException {
+		return puzzleRoomDB.getPuzzles();
+	}
+
+	public void removePuzzle(Puzzle puzzle) throws GameException {
+		puzzleRoomDB.removePuzzle(puzzle);
+	}
+
+	public List<Item> getRewards() throws GameException {
+		return rewardDB.getRewards();
+	}
+
+	public List<Item> getItems() throws GameException {
+		return itemRoomDB.getItems();
+	}
+
+	public void addItem(Item item) throws GameException {
+		itemRoomDB.addItem(item);
+	}
+
+	public void removeItem(Item item) throws GameException {
+		itemRoomDB.removeItem(item);
+	}
+
+	public List<Monster> getMonsters() throws GameException {
+		return monsterRoomDB.getMonsters();
+	}
+
+	public void removeMonster(Monster monster) throws GameException {
+		monsterRoomDB.removeMonster(monster);
+	}
+
+	public List<Exit> getExits() throws GameException {
+		return exitDB.getExits();
 	}
 }

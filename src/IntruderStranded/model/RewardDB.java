@@ -8,12 +8,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface RewardDB extends RoomDBInfoProvider {
+public record RewardDB(int roomID) {
 
 	/**
 	 * Method: getRewards
 	 */
-	default List<Item> getRewards() throws GameException {
+	List<Item> getRewards() throws GameException {
 		try {
 			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT Item.* FROM Rewards LEFT JOIN Item ON Rewards.ItemID = Item.ItemID WHERE RoomID = ?", roomID());
 

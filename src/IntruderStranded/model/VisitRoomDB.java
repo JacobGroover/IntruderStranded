@@ -5,8 +5,8 @@ import IntruderStranded.gameExceptions.GameException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public interface VisitRoomDB extends RoomDBInfoProvider {
-	default boolean getVisited() throws GameException {
+public record VisitRoomDB(int roomID, int playerID) {
+	boolean getVisited() throws GameException {
 		try {
 			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM VisitRoom WHERE PlayerID = ? AND RoomID = ?", playerID(), roomID());
 			boolean visited = resultSet.next();
@@ -17,7 +17,7 @@ public interface VisitRoomDB extends RoomDBInfoProvider {
 		}
 	}
 
-	default void setVisited() throws GameException {
+	void setVisited() throws GameException {
 		try {
 			DBService.getDB().updatePrepared("INSERT OR REPLACE INTO VisitRoom (PlayerID, RoomID) VALUES (?, ?)", playerID(), roomID());
 		} catch (SQLException exception) {
