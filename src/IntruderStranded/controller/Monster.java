@@ -1,5 +1,6 @@
 package IntruderStranded.controller;
 
+import IntruderStranded.gameExceptions.GameException;
 import IntruderStranded.model.RoomDB;
 
 import java.util.*;
@@ -14,23 +15,23 @@ public class Monster extends Entity implements RoomEvent {
 		this.roomDB = new RoomDB(roomID, playerID);
 	}
 
-	public List<Item> getRewards() {
-		throw new UnsupportedOperationException();
+	public List<Item> getRewards() throws GameException {
+		return roomDB.getRewards();
 	}
 
     public int getDamage() {
-        throw new UnsupportedOperationException();
+        return damage;
     }
 
     public void setDamage(int damage) {
-        throw new UnsupportedOperationException();
+        this.damage = damage;
     }
 
     public String getName() {
-        throw new UnsupportedOperationException();
+        return name;
     }
 
     public void setName(String name) {
-        throw new UnsupportedOperationException();
+        this.name = name;
     }
 }
