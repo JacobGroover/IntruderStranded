@@ -9,6 +9,7 @@ public abstract class Puzzle implements RoomEvent {
 	private int id;
 	int puzzleCounter;
 	private final RoomDB roomDB;
+	private boolean isCompleted;
 
 
 	public Puzzle(int id, int roomID, int playerID) {
@@ -17,11 +18,12 @@ public abstract class Puzzle implements RoomEvent {
 	}
 
 	/**
-     * Method: run
-     * Abstract method to be implemented in child classes. Runs the primary functionality of a puzzle.
-     *
-     */
-	abstract void run(String cmd);
+	 * Method: run
+	 * Abstract method to be implemented in child classes. Runs the primary functionality of a puzzle.
+	 *
+	 * @return
+	 */
+	abstract String run(String cmd);
 
 	/**
 	 * Method: setupPuzzle
@@ -40,11 +42,16 @@ public abstract class Puzzle implements RoomEvent {
 	 * @return List<Item>
 	 * Returns a List of rewards for solving the Puzzle from RoomDB
 	 */
-	public List<Item> getRewards() {
-        try {
+	public List<Item> getRewards() throws GameException {
+
             return roomDB.getRewards();
-        } catch (GameException e) {
-            throw new RuntimeException(e);
-        }
     }
+
+	public boolean getIsCompleted() {
+		return isCompleted;
+	}
+
+	protected void setIsCompleted(boolean isCompleted) {
+		this.isCompleted = isCompleted;
+	}
 }
