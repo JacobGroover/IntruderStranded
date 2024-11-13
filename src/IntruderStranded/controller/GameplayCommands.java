@@ -57,6 +57,8 @@ public class GameplayCommands extends Commands {
 	String executeCommand(String command) throws GameException {
 		if (isExiting) {
 			return exit(command);
+		} else if (command.equals("HELP")) {
+			return help();
 		} else if (isManagingInventory) {
 			return inventory(command);
 		} else if (teleportCounter != 0) {
@@ -66,7 +68,6 @@ public class GameplayCommands extends Commands {
 		} else if (Direction.parseDirection(command) != null) {
 			return move(command);
 		} else return switch (command) {
-			case "HELP" -> help();
 			case "HINT" -> hint();
 			case "LOOK" -> look();
 			case "SAVE" -> saveGame();
@@ -198,37 +199,46 @@ public class GameplayCommands extends Commands {
 	String help() {
 		if (isManagingInventory) {
 			return """
-            Store
-            Use <item>
-            Discard <item>
-            Close
-            Exit""";
+            Inventory Commands
+            
+            Store <item> - Pick up an item from the room
+            Use <item> - Use an item in your inventory
+            Discard <item> - Discard an item in your inventory
+            Close - Close the inventory menu
+            Exit - Exit to the main menu
+            Help - This command, displays available commands
+            """;
 		}
 		else if (currentMonster != null || currentPuzzle != null) {
 			return """
-            Hint
-            Look
-            Exit
-            Help
-            Save Game
-            Load Game
-            INV
-            Flee""";
+            Gameplay Commands
+            
+            Hint - Get a hint about the current monster/puzzle
+            Look - Print the room description again
+            Exit - Exit to the main menu
+            Help - This command, displays available commands
+            Save Game - Save the game
+            Load Game - Load a save
+            INV - Open inventory
+            Flee - Flee from the current monster/puzzle
+            """;
 		}
 
 		return """
-            Hint
-            Look
-            Exit
-            Help
-            Save Game
-            Load Game
-            INV
-            TEL
-            North
-            South
-            East
-            West""";
+            Gameplay Commands
+            
+            Hint - Get a hint about the current monster/puzzle
+            Look - Print the room description again
+            Exit - Exit to the main menu
+            Help - This command, displays available commands
+            Save Game - Save the game
+            Load Game - Load a save
+            INV - Open inventory
+            North - Move north
+            South - Move south
+            East - Move east
+            West - Move west
+            """ + (player.getCurrentRoom().canTeleport() ? "TEL - Teleport\n" : "");
 	}
 
 	/**

@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameplayCommandsTest {
     private static GameplayCommands commands;
     private static DB db;
+    private static Player player;
 
     @BeforeAll
     static void setUp() throws Exception {
@@ -36,7 +37,8 @@ class GameplayCommandsTest {
 
     @BeforeEach
     void beforeEach() throws Exception {
-        commands = new GameplayCommands(Player.getById(1));
+        player = Player.getById(1);
+        commands = new GameplayCommands(player);
     }
 
     @AfterAll
@@ -74,40 +76,68 @@ class GameplayCommandsTest {
     @Test
     void help() throws Throwable {
         assertEquals("""
-            Hint
-            Look
-            Exit
-            Help
-            Save Game
-            Load Game
-            INV
-            TEL
-            North
-            South
-            East
-            West""", callExecuteCommand("help"));
+            Gameplay Commands
+            
+            Hint - Get a hint about the current monster/puzzle
+            Look - Print the room description again
+            Exit - Exit to the main menu
+            Help - This command, displays available commands
+            Save Game - Save the game
+            Load Game - Load a save
+            INV - Open inventory
+            North - Move north
+            South - Move south
+            East - Move east
+            West - Move west
+            TEL - Teleport
+            """, callExecuteCommand("help"));
+
+        player.setCurrentRoom(Room.getById(2, player.getID()));
+
+        assertEquals("""
+            Gameplay Commands
+            
+            Hint - Get a hint about the current monster/puzzle
+            Look - Print the room description again
+            Exit - Exit to the main menu
+            Help - This command, displays available commands
+            Save Game - Save the game
+            Load Game - Load a save
+            INV - Open inventory
+            North - Move north
+            South - Move south
+            East - Move east
+            West - Move west
+            """, callExecuteCommand("help"));
 
         setGameplayCommandsField("isManagingInventory", true);
 
         assertEquals("""
-            Store
-            Use <item>
-            Discard <item>
-            Close
-            Exit""", callExecuteCommand("help"));
+            Inventory Commands
+            
+            Store <item> - Pick up an item from the room
+            Use <item> - Use an item in your inventory
+            Discard <item> - Discard an item in your inventory
+            Close - Close the inventory menu
+            Exit - Exit to the main menu
+            Help - This command, displays available commands
+            """, callExecuteCommand("help"));
 
         setGameplayCommandsField("isManagingInventory", false);
         setGameplayCommandsField("currentPuzzle", new SandPuzzle(1, 1, 1));
 
         String roomEventHelp = """
-            Hint
-            Look
-            Exit
-            Help
-            Save Game
-            Load Game
-            INV
-            Flee""";
+            Gameplay Commands
+            
+            Hint - Get a hint about the current monster/puzzle
+            Look - Print the room description again
+            Exit - Exit to the main menu
+            Help - This command, displays available commands
+            Save Game - Save the game
+            Load Game - Load a save
+            INV - Open inventory
+            Flee - Flee from the current monster/puzzle
+            """;
 
         assertEquals(roomEventHelp, callExecuteCommand("help"));
 
