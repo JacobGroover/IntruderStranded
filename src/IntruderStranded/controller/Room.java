@@ -89,38 +89,25 @@ public class Room {
 	 * Calls rdb.getItems method to get a list of items in the room.
 	 */
 	String display() throws GameException {
-		String status;
-
-		if (visited) {
-			status = "(Visited)";
-		} else {
-			status = "(Not Visited)";
-		}
+		String status = visited ? "(Visited)" : "(Not visited)";
 
 		List<Item> items = rdb.getItems();
-		String itemList = "";
-		if (items.isEmpty()) {
-			itemList = "No items in this room.";
-		} else {
-			for (Item item : items) {
-				itemList += item.display() + ", ";
-			}
-			itemList = itemList.substring(0, itemList.length() - 2);
+		String itemList = items.stream()
+				.map(Item::display)
+				.collect(Collectors.joining("\n"));
+
+		if (!itemList.isEmpty()) {
+			itemList = "\nItems in room:\n" + itemList;
 		}
 
-		String exitList;
-		List<Exit> physicalExits = exits.stream().filter(e -> !e.getDirection().isTeleport()).toList();
-		if (physicalExits.size() == 1) {
-			exitList = "You can go " + physicalExits.get(0).getDirection().toString().toLowerCase();
-		} else {
-			exitList = "You can go either " + physicalExits.stream().map(e -> e.getDirection().toString().toLowerCase()).collect(Collectors.joining(" or "));
-		}
+		String exitList = exits.stream()
+				.filter(e -> !e.getDirection().isTeleport())
+				.map(Exit::display)
+				.collect(Collectors.joining(", "));
 
-		String display = roomName + " " + status + "\nCurrent Level: " + level +
-				"\n" + limitStringWidth(roomDescription, 90) + "\n" + itemList
+		return roomName + " " + status + "\nCurrent Level: Level " + level +
+				"\n\n" + limitStringWidth(roomDescription, 90) + itemList
 				+ "\n" + exitList;
-
-		return display;
 	}
 
 	/**
