@@ -90,8 +90,15 @@ public class GameplayCommands extends Commands {
 	 * room the player is currently in.
 	 */
 	private String hint() throws GameException {
-		// TODO - implement GameplayCommands.hint
-		throw new UnsupportedOperationException();
+		if (currentPuzzle != null) {
+			return currentPuzzle.getHint();
+		}
+		
+		if (player.getCurrentRoom().getHint() != null) {
+			return player.getCurrentRoom().getHint();
+		}
+		
+		return "No hint for current room";
 	}
 
 	/**
