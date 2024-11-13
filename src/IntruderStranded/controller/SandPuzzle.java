@@ -1,12 +1,5 @@
 package IntruderStranded.controller;
 
-import IntruderStranded.gameExceptions.GameException;
-import IntruderStranded.model.RewardDB;
-import IntruderStranded.model.RoomDB;
-
-import java.util.List;
-import java.util.Scanner;
-
 /**
  * Class: SandPuzzle
  * @author Hannah Jensen
@@ -23,36 +16,39 @@ public class SandPuzzle extends Puzzle {
 	}
 
 	/**
-     * Method: run
-     * returns "To throw this rope, you must align these numbers: The first is half of 18, The second is the number of seasons, The third is the sides of a hexagon."
-     * Checks if the input parameter is equal to "946".
-     * If it is not equal, return "The number you have entered is incorrect, try again."
-     * If it is equal, return "You have input the correct number." and call getRewards method from the implemented RoomEvent interface.
-     *
-     */
+	 * Method: run
+	 * returns "To throw this rope, you must align these numbers: The first is half of 18, The second is the number of seasons, The third is the sides of a hexagon."
+	 * Checks if the input parameter is equal to "946".
+	 * If it is not equal, return "The number you have entered is incorrect, try again."
+	 * If it is equal, return "You have input the correct number."
+	 *
+	 * @return String
+	 */
 	@Override()
-    void run(String cmd) {
-		Scanner input = new Scanner(System.in);
+	String run(String cmd) {
+		StringBuilder output = new StringBuilder();
+
 		if(puzzleCounter == -1) {
-			System.out.println("To throw this rope, you must align these numbers: \n " +
+			output.append("To throw this rope, you must align these numbers: \n " +
 					"The first is half of 18, The second is the number of seasons, The third is the sides of a hexagon.");
 			puzzleCounter ++;
 		}
-		while(puzzleCounter <= 3) {
-			String answer = input.nextLine();
-			if (answer.equals("946")) {
-				System.out.println("You have entered the correct number! You toss the rope to grab the missing item.");
-				getRewards();
-				break;
-			} else if (puzzleCounter == 3) {
-				System.out.println("You've lost the puzzle, and fallen into the sand.");
-				break;
+		else if (puzzleCounter == 3) {
+			output.append("You've lost the puzzle, and fallen into the sand.");
+			setupPuzzle();
+		}
+		else {
+			if (cmd.equals("946")) {
+				output.append("You have entered the correct number! You toss the rope to grab the missing item.");
+				setIsCompleted(true);
+
 			} else {
-				System.out.println("The number you've entered is incorrect, try again.");
+				output.append("The number you've entered is incorrect, try again.");
 				puzzleCounter ++;
 			}
 		}
-		puzzleCounter = -1;
+
+		return output.toString();
 	}
 
 	@Override()
@@ -68,10 +64,7 @@ public class SandPuzzle extends Puzzle {
 		return "The first number is 9 and the second number is 4";
 	}
 
-	/**
-	 * Method: getRewards
-	 * Gets the rewards from completing this puzzle.
-	 */
+
 
 
 }

@@ -1,13 +1,10 @@
 package IntruderStranded.controller;
 
 import IntruderStranded.gameExceptions.GameException;
-import IntruderStranded.model.RewardDB;
-import IntruderStranded.model.RoomDB;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 /**
  * Class: CombinationPuzzle
@@ -33,88 +30,84 @@ public class CombinationPuzzle extends Puzzle {
 	}
 
 	/**
-     * Method: run
-     * If puzzleCounter is -1, returns unknownNumber + "\nEnter a number between 0 and 9 to guess
-     * the combination: " and increments puzzleCounter.
-     * If puzzleCounter is not -1, check if the input parameter equals a digit in answerNumber. If it is
-     * not equal, increment the puzzleCounter and return "Incorrect number, try again. You have " +
-     * (5 - puzzleCounter) + " guesses left." If the input parameter was one of the numbers in the
-     * digit +/- 1, then also return "You were close to a digit in the combination." Otherwise,
-     * also return "You were not close to a digit in the combination."
-     * If the player enters text that is not a number between 0 and 9, throw a GameException with the
-     * message, "Please enter a number between 0 and 9."
-     * After every guess, unknownNumber is displayed again.
-     * When a correct letter is guessed, guessArray is updated to show everywhere that digit appears
-     * in answerNumber.
-     * If the puzzleCounter reaches 5, call setupPuzzle method and return "You lost the puzzle."
-     * If all digits are guessed, return "You have successfully solved the puzzle!" and call getRewards
-     * method from the implemented RoomEvent interface.
-     *
-     */
+	 * Method: run
+	 * If puzzleCounter is -1, returns unknownNumber + "\nEnter a number between 0 and 9 to guess
+	 * the combination: " and increments puzzleCounter.
+	 * If puzzleCounter is not -1, check if the input parameter equals a digit in answerNumber. If it is
+	 * not equal, increment the puzzleCounter and return "Incorrect number, try again. You have " +
+	 * (5 - puzzleCounter) + " guesses left." If the input parameter was one of the numbers in the
+	 * digit +/- 1, then also return "You were close to a digit in the combination." Otherwise,
+	 * also return "You were not close to a digit in the combination."
+	 * If the player enters text that is not a number between 0 and 9, throw a GameException with the
+	 * message, "Please enter a number between 0 and 9."
+	 * After every guess, unknownNumber is displayed again.
+	 * When a correct letter is guessed, guessArray is updated to show everywhere that digit appears
+	 * in answerNumber.
+	 * If the puzzleCounter reaches 5, call setupPuzzle method and return "You lost the puzzle."
+	 * If all digits are guessed, return "You have successfully solved the puzzle!" and call getRewards
+	 * method from the implemented RoomEvent interface.
+	 *
+	 * @return String
+	 */
 	@Override()
-    void run(String cmd) {
-		Scanner input = new Scanner(System.in);
-		String guess = input.nextLine();
+    public String run(String cmd) {
+		StringBuilder output = new StringBuilder();
 
-		if(puzzleCounter == -1) {
-			System.out.println("To open the chest, enter a number between 0 and 9 to guess\n" +
+
+		if (puzzleCounter == -1) {
+			output.append("To open the chest, enter a number between 0 and 9 to guess\n" +
 					"the combination: ___");
 			puzzleCounter++;
-		}
-
-		if(puzzleCounter >= 5) {
-			System.out.println("You've lost the puzzle, and cannot open the chest.");
+		} else if (puzzleCounter >= 5) {
+			output.append("You've lost the puzzle, and cannot open the chest.");
 			setupPuzzle();
-		}
+		} else {
 
-		try {
-			int guessInt = Integer.parseInt(guess);
-			boolean guessIsHot = isHot(guessInt);
+			try {
+				int guessInt = Integer.parseInt(cmd);
+				boolean guessIsHot = isHot(guessInt);
 
-			if (guessInt < 0 || guessInt > 9) {
-				throw new GameException("Please enter a number between 0 and 9.");
-			}
+				if (guessInt < 0 || guessInt > 9) {
+					throw new GameException("Please enter a number between 0 and 9.");
+				}
 
-			boolean correctGuess = false;
+				boolean correctGuess = false;
 
-
-			while (puzzleCounter <= 5) {
 				for (int i = 0; i < answerNumber.length(); i++) {
-					if (answerNumber.charAt(i) == guess.charAt(i)) {
+					if (answerNumber.charAt(i) == cmd.charAt(i)) {
 						guessArray.set(i, answerNumber.substring(i, i + 1));
 						correctGuess = true;
 					}
 				}
-
 				puzzleCounter++;
 
 
 				if (!correctGuess) {
-					System.out.println("Incorrect number, try again. \n You have " + (puzzleCounter-1) + " guesses left.");
-					if(guessIsHot) {
-						System.out.println("You were close to a digit in the combination");
-					}else {
-						System.out.println("You were not close to a digit in the combination.");
+					output.append("Incorrect number, try again. \n You have " + (puzzleCounter - 1) + " guesses left.");
+					if (guessIsHot) {
+						output.append("You were close to a digit in the combination");
+					} else {
+						output.append("You were not close to a digit in the combination.");
 					}
-					System.out.print(guessArray);
-					System.out.println("Enter a number between 0 and 9:");
+					output.append(guessArray);
+					output.append("Enter a number between 0 and 9:");
 
 				} else if (answerArray.equals(guessArray)) {
-					System.out.println("You've solved the puzzle, and can now open the chest!");
-					getRewards();
-					break;
+					setIsCompleted(true);
+					output.append("You've solved the puzzle, and can now open the chest!");
 
 				} else {
-					System.out.print(guessArray);
-					System.out.println("Enter a number between 0 and 9:");
+					output.append(guessArray);
+					output.append("Enter a number between 0 and 9:");
 				}
 
+			} catch (NumberFormatException | GameException ex) {
+				System.out.println("Please enter a valid number.");
 			}
-
-		} catch (NumberFormatException | GameException ex) {
-			System.out.println("Please enter a valid number.");
 		}
 
+
+		return output.toString();
 	}
 
 	/**
