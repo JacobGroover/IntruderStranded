@@ -294,7 +294,7 @@ public class GameplayCommands extends Commands {
             South - Move south
             East - Move east
             West - Move west
-            """ + (player.getCurrentRoom().canTeleport() ? "TEL - Teleport\n" : "");
+            """ + (player.getCurrentRoom().allowsTeleport() ? "TEL - Teleport\n" : "");
 	}
 
 	/**
@@ -410,7 +410,7 @@ public class GameplayCommands extends Commands {
 	 */
 	String teleport(String command) throws GameException {
 		if (teleportCounter == 0) {
-			if (!player.getCurrentRoom().canTeleport()) {
+			if (!player.getCurrentRoom().allowsTeleport()) {
 				throw new GameException("Invalid command");
 			}
 
