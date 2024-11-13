@@ -226,8 +226,9 @@ public class Room {
 	 * 
 	 * @param visited
 	 */
-	public void setVisited(boolean visited) {
+	public void setVisited(boolean visited) throws GameException {
 		this.visited = visited;
+		rdb.updateRoom(this);
 	}
 
 	/**
