@@ -136,7 +136,7 @@ public class Room {
 	 * Iterates through the List of Exits and checks whether the List contains TEL Directions.
 	 * Should be called from the Room constructor right after the Room data is retrieved from the database.
 	 */
-	boolean canTeleport()  {
+	private boolean canTeleport()  {
 		for (Exit exit : exits) {
 			if (exit.getDirection().isTeleport()) {
 				return true;
