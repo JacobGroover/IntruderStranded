@@ -151,16 +151,15 @@ public class Room {
 	 * Iterates through the List of Exits for this room to return the ID of the destination room in the given
 	 * direction from this room. If there is no Exit corresponding to the given direction, a GameException
 	 * will be thrown.
-	 * @param command
+	 * @param direction The direction to go.
 	 */
-	int leaveRoom(String command) throws GameException {
-		Direction direction = Direction.parseDirection(command);
-
+	int leaveRoom(Direction direction) throws GameException {
 		for (Exit exit : exits) {
 			if (exit.getDirection() == direction) {
 				return exit.getDestinationID();
 			}
 		}
+
 		throw new GameException("Invalid direction.");
 	}
 
