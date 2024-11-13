@@ -3,6 +3,8 @@ package IntruderStranded.controller;
 import IntruderStranded.gameExceptions.*;
 import IntruderStranded.model.SaveManager;
 
+import java.util.List;
+
 /**
  * Class: GameplayCommands
  * @author Jacob Groover
@@ -18,9 +20,9 @@ public class GameplayCommands extends Commands {
 
 	private boolean isExiting;
 	private boolean isManagingInventory;
-	private boolean isTeleporting;
 	private int teleportCounter;
 	private String teleportLevel;
+	private Direction teleportDirection;
 	private Puzzle currentPuzzle;
 	private Monster currentMonster;
 
@@ -57,7 +59,7 @@ public class GameplayCommands extends Commands {
 			return exit(command);
 		} else if (isManagingInventory) {
 			return inventory(command);
-		} else if (isTeleporting) {
+		} else if (teleportCounter != 0) {
 			return teleport(command);
 		} else if (currentPuzzle != null) {
 			return currentPuzzle.run();
@@ -147,7 +149,11 @@ public class GameplayCommands extends Commands {
 	 * @param command
 	 */
 	private String move(String command) throws GameException {
-		int destinationId = player.getCurrentRoom().leaveRoom(command);
+		return moveInDirection(Direction.parseDirection(command));
+	}
+
+	private String moveInDirection(Direction direction) throws GameException {
+		int destinationId = player.getCurrentRoom().leaveRoom(direction);
 		player.setCurrentRoom(Room.getById(destinationId, player.getID()));
 		return player.getCurrentRoom().display();
 	}
@@ -317,9 +323,70 @@ public class GameplayCommands extends Commands {
 	 * Otherwise return "Please enter yes or no."
 	 * @param command
 	 */
-	String teleport(String command) {
-		// TODO - implement GameplayCommands.teleport
-		throw new UnsupportedOperationException();
-	}
+	String teleport(String command) throws GameException {
+		if (teleportCounter == 0) {
+			if (!player.getCurrentRoom().canTeleport()) {
+				throw new GameException("Invalid command");
+			}
 
+			teleportCounter++;
+			return "Where would you like to teleport? Level -2 (Cell), Level -1 (Armory), Level 0 (Inside), Level 0 (Outside). Please enter a number.";
+		} else if (teleportCounter == 1) {
+			if (!List.of("0", "-1", "-2").contains(command)) {
+				throw new GameException("This level does not exist.");
+			}
+
+			if (command.equals(player.getCurrentRoom().getLevel())) {
+				throw new GameException("You are already in this level.");
+			}
+
+			teleportLevel = command;
+			teleportCounter++;
+
+			if (command.equals("0")) {
+				return "Please enter \"inside\" or \"outside\"";
+			}
+
+			teleportCounter++;
+			teleportDirection = switch (command) {
+				case "-1" -> Direction.TEL1;
+				case "-2" -> Direction.TEL2;
+                default -> throw new IllegalStateException();
+            };
+
+			return "Are you sure you want to teleport?";
+		} else if (teleportCounter == 2) {
+			teleportDirection = switch (command) {
+				case "INSIDE" -> Direction.TEL0IN;
+				case "OUTSIDE" -> Direction.TEL0OUT;
+				default -> throw new GameException("Please enter \"inside\" or \"outside\"");
+			};
+
+			String level = switch (teleportDirection) {
+				case TEL0IN -> "0 (Inside)";
+				case TEL0OUT -> "0 (Outside)";
+				default -> throw new IllegalStateException();
+			};
+
+			if (level.equals(player.getCurrentRoom().getLevel())) {
+				throw new GameException("You are already in this level.");
+			}
+
+			teleportCounter++;
+			return "Are you sure you want to teleport?";
+		}
+		else if (teleportCounter == 3) {
+			if (command.equals("YES")) {
+				teleportCounter = 0;
+				return "\n" + moveInDirection(teleportDirection);
+			} else if (command.equals("NO")) {
+				teleportCounter = 0;
+				return "";
+			}
+
+			throw new GameException("Please enter yes or no.");
+		}
+
+		throw new IllegalStateException("Invalid teleportCounter");
+	}
 }
