@@ -64,6 +64,19 @@ public class Room {
 	}
 
 	/**
+	 * Method: getNameFromId
+	 * Gets the name of a room from its id.
+	 * @param roomId The id of the room to get.
+	 * @return The name of the room with the given id.
+	 * @throws GameException
+	 */
+	public static String getNameFromId(int roomId) throws GameException {
+		RoomDB rdb = new RoomDB(roomId, -1);
+		Room room = rdb.getRoom();
+		return room.getRoomName();
+	}
+
+	/**
 	 * Method: allowsTeleport
 	 * Getter for teleport class attribute
 	 */
