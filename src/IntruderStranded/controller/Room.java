@@ -96,14 +96,15 @@ public class Room {
 		}
 
 		String exitList;
-		if (exits.size() == 1) {
-			exitList = "You can go " + exits.get(0).getDirection().toString().toLowerCase();
+		List<Exit> physicalExits = exits.stream().filter(e -> !e.getDirection().isTeleport()).toList();
+		if (physicalExits.size() == 1) {
+			exitList = "You can go " + physicalExits.get(0).getDirection().toString().toLowerCase();
 		} else {
-			exitList = "You can go either " + exits.stream().map(e -> e.getDirection().toString().toLowerCase()).collect(Collectors.joining(" or "));
+			exitList = "You can go either " + physicalExits.stream().map(e -> e.getDirection().toString().toLowerCase()).collect(Collectors.joining(" or "));
 		}
 
 		String display = roomName + " " + status + "\nCurrent Level: " + level +
-				"\n" + limitStringWidth(roomDescription, 80) + "\n" + itemList
+				"\n" + limitStringWidth(roomDescription, 90) + "\n" + itemList
 				+ "\n" + exitList;
 
 		return display;
@@ -137,9 +138,7 @@ public class Room {
 	 */
 	boolean canTeleport()  {
 		for (Exit exit : exits) {
-			Direction direction = exit.getDirection();
-			if (direction == Direction.TEL0IN || direction == Direction.TEL0OUT ||
-					direction == Direction.TEL1 || direction == Direction.TEL2) {
+			if (exit.getDirection().isTeleport()) {
 				return true;
 			}
 		}
