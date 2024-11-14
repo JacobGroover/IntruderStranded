@@ -5,12 +5,13 @@ public class Item {
 	private final int itemID;
 	private String itemName;
 	private String itemDescription;
+	private boolean discardAllowed;
 
 	/**
 	 * Returns the name and description of the item as a string.
 	 */
 	String display() {
-		return itemName + "- " + itemDescription;
+		return itemName + " - " + itemDescription;
 	}
 
 	/**
@@ -49,4 +50,13 @@ public class Item {
     public int getItemID() {
         return itemID;
     }
+
+    public boolean isDiscardAllowed() {
+        return discardAllowed;
+    }
+
+    public void setDiscardAllowed(boolean discardAllowed) {
+        this.discardAllowed = discardAllowed;
+    }
+
 }

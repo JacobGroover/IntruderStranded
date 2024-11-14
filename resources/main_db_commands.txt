@@ -2,6 +2,7 @@ CREATE TABLE Item (
     ItemID          INT NOT NULL PRIMARY KEY,
     ItemName        TEXT NOT NULL,
     ItemDescription TEXT NOT NULL,
+    CanDiscard      INT NOT NULL,
     ConsumableType  INT NOT NULL
 );
 
@@ -120,23 +121,23 @@ INSERT INTO Room
 (30, '0 (Outside)', 'Motorcycle', 'On the outskirts of the Moving Sand area, the player stumbles upon an abandoned, alien-designed motorcycle. The bike is weathered, covered in sand and dust, but still functional with the right know-how. It has a sleek, futuristic design, built for speed and capable of holding two characters. However, its fuel reserves are limited, allowing for just one trip before it''s drained. The surrounding area is desolate, making the motorcycle the fastest means to move ahead.');
 
 INSERT INTO Item
-(ItemID,ConsumableType, ItemName,                       ItemDescription) VALUES
-(1,     0,              'Cell Door Key',                'A rusted key.'),
-(2,     0,              'Iron Sword',                   'A weapon made of iron that can slash through any foe.'),
-(3,     0,              'Crowbar',                      'It''s a red and black curved metal bar. On both ends there appears to be a ledge used to open objects, like crates.'),
-(4,     1,              'Med Pack',                     'It is a portable medical kit designed for rapid treatment in emergency situations. Can restore 20 health for the player.'),
-(5,     0,              'Rope',                         'An old but sturdy rope half covered in sand, located next to the moving sand.'),
-(6,     0,              'Flame Knife',                  'Even when it''s in your hand, you feel a slight warmth radiating from it. The shine of the blade itself has flames that emit from it. When touching it, you don''t feel any burn except small heat.'),
-(7,     0,              'Sneaky Shoes',                 'A pair of enchanted shoes that allows the player to move quietly.'),
-(8,     0,              'Boomerang Blade',              'Made from a special type of metal that seems to be something only the aliens on the ship are familiar with. It has a curved shape and will return to the user when used.'),
-(9,     2,              'Freezing Potion',              'A potion that freezes anything that it touches.'),
-(10,    0,              'Missing Wheel',                'It''s the wheel for a ship that''s been unscrewed.'),
-(11,    0,              'Missing Control Panel',        'It''s a screen that looks like it''s been carefully removed from somewhere. There are wires sticking out from the back but none of them appear to be damaged.'),
-(12,    0,              'Missing Engine',               'It appears to be more compact than it would seem. You could easily carry it. There''s oil leaking out from some parts like it''s been recently removed.'),
-(13,    0,              'Missing Wing',                 'It''s almost as long as your body, but it''s also very light. It has a sleek design that shines against the dim lights in the alien''s spaceship. It appears to have been sawed off from something, but it is still fixable.'),
-(14,    0,              'Missing Chair',                'It looks like it''s been slightly roughed up with the leather seating scratched up. The bottom part appears to be in proper condition. It can still be connected to a certain attachment, like a ship.'),
-(15,    0,              'Alien Communication Device',   'Cell Phone-like device.'),
-(16,    0,              'Motorcycle Fuel',              'A canister of motorcycle fuel.');
+(ItemID,CanDiscard,     ConsumableType, ItemName,                       ItemDescription) VALUES
+(1,     1,              0,              'Cell Door Key',                'A rusted key.'),
+(2,     1,              0,              'Iron Sword',                   'A weapon made of iron that can slash through any foe.'),
+(3,     1,              0,              'Crowbar',                      'It''s a red and black curved metal bar. On both ends there appears to be a ledge used to open objects, like crates.'),
+(4,     1,              1,              'Med Pack',                     'It is a portable medical kit designed for rapid treatment in emergency situations. Can restore 20 health for the player.'),
+(5,     1,              0,              'Rope',                         'An old but sturdy rope half covered in sand, located next to the moving sand.'),
+(6,     1,              0,              'Flame Knife',                  'Even when it''s in your hand, you feel a slight warmth radiating from it. The shine of the blade itself has flames that emit from it. When touching it, you don''t feel any burn except small heat.'),
+(7,     1,              0,              'Sneaky Shoes',                 'A pair of enchanted shoes that allows the player to move quietly.'),
+(8,     1,              0,              'Boomerang Blade',              'Made from a special type of metal that seems to be something only the aliens on the ship are familiar with. It has a curved shape and will return to the user when used.'),
+(9,     1,              2,              'Freezing Potion',              'A potion that freezes anything that it touches.'),
+(10,    0,              0,              'Missing Wheel',                'It''s the wheel for a ship that''s been unscrewed.'),
+(11,    0,              0,              'Missing Control Panel',        'It''s a screen that looks like it''s been carefully removed from somewhere. There are wires sticking out from the back but none of them appear to be damaged.'),
+(12,    0,              0,              'Missing Engine',               'It appears to be more compact than it would seem. You could easily carry it. There''s oil leaking out from some parts like it''s been recently removed.'),
+(13,    0,              0,              'Missing Wing',                 'It''s almost as long as your body, but it''s also very light. It has a sleek design that shines against the dim lights in the alien''s spaceship. It appears to have been sawed off from something, but it is still fixable.'),
+(14,    0,              0,              'Missing Chair',                'It looks like it''s been slightly roughed up with the leather seating scratched up. The bottom part appears to be in proper condition. It can still be connected to a certain attachment, like a ship.'),
+(15,    1,              0,              'Alien Communication Device',   'Cell Phone-like device.'),
+(16,    1,              0,              'Motorcycle Fuel',              'A canister of motorcycle fuel.');
 
 INSERT INTO Weapon
 (ItemID,Damage) VALUES
