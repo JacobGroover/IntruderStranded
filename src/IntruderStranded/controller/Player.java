@@ -222,8 +222,26 @@ public class Player extends Entity {
 	 * @param item
 	 */
 	String useItem(Item item) throws GameException {
-        // TODO: Fix implementation
-		pdb.removeItem(getID(), item);
+		if (item instanceof Weapon weapon) {
+			this.equippedWeapon = weapon;
+			update();
+			return "You are now equipped with " + item.getItemName() + "!\nYour STATS: " + getStatus();
+		}
+
+		switch (item.getConsumableType()) {
+			case NONE -> {
+				return "You cannot use this item";
+			}
+			case MED_PACK -> {
+				discardItem(item);
+				setHealth(getHealth() + 20);
+				return "You used the " + item.getItemName() + "\nYour STATS: " + getStatus();
+			}
+			case FREEZING_POTION -> {
+				return "You can only use this item in a battle";
+			}
+		}
+
 		return item.display();
 	}
 
