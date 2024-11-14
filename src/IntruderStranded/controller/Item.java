@@ -6,6 +6,7 @@ public class Item {
 	private String itemName;
 	private String itemDescription;
 	private boolean discardAllowed;
+	private ConsumableType consumableType;
 
 	/**
 	 * Returns the name and description of the item as a string.
@@ -59,4 +60,11 @@ public class Item {
         this.discardAllowed = discardAllowed;
     }
 
+    public ConsumableType getConsumableType() {
+        return consumableType;
+    }
+
+    public void setConsumableType(ConsumableType consumableType) {
+        this.consumableType = consumableType;
+    }
 }
