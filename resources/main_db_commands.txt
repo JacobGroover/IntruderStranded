@@ -120,6 +120,8 @@ INSERT INTO Room
 (29, '0 (Outside)', 'Rocky Mountain', 'A towering, jagged mountain rises from the desert landscape, its steep cliffs offering a challenging but faster route to the next area. The rocks are uneven, and the ascent requires careful coordination of both hands and feet. Strong winds sweep across the mountainside, making the climb even more perilous. However, for those who succeed, it is the quickest way to reach higher ground and continue their journey.'),
 (30, '0 (Outside)', 'Motorcycle', 'On the outskirts of the Moving Sand area, the player stumbles upon an abandoned, alien-designed motorcycle. The bike is weathered, covered in sand and dust, but still functional with the right know-how. It has a sleek, futuristic design, built for speed and capable of holding two characters. However, its fuel reserves are limited, allowing for just one trip before it''s drained. The surrounding area is desolate, making the motorcycle the fastest means to move ahead.');
 
+UPDATE Room SET RoomHint = 'Enter "look" to look around' WHERE RoomID = 1;
+
 INSERT INTO Item
 (ItemID,CanDiscard,     ConsumableType, ItemName,                       ItemDescription) VALUES
 (1,     1,              0,              'Cell Door Key',                'A rusted key.'),
