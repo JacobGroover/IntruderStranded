@@ -69,13 +69,13 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * Method: removeItem
+	 * Method: discardItem
 	 * Removes item from game session database Inventory table by calling
 	 * PlayerDB.removeItem method.
 	 * Adds item to currentRoom by calling currentRoom.addItem method.
 	 * @param item
 	 */
-	void removeItem(Item item) throws GameException {
+	void discardItem(Item item) throws GameException {
 		pdb.removeItem(getID(), item);
 		currentRoom.addItem(item);
 	}
