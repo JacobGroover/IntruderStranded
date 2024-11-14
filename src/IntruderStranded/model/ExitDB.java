@@ -11,7 +11,8 @@ import java.util.List;
 public record ExitDB(int roomID) {
 	/**
 	 * Method: getExits
-	 * Returns an ArrayList of exits associated with a roomID.
+	 * Gets all exits in this room.
+	 * @return The list of exits in this room.
 	 */
 	List<Exit> getExits() throws GameException {
 		try {
@@ -36,7 +37,6 @@ public record ExitDB(int roomID) {
 	/**
 	 * Method: directionFromInt
 	 * Converts an integer into its corresponding direction.
-	 *
 	 * @param direction The integer to convert into a direction.
 	 * @return The direction value represented by the provided integer.
 	 */

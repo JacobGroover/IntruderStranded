@@ -13,7 +13,7 @@ import java.util.Optional;
  * @author Fareed Ahmed
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
- * Written: November 10, 2024
+ * Written: November 14, 2024
  *
  * This class handles getting and setting player data from the database.
  */

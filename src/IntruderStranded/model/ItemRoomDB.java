@@ -7,7 +7,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Class: ItemRoomDB
+ * @author Fareed Ahmed
+ * @version 1.0
+ * Course: ITEC 3860 Fall 2024
+ * Written: November 14, 2024
+ *
+ * This class handles getting and updating the room item data from the database.
+ */
 public record ItemRoomDB(int roomID, int playerID) {
+	/**
+	 * Method: getItems
+	 * Gets all items currently in this room.
+	 * @return The list of items in this room.
+	 */
 	List<Item> getItems() throws GameException {
 		try {
 			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT Item.*, ItemRoom.ItemQuantity FROM ItemRoom LEFT JOIN Item ON ItemRoom.ItemID = Item.ItemID WHERE PlayerID = ? AND RoomID = ?", playerID(), roomID());
@@ -18,10 +32,9 @@ public record ItemRoomDB(int roomID, int playerID) {
 	}
 
 	/**
-	 * method: addItem
-	 * Adds an item to the room with the roomID matching the parameter passed in.
-	 *
-	 * @param item
+	 * Method: addItem
+	 * Adds an item to this room.
+	 * @param item The item to add.
 	 */
 	void addItem(Item item) throws GameException {
 		try {
@@ -42,10 +55,9 @@ public record ItemRoomDB(int roomID, int playerID) {
 	}
 
 	/**
-	 * method: removeItem
-	 * Removes an item from the room with the roomID matching the parameter passed in.
-	 *
-	 * @param item
+	 * Method: removeItem
+	 * Removes an item from this room.
+	 * @param item The item to remove.
 	 */
 	void removeItem(Item item) throws GameException {
 		try {
