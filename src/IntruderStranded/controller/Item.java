@@ -60,6 +60,15 @@ public class Item {
         this.discardAllowed = discardAllowed;
     }
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Item other) {
+			return itemID == other.itemID;
+		}
+
+		return false;
+	}
+
     public ConsumableType getConsumableType() {
         return consumableType;
     }

@@ -85,14 +85,26 @@ public class Player extends Entity {
 	 * Calls getInventory method and uses it to return a String representation of Item objects.
 	 */
 	String displayInventory() throws GameException {
-		List<Item> inventory = getInventory();
-		String inventoryList = "INV \n";
+		StringBuilder display = new StringBuilder("Item List:\n");
+		List<Item> inventory = getInventory().stream().distinct().toList();
 
-		for(Item item : inventory) {
-			inventoryList += item.display() + "\n";
+		for (int index = 0; index < 10; index++) {
+			if (index >= inventory.size()) {
+				display.append("empty,\n");
+				continue;
+			}
+
+			Item item = inventory.get(index);
+			long quantity = inventory.stream().filter(i -> i.equals(item)).count();
+			if (quantity > 1) {
+				display.append(quantity).append(' ');
+			}
+
+			display.append(item.getItemName()).append(",\n");
 		}
 
-		return inventoryList;
+		return display.toString();
+	}
 	}
 
 	/**
