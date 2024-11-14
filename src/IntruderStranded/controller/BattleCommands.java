@@ -6,8 +6,12 @@ import java.util.List;
 
 public class BattleCommands extends GameplayCommands {
     private final GameplayCommands source;
-    private final Monster currentMonster;
     private final List<Monster> monsters;
+    private Monster currentMonster;
+    private static final String ACTION_PROMPT = """
+            
+            What would you like to do?
+            "ATTACK", "USE ITEM", "DEFEND", "FLEE\"""";
 
     /**
      * Creates a new BattleCommands object.
@@ -46,23 +50,82 @@ public class BattleCommands extends GameplayCommands {
             Help - This command, displays available commands
             Save - Save the game
             Load - Load a save
-            INV - Open inventory
-            Flee - Flee from the current monster
+            INV - To view user's inventory
+            Flee - Flee from combat
+            Attack - Attack the current monster
+            Defend - Reduces damage
             """;
     }
 
     private String getBattleInfo() {
-        return "\n";
+        return "\nYour STATS: " + player.getStatus()
+                + "\n" + currentMonster.getName() + " STATS: " + currentMonster.getStatus();
     }
 
-    private String attack() {
-        // TODO - implement GameplayCommands.attack
-        throw new UnsupportedOperationException();
+    @Override
+    protected String useItem(Item item) throws GameException {
+        if (item.getConsumableType() == ConsumableType.FREEZING_POTION) {
+            currentMonster.freeze();
+            return "You used the " + item.getItemName();
+        }
+
+        return player.useItem(item);
+    }
+
+    private String attack() throws GameException {
+        currentMonster.setHealth(currentMonster.getHealth() - player.getDamage());
+
+        if (currentMonster.getHealth() <= 0) {
+            monsters.remove(currentMonster);
+            currentMonster.delete();
+
+            String display = "You charged on " + currentMonster.getName() + "!\n"
+                    + "You landed a hit!\n" + getBattleInfo()
+                    + "\n\nYou have defeated " + currentMonster.getName();
+
+            if (monsters.isEmpty()) {
+                source.setRewards(currentMonster.getRewards());
+                changeGameState(source);
+                return display;
+            } else {
+                currentMonster = monsters.getFirst();
+                display += "\n\n" + currentMonster.getName() + " is blocking your path.";
+                display += getBattleInfo() + ACTION_PROMPT;
+            }
+
+            return display;
+        }
+
+        if (currentMonster.isFrozen()) {
+            currentMonster.tickFreeze();
+            return "You charged on " + currentMonster.getName() + "!\n"
+                    + currentMonster.getName() + " is frozen, it couldn't attack you!"
+                    + getBattleInfo() + ACTION_PROMPT;
+        }
+
+        player.setHealth(player.getHealth() - currentMonster.getDamage());
+
+        if (player.getHealth() <= 0) {
+            return onPlayerLose();
+        }
+
+        return "You charged on " + currentMonster.getName() + "!\n"
+                + "You landed a hit!\n" + currentMonster.getName() + "attacked you!"
+                + getBattleInfo() + ACTION_PROMPT;
     }
 
     private String defend() {
-        // TODO - implement GameplayCommands.defend
-        throw new UnsupportedOperationException();
+        player.setHealth(player.getHealth() - currentMonster.getDamage() / 2);
+
+        if (player.getHealth() <= 0) {
+            return onPlayerLose();
+        }
+
+        return currentMonster.getName() + "attacked you!" + getBattleInfo();
+    }
+
+    private String onPlayerLose() {
+        return "You lost!";
     }
 
     @Override
@@ -74,6 +137,6 @@ public class BattleCommands extends GameplayCommands {
 
     @Override
     protected String getIntroText() {
-        return getBattleInfo();
+        return getBattleInfo() + ACTION_PROMPT;
     }
 }
