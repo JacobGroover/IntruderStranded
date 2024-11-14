@@ -32,7 +32,7 @@ public record ItemRoomDB(int roomID, int playerID) {
 				int quantity = resultSet.getInt("ItemQuantity");
 				DBService.getDB().updatePrepared("UPDATE ItemRoom SET ItemQuantity = ?", quantity + 1);
 			} else {
-				DBService.getDB().updatePrepared("INSERT INTO ItemRoom (ItemID, RoomID, PlayerID, ItemQuantity), (?, ?, ?, ?)", item.getItemID(), roomID(), playerID(), 1);
+				DBService.getDB().updatePrepared("INSERT INTO ItemRoom (ItemID, RoomID, PlayerID, ItemQuantity) VALUES (?, ?, ?, ?)", item.getItemID(), roomID(), playerID(), 1);
 			}
 
 			resultSet.getStatement().close();
