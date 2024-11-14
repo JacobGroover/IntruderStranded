@@ -36,8 +36,4 @@ public enum Direction {
 	public boolean isTeleport() {
 		return !physicalDirectionMap.containsValue(this);
 	}
-
-	public String getTitleCaseString() {
-		return name().charAt(0) + name().toLowerCase().substring(1);
-	}
 }

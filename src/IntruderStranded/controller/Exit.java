@@ -47,6 +47,8 @@ public class Exit {
 	}
 
 	public String display() {
-		return "\"" + direction.getTitleCaseString() + "\" - " + destinationName;
+		String directionName = direction.name();
+		return "\"" + directionName.charAt(0) + directionName.toLowerCase().substring(1)
+				+ "\" - " + destinationName;
 	}
 }
