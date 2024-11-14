@@ -18,8 +18,8 @@ import java.util.Optional;
  * This class handles getting and setting player data from the database.
  */
 public class PlayerDB {
-	InventoryDB inventoryDB = new InventoryDB();
-	WeaponDB weaponDB = new WeaponDB();
+	private final InventoryDB inventoryDB = new InventoryDB();
+	private final WeaponDB weaponDB = new WeaponDB();
 
 	/**
 	 * Method: updatePlayer
