@@ -99,9 +99,10 @@ public class Player extends Entity {
 	 * Method: getInventory
 	 * Returns an ArrayList of Item objects by calling PlayerDB.getInventory method.
 	 */
-	List<Item> getInventory() throws GameException {
-		List<Item> inventory = pdb.getInventory(getID());
-		return inventory;
+	private List<Item> getInventory() throws GameException {
+		return pdb.getInventory(getID());
+	}
+
 	boolean inventoryFull() throws GameException {
 		return getInventory().stream().distinct().count() >= INVENTORY_CAPACITY;
 	}
