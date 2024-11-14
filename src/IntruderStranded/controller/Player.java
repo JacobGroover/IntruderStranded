@@ -229,6 +229,10 @@ public class Player extends Entity {
 		return item.display();
 	}
 
+	boolean hasItem(String itemName) throws GameException {
+		return getInventory().stream().anyMatch(i -> i.getItemName().equalsIgnoreCase(itemName));
+	}
+
 	void update() throws GameException {
 		pdb.updatePlayer(this);
 	}
