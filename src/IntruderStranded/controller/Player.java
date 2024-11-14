@@ -22,6 +22,7 @@ public class Player extends Entity {
 	private Room previousRoom;
 	private int score;
 	private static final PlayerDB pdb = new PlayerDB();
+	private static final int INVENTORY_CAPACITY = 10;
 	private static final int BASE_DAMAGE = 10;
 
 	/**
@@ -101,6 +102,8 @@ public class Player extends Entity {
 	List<Item> getInventory() throws GameException {
 		List<Item> inventory = pdb.getInventory(getID());
 		return inventory;
+	boolean inventoryFull() throws GameException {
+		return getInventory().stream().distinct().count() >= INVENTORY_CAPACITY;
 	}
 
 	/**
