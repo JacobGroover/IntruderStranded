@@ -93,10 +93,10 @@ public class GameplayCommands extends Commands {
 	private String runPuzzle(String command) throws GameException {
 		String output = currentPuzzle.run(command);
 		if (currentPuzzle.getIsCompleted()) {
-			setRewards(currentPuzzle.getRewards());
+			output += "\n" + setRewards(currentPuzzle.getRewards());
 			currentPuzzle.delete();
 			currentPuzzle = null;
-			return output + "\n" + giveRewards(null);
+			return output;
 		}
 		return output;
 	}
@@ -111,6 +111,10 @@ public class GameplayCommands extends Commands {
 	}
 
 	protected String giveRewards(String command) throws GameException {
+		if (currentRewards.isEmpty()) {
+			return "";
+		}
+
 		Item reward = currentRewards.getFirst();
 
 		if (discardingReward) {
@@ -134,8 +138,12 @@ public class GameplayCommands extends Commands {
 			}
 			return getCurrentReward();
 		} else if (command.equals("DISCARD")) {
-			currentRewards.remove(reward);
-			return discardItem(reward) + getCurrentReward();
+			if (reward.canDiscard()) {
+				currentRewards.remove(reward);
+				return discardItem(reward) + getCurrentReward();
+			} else {
+				return discardItem(reward);
+			}
 		} else {
 			throw new GameException("Please enter \"keep\" or \"discard\"");
 		}
@@ -321,7 +329,7 @@ public class GameplayCommands extends Commands {
 	protected String moveTo(int destinationId) throws GameException {
 		player.setCurrentRoom(Room.getById(destinationId, player.getID()));
 		player.update();
-		return player.getCurrentRoom().display(player) + enterRoom();
+		return "\n" + player.getCurrentRoom().display(player) + enterRoom();
 	}
 
 	/**
@@ -574,7 +582,7 @@ public class GameplayCommands extends Commands {
 		else if (teleportCounter == 3) {
 			if (command.equals("YES")) {
 				teleportCounter = 0;
-				return "\n" + moveInDirection(teleportDirection);
+				return moveInDirection(teleportDirection);
 			} else if (command.equals("NO")) {
 				teleportCounter = 0;
 				return "";
