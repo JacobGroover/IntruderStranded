@@ -112,14 +112,18 @@ public class Room {
 			itemList = "\nItems in room:\n" + itemList;
 		}
 
-		String exitList = exits.stream()
+		String exitText = exits.stream()
 				.filter(e -> !e.getDirection().isTeleport())
 				.map(Exit::display)
 				.collect(Collectors.joining(", "));
 
+		if (allowsTeleport()) {
+			exitText += "\nThe teleportation feature can be activated.";
+		}
+
 		return roomName + " " + status + "\nCurrent Level: Level " + level +
 				"\n\n" + limitStringWidth(roomDescription, 90) + itemList
-				+ (canLeave(player) ? "\n" + exitList : "");
+				+ (canLeave(player) ? "\n" + exitText : "");
 	}
 
 	/**
