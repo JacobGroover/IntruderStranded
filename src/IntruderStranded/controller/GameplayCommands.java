@@ -19,8 +19,8 @@ import java.util.Optional;
  */
 public class GameplayCommands extends Commands {
 
-	private boolean isExiting;
-	private boolean isManagingInventory;
+	protected boolean isExiting;
+	protected boolean isManagingInventory;
 	private boolean introTextPrinted;
 	private boolean discardingReward;
 	private int teleportCounter;
@@ -141,8 +141,9 @@ public class GameplayCommands extends Commands {
 		}
 	}
 
-	protected void setRewards(List<Item> rewards) {
+	protected String setRewards(List<Item> rewards) throws GameException {
 		currentRewards = rewards;
+		return giveRewards(null);
 	}
 
 	/**
@@ -242,7 +243,7 @@ public class GameplayCommands extends Commands {
 			return help();
 		} else if (command.equals("CLOSE")) {
 			isManagingInventory = false;
-			return player.getCurrentRoom().display(player);
+			return onInventoryClose();
 		}
 
 		throw new GameException("Invalid command");
@@ -259,6 +260,10 @@ public class GameplayCommands extends Commands {
 
 		player.discardItem(item);
 		return "You have discarded the item";
+	}
+
+	protected String onInventoryClose() throws GameException {
+		return player.getCurrentRoom().display(player);
 	}
 
 	/**
@@ -449,7 +454,7 @@ public class GameplayCommands extends Commands {
 		return moveTo(player.getPreviousRoom().getID());
 	}
 
-	private void reloadCurrentRoom() throws GameException {
+	protected void reloadCurrentRoom() throws GameException {
 		player.setCurrentRoom(Room.getById(player.getCurrentRoom().getID(), player.getID()));
 	}
 

@@ -1,17 +1,21 @@
 package IntruderStranded.controller;
 
 import IntruderStranded.gameExceptions.GameException;
+import IntruderStranded.model.GameDBCreate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BattleCommands extends GameplayCommands {
     private final GameplayCommands source;
+    private final List<Monster> originalMonsters;
     private final List<Monster> monsters;
     private Monster currentMonster;
+    private boolean restartPrompted;
     private static final String ACTION_PROMPT = """
             
             What would you like to do?
-            "ATTACK", "USE ITEM", "DEFEND", "FLEE\"""";
+            "ATTACK", USE "ITEM", "DEFEND", "FLEE\"""";
 
     /**
      * Creates a new BattleCommands object.
@@ -22,23 +26,48 @@ public class BattleCommands extends GameplayCommands {
     public BattleCommands(GameplayCommands source, List<Monster> monsters) {
         super(source.player);
         this.source = source;
-        this.monsters = monsters;
+        this.monsters = new ArrayList<>(monsters);
+        this.originalMonsters = new ArrayList<>(monsters);
         this.currentMonster = monsters.getFirst();
     }
 
     @Override
     String executeCommand(String command) throws GameException {
-        return switch (command) {
+        if (isExiting) {
+            return exit(command);
+        } else if (restartPrompted) {
+            restart(command);
+            return "";
+        } else if (isManagingInventory) {
+            return inventory(command);
+        } else return switch (command) {
             case "ATTACK" -> attack();
             case "DEFEND" -> defend();
             case "SAVE" -> saveGame();
             case "LOAD" -> loadGame();
-            case "INV" -> inventory(command);
+            case "ITEM" -> inventory(command);
             case "EXIT" -> exit(command);
             case "HELP" -> help();
             case "FLEE" -> flee();
             default -> throw new GameException("Invalid command");
         };
+    }
+
+    private void restart(String command) throws GameException {
+        if (command.equals("YES")) {
+            changeGameState(new BattleCommands(source, originalMonsters));
+        } else if (command.equals("NO")) {
+            GameDBCreate gameDBCreate = new GameDBCreate();
+
+            if (gameDBCreate.gameExists(player.getID())) {
+                loadGame();
+            } else {
+                gameDBCreate.newGame(player.getID());
+                changeGameState(new GameplayCommands(player));
+            }
+        } else {
+            throw new GameException("Please enter yes or no.");
+        }
     }
 
     @Override
@@ -50,7 +79,7 @@ public class BattleCommands extends GameplayCommands {
             Help - This command, displays available commands
             Save - Save the game
             Load - Load a save
-            INV - To view user's inventory
+            Item - To view user's inventory
             Flee - Flee from combat
             Attack - Attack the current monster
             Defend - Reduces damage
@@ -72,24 +101,36 @@ public class BattleCommands extends GameplayCommands {
         return player.useItem(item);
     }
 
+    @Override
+    protected String onInventoryClose() {
+        return getBattleInfo() + ACTION_PROMPT;
+    }
+
     private String attack() throws GameException {
-        currentMonster.setHealth(currentMonster.getHealth() - player.getDamage());
+        boolean monsterImmune = currentMonster.getName().equals("Slime") && !player.getEquippedWeapon().getItemName().equals("Flame Knife");
+        String attackText = monsterImmune ? "The monster is immune to your current weapon!\n" : "You landed a hit!\n";
+
+        if (!monsterImmune) {
+            currentMonster.setHealth(Math.max(currentMonster.getHealth() - player.getDamage(), 0));
+        }
 
         if (currentMonster.getHealth() <= 0) {
             monsters.remove(currentMonster);
             currentMonster.delete();
 
             String display = "You charged on " + currentMonster.getName() + "!\n"
-                    + "You landed a hit!\n" + getBattleInfo()
+                    + attackText + getBattleInfo()
                     + "\n\nYou have defeated " + currentMonster.getName();
 
             if (monsters.isEmpty()) {
-                source.setRewards(currentMonster.getRewards());
+                String output = source.setRewards(currentMonster.getRewards());
+                source.reloadCurrentRoom();
                 changeGameState(source);
+                display += "\n\n" + player.getCurrentRoom().display(player) + (output.isEmpty() ? "" : "\n" + output);
                 return display;
             } else {
                 currentMonster = monsters.getFirst();
-                display += "\n\n" + currentMonster.getName() + " is blocking your path.";
+                display += "\n\n" + currentMonster.getName() + " is blocking your path.\n";
                 display += getBattleInfo() + ACTION_PROMPT;
             }
 
@@ -99,7 +140,7 @@ public class BattleCommands extends GameplayCommands {
         if (currentMonster.isFrozen()) {
             currentMonster.tickFreeze();
             return "You charged on " + currentMonster.getName() + "!\n"
-                    + currentMonster.getName() + " is frozen, it couldn't attack you!"
+                    + attackText + currentMonster.getName() + " is frozen, it couldn't attack you!\n"
                     + getBattleInfo() + ACTION_PROMPT;
         }
 
@@ -110,7 +151,7 @@ public class BattleCommands extends GameplayCommands {
         }
 
         return "You charged on " + currentMonster.getName() + "!\n"
-                + "You landed a hit!\n" + currentMonster.getName() + "attacked you!"
+                + attackText + currentMonster.getName() + " attacked you!\n"
                 + getBattleInfo() + ACTION_PROMPT;
     }
 
@@ -121,11 +162,12 @@ public class BattleCommands extends GameplayCommands {
             return onPlayerLose();
         }
 
-        return currentMonster.getName() + "attacked you!" + getBattleInfo();
+        return currentMonster.getName() + " attacked you!\n" + getBattleInfo();
     }
 
     private String onPlayerLose() {
-        return "You lost!";
+        restartPrompted = true;
+        return "You have been defeated\nWould you like to restart?";
     }
 
     @Override
