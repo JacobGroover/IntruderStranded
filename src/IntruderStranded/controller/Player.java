@@ -105,6 +105,12 @@ public class Player extends Entity {
 
 		return display.toString();
 	}
+
+	Item getInventoryItemByName(String name) throws GameException {
+		return getInventory().stream()
+				.filter(i -> i.getItemName().equalsIgnoreCase(name))
+				.findFirst()
+				.orElseThrow(() -> new GameException("Item does not exist"));
 	}
 
 	/**
