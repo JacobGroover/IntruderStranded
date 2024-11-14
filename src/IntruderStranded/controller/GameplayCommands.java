@@ -242,7 +242,7 @@ public class GameplayCommands extends Commands {
 			return help();
 		} else if (command.equals("CLOSE")) {
 			isManagingInventory = false;
-			return "";
+			return player.getCurrentRoom().display(player);
 		}
 
 		throw new GameException("Invalid command");
