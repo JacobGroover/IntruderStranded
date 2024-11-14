@@ -422,7 +422,7 @@ public class GameplayCommands extends Commands {
 		}
 
 		isExiting = false;
-		player.setCurrentRoom(Room.getById(player.getCurrentRoom().getID(), player.getID()));
+		reloadCurrentRoom();
 
 		if (command.equals("YES") || command.equals("Y")) {
 			SaveManager.saveGame();
@@ -448,6 +448,8 @@ public class GameplayCommands extends Commands {
 		return moveTo(player.getPreviousRoom().getID());
 	}
 
+	private void reloadCurrentRoom() throws GameException {
+		player.setCurrentRoom(Room.getById(player.getCurrentRoom().getID(), player.getID()));
 	}
 
 	/**
@@ -466,6 +468,8 @@ public class GameplayCommands extends Commands {
 		introTextPrinted = true;
 
         try {
+			reloadCurrentRoom();
+
             return """
             Welcome to Intruder Stranded
             Enter north, south, east, or west to move
