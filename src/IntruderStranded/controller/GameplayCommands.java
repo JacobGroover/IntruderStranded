@@ -141,7 +141,7 @@ public class GameplayCommands extends Commands {
 	 * If the player is currently in a puzzle, returns that puzzle's hint. Otherwise returns the hint for the
 	 * room the player is currently in.
 	 */
-	private String hint() throws GameException {
+	private String hint() {
 		if (currentPuzzle != null) {
 			return currentPuzzle.getHint();
 		}
@@ -158,8 +158,15 @@ public class GameplayCommands extends Commands {
 	 * returns the description for the room the player is currently in.
 	 */
 	private String look() throws GameException {
-		// TODO - implement GameplayCommands.look
-		throw new UnsupportedOperationException();
+		List<RoomEvent> roomEvents = player.getCurrentRoom().getRoomEvents();
+
+		if (!roomEvents.isEmpty()) {
+			currentPuzzle = (Puzzle) roomEvents.removeFirst();
+		}
+
+		return player.getCurrentRoom().display(player)
+				+ (player.getCurrentRoom().getVisited() ? "\nYou have already been in this room." : "")
+				+ (currentPuzzle != null ? "\n\nYou haven't completed the puzzle; you cannot open the chest\n" + currentPuzzle.run(null) : "");
 	}
 
 	/**
