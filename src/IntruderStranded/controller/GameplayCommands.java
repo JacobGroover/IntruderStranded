@@ -346,9 +346,9 @@ public class GameplayCommands extends Commands {
 			return """
             Inventory Commands
             
-            Store <item> - Pick up an item from the room
-            Use <item> - Use an item in your inventory
-            Discard <item> - Discard an item in your inventory
+            Store <item> - stores an item
+            Use <item> - Use an item
+            Discard <item> - Discard an item
             Close - Close the inventory menu
             Exit - Exit to the main menu
             Help - This command, displays available commands
@@ -356,15 +356,11 @@ public class GameplayCommands extends Commands {
 		}
 		else if (currentPuzzle != null) {
 			return """
-            Gameplay Commands
+            Puzzle Commands
             
-            Hint - Get a hint about the current puzzle
-            Look - Print the room description again
+            Hint - Each puzzle will display different hint
             Exit - Exit to the main menu
             Help - This command, displays available commands
-            Save - Save the game
-            Load - Load a save
-            INV - Open inventory
             Flee - Flee from the current puzzle
             """;
 		}
@@ -372,18 +368,18 @@ public class GameplayCommands extends Commands {
 		return """
             Gameplay Commands
             
-            Hint - Get a hint about the current monster/puzzle
-            Look - Print the room description again
+            Hint - Display the hint for the current room
+            Look - Display the current room
             Exit - Exit to the main menu
             Help - This command, displays available commands
-            Save - Save the game
-            Load - Load a save
+            Save - Creates a save file or overwrites a previous save
+            Load - Loads previous saved game
             INV - Open inventory
             North - Move north
             South - Move south
             East - Move east
             West - Move west
-            """ + (player.getCurrentRoom().allowsTeleport() ? "TEL - Teleport\n" : "");
+            """ + (player.getCurrentRoom().allowsTeleport() ? "TEL - Access teleportation\n" : "");
 	}
 
 	/**
