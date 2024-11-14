@@ -94,6 +94,7 @@ public class BattleCommands extends GameplayCommands {
     @Override
     protected String useItem(Item item) throws GameException {
         if (item.getConsumableType() == ConsumableType.FREEZING_POTION) {
+            player.removeItem(item);
             currentMonster.freeze();
             return "You used the " + item.getItemName();
         }

@@ -79,6 +79,15 @@ public class Player extends Entity {
 	}
 
 	/**
+	 * Method: removeItem
+	 * Removes an item from this player's inventory.
+	 * @param item The item to remove.
+	 */
+	void removeItem(Item item) throws GameException {
+		pdb.removeItem(getID(), item);
+	}
+
+	/**
 	 * Method: displayInventory
 	 * Calls getInventory method and uses it to return a String representation of Item objects.
 	 */
@@ -233,7 +242,7 @@ public class Player extends Entity {
 				return "You cannot use this item";
 			}
 			case MED_PACK -> {
-				discardItem(item);
+				removeItem(item);
 				setHealth(getHealth() + 20);
 				return "You used the " + item.getItemName() + "\nYour STATS: " + getStatus();
 			}
