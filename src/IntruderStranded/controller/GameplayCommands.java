@@ -405,6 +405,7 @@ public class GameplayCommands extends Commands {
 		}
 
 		isExiting = false;
+		player.setCurrentRoom(Room.getById(player.getCurrentRoom().getID(), player.getID()));
 
 		if (command.equals("YES") || command.equals("Y")) {
 			SaveManager.saveGame();
