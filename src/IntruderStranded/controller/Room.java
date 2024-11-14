@@ -71,7 +71,7 @@ public class Room {
 	 * @throws GameException
 	 */
 	public static String getNameFromId(int roomId) throws GameException {
-		RoomDB rdb = new RoomDB(roomId, -1);
+		RoomDB rdb = new RoomDB(roomId);
 		Room room = rdb.getRoom();
 		return room.getRoomName();
 	}
@@ -246,7 +246,7 @@ public class Room {
 	 */
 	public void setVisited(boolean visited) throws GameException {
 		this.visited = visited;
-		rdb.updateRoom(this);
+		rdb.setVisited();
 	}
 
 	/**

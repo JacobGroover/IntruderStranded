@@ -41,12 +41,6 @@ public class RoomDB {
 		rewardDB = new RewardDB(roomID);
 	}
 
-	public void updateRoom(Room room) throws GameException {
-		if (room.getVisited()) {
-			visitRoomDB.setVisited();
-		}
-	}
-
 	public Room getRoom() throws GameException {
 		try {
 			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Room WHERE RoomID = ?", roomID);
