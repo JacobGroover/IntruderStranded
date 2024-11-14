@@ -22,9 +22,11 @@ public class GameplayCommands extends Commands {
 	private boolean isExiting;
 	private boolean isManagingInventory;
 	private boolean introTextPrinted;
+	private boolean discardingReward;
 	private int teleportCounter;
 	private Direction teleportDirection;
 	private Puzzle currentPuzzle;
+	private List<Item> currentRewards;
 
 	/**
 	 * One-Argument Constructor for the GameplayCommands class
@@ -58,16 +60,26 @@ public class GameplayCommands extends Commands {
 			return exit(command);
 		} else if (command.equals("HELP")) {
 			return help();
+		} else if (currentRewards != null && !currentRewards.isEmpty()) {
+			return giveRewards(command);
+		} else if (command.equals("HINT")) {
+			return hint();
+		} else if (currentPuzzle != null) {
+			if (command.equals("FLEE")) {
+				return flee();
+			}
+			if (command.equals("EXIT")) {
+				return exit(command);
+			}
+
+			return runPuzzle(command);
 		} else if (isManagingInventory) {
 			return inventory(command);
 		} else if (teleportCounter != 0) {
 			return teleport(command);
-		} else if (currentPuzzle != null) {
-			return currentPuzzle.run();
 		} else if (Direction.parseDirection(command) != null) {
 			return move(command);
 		} else return switch (command) {
-			case "HINT" -> hint();
 			case "LOOK" -> look();
 			case "SAVE" -> saveGame();
 			case "LOAD" -> loadGame();
@@ -77,6 +89,50 @@ public class GameplayCommands extends Commands {
 			case "TEL" -> teleport(command);
 			default -> throw new GameException("Invalid command");
 		};
+	}
+
+	private String getCurrentReward() {
+		if (!currentRewards.isEmpty()) {
+			Item reward = currentRewards.getFirst();
+			return "\nYou have obtained an item!\n" + reward.display() + "\n\"Keep\" or \"Discard\" the item?";
+		}
+
+		return "";
+	}
+
+	protected String giveRewards(String command) throws GameException {
+		Item reward = currentRewards.getFirst();
+
+		if (discardingReward) {
+			Item item = player.getInventoryItemByName(command);
+			discardingReward = false;
+			player.addItem(reward);
+			currentRewards.remove(reward);
+			return discardItem(item) + getCurrentReward();
+		} else if (command == null) {
+			return getCurrentReward();
+		} else if (command.equals("KEEP")) {
+			if (player.inventoryFull()) {
+				discardingReward = true;
+				return player.displayInventory() + "\nInventory is Full. Please pick an item to discard.";
+			}
+
+			player.addItem(reward);
+			currentRewards.remove(reward);
+			if (currentRewards.isEmpty()) {
+				return inventory(null);
+			}
+			return getCurrentReward();
+		} else if (command.equals("DISCARD")) {
+			currentRewards.remove(reward);
+			return discardItem(reward) + getCurrentReward();
+		} else {
+			throw new GameException("Please enter \"keep\" or \"discard\"");
+		}
+	}
+
+	protected void setRewards(List<Item> rewards) {
+		currentRewards = rewards;
 	}
 
 	/**
@@ -143,20 +199,12 @@ public class GameplayCommands extends Commands {
 	protected String inventory(String command) throws GameException {
 		if (!isManagingInventory) {
 			isManagingInventory = true;
-			return player.displayInventory();
+			return player.displayInventory() + "\nSelect an Item to \"Use\" or \"Discard\"";
 		}
 
 		if (command.startsWith("USE")) {
-			String itemName = getCommandArgument(command);
-			Optional<Item> item = player.getInventory().stream()
-					.filter(i -> i.getItemName().equalsIgnoreCase(itemName))
-					.findAny();
-
-			if (item.isEmpty()) {
-				throw new GameException("You do not have " + itemName);
-			}
-
-			return player.useItem(item.get());
+			Item item = player.getInventoryItemByName(getCommandArgument(command));
+			return useItem(item);
 		} else if (command.startsWith("STORE")) {
 			String itemName = getCommandArgument(command);
 			Optional<Item> item = player.getCurrentRoom().getItems().stream()
@@ -164,23 +212,15 @@ public class GameplayCommands extends Commands {
 					.findAny();
 
 			if (item.isEmpty()) {
-				throw new GameException("This room does not have " + itemName);
+				throw new GameException("Item does not exist in room");
 			}
 
 			player.getCurrentRoom().removeItem(item.get());
 			player.addItem(item.get());
+			return player.displayInventory() + "\nSelect an Item to \"Use\" or \"Discard\"";
 		} else if (command.startsWith("DISCARD")) {
-			String itemName = getCommandArgument(command);
-			Optional<Item> item = player.getInventory().stream()
-					.filter(i -> i.getItemName().equalsIgnoreCase(itemName))
-					.findAny();
-
-			if (item.isEmpty()) {
-				throw new GameException("You do not have " + itemName);
-			}
-
-			player.removeItem(item.get());
-			player.getCurrentRoom().addItem(item.get());
+			Item item = player.getInventoryItemByName(getCommandArgument(command));
+			return discardItem(item);
 		} else if (command.equals("HELP")) {
 			return help();
 		} else if (command.equals("CLOSE")) {
@@ -189,6 +229,19 @@ public class GameplayCommands extends Commands {
 		}
 
 		throw new GameException("Invalid command");
+	}
+
+	protected String useItem(Item item) throws GameException {
+		return player.useItem(item);
+	}
+
+	private String discardItem(Item item) throws GameException {
+		if (!item.isDiscardAllowed()) {
+			return "Item cannot be discarded";
+		}
+
+		player.discardItem(item);
+		return "You have discarded the item";
 	}
 
 	/**
