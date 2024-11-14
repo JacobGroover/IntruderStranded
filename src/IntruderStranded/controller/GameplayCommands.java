@@ -232,7 +232,7 @@ public class GameplayCommands extends Commands {
 	 * @throws GameException
 	 */
 	private String moveInDirection(Direction direction) throws GameException {
-		int destinationId = player.getCurrentRoom().leaveRoom(direction);
+		int destinationId = player.getCurrentRoom().leaveRoom(player, direction);
 		return moveTo(destinationId);
 	}
 
@@ -246,7 +246,7 @@ public class GameplayCommands extends Commands {
 	protected String moveTo(int destinationId) throws GameException {
 		player.setCurrentRoom(Room.getById(destinationId, player.getID()));
 		player.update();
-		return player.getCurrentRoom().display() + enterRoom();
+		return player.getCurrentRoom().display(player) + enterRoom();
 	}
 
 	/**
@@ -372,9 +372,9 @@ public class GameplayCommands extends Commands {
 	}
 
 
-	private String flee() {
-		// TODO - implement GameplayCommands.flee
-		throw new UnsupportedOperationException();
+		player.getCurrentRoom().getRoomEvents().addFirst(currentPuzzle);
+		currentPuzzle = null;
+		return moveTo(player.getPreviousRoom().getID());
 	}
 
 	private String useItem() {
@@ -403,7 +403,7 @@ public class GameplayCommands extends Commands {
             Enter north, south, east, or west to move
             Enter help for more commands
             
-            """ + player.getCurrentRoom().display() + "\n";
+            """ + player.getCurrentRoom().display(player) + "\n";
         } catch (GameException exception) {
             return exception.getMessage();
         }
