@@ -431,6 +431,7 @@ public class GameplayCommands extends Commands {
 		}
 
 		if (command.equals("NO") || command.equals("N")) {
+			SaveManager.rollbackGame();
 			changeGameState(new MainMenuCommands(player));
 			return "";
 		}
