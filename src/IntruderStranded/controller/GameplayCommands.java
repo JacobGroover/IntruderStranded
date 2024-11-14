@@ -91,6 +91,17 @@ public class GameplayCommands extends Commands {
 		};
 	}
 
+	private String runPuzzle(String command) throws GameException {
+		String output = currentPuzzle.run(command);
+		if (currentPuzzle.getIsCompleted()) {
+			setRewards(currentPuzzle.getRewards());
+			currentPuzzle.delete();
+			currentPuzzle = null;
+			return output + "\n" + giveRewards(null);
+		}
+		return output;
+	}
+
 	private String getCurrentReward() {
 		if (!currentRewards.isEmpty()) {
 			Item reward = currentRewards.getFirst();
