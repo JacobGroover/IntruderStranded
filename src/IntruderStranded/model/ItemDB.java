@@ -47,7 +47,7 @@ public final class ItemDB {
             item.setItemName(resultSet.getString("ItemName"));
             item.setItemDescription(resultSet.getString("ItemDescription"));
             item.setConsumableType(ConsumableType.values()[resultSet.getInt("ConsumableType")]);
-            item.setDiscardAllowed(resultSet.getBoolean("CanDiscard"));
+            item.setCanDiscard(resultSet.getBoolean("CanDiscard"));
             int quantity = withQuantity ? resultSet.getInt("ItemQuantity") : 1;
             items.addAll(Collections.nCopies(quantity, item));
         }

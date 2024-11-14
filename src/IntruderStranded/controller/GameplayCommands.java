@@ -253,7 +253,7 @@ public class GameplayCommands extends Commands {
 	}
 
 	private String discardItem(Item item) throws GameException {
-		if (!item.isDiscardAllowed()) {
+		if (!item.canDiscard()) {
 			return "Item cannot be discarded";
 		}
 

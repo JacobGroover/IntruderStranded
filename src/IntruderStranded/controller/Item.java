@@ -5,7 +5,7 @@ public class Item {
 	private final int itemID;
 	private String itemName;
 	private String itemDescription;
-	private boolean discardAllowed;
+	private boolean canDiscard;
 	private ConsumableType consumableType;
 
 	/**
@@ -52,12 +52,12 @@ public class Item {
         return itemID;
     }
 
-    public boolean isDiscardAllowed() {
-        return discardAllowed;
+    public boolean canDiscard() {
+        return canDiscard;
     }
 
-    public void setDiscardAllowed(boolean discardAllowed) {
-        this.discardAllowed = discardAllowed;
+    public void setCanDiscard(boolean canDiscard) {
+        this.canDiscard = canDiscard;
     }
 
 	@Override
