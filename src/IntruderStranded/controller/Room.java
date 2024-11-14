@@ -89,7 +89,7 @@ public class Room {
 			return false;
 		}
 
-		if (roomName.equalsIgnoreCase("Cell") && !player.hasItem("Cell Door Key")) {
+		if (!visited && roomName.equalsIgnoreCase("Cell") && !player.hasItem("Cell Door Key")) {
 			return false;
 		}
 
