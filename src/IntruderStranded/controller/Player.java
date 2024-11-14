@@ -17,7 +17,7 @@ import java.util.Optional;
 public class Player extends Entity {
 
 	private String username;
-	private int weapon;
+	private Weapon equippedWeapon;
 	private Room currentRoom;
 	private Room previousRoom;
 	private int score;
@@ -235,16 +235,16 @@ public class Player extends Entity {
 		this.username = username;
 	}
 
-	public int getWeapon() {
-		return this.weapon;
+	public Weapon getEquippedWeapon() {
+		return this.equippedWeapon;
 	}
 
 	/**
 	 * 
-	 * @param weapon
+	 * @param equippedWeapon
 	 */
-	public void setWeapon(int weapon) {
-		this.weapon = weapon;
+	public void setEquippedWeapon(Weapon equippedWeapon) {
+		this.equippedWeapon = equippedWeapon;
 	}
 
 	/**
