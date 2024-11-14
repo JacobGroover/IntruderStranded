@@ -1,10 +1,5 @@
 package IntruderStranded.controller;
 
-import IntruderStranded.gameExceptions.GameException;
-import IntruderStranded.model.RewardDB;
-import IntruderStranded.model.RoomDB;
-
-import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -39,34 +34,32 @@ public class NumberGuessingPuzzle extends Puzzle {
 	 * If it is equal, return "You have successfully solved the puzzle!" and call getRewards method from
 	 * the implemented RoomEvent interface.
 	 *
-     */
+	 * @return String
+	 */
 	@Override()
-	public void run(String cmd) {
-		Scanner input = new Scanner(System.in);
+	public String run(String cmd) {
+		StringBuilder output = new StringBuilder();
 
 		if(puzzleCounter == -1) {
-			System.out.println("Guess a number between 1 and 10:");
+			output.append("Guess a number between 1 and 10:");
 			puzzleCounter ++;
 		}
-
-		while(puzzleCounter <= 3) {
-			int guess = input.nextInt();
-
+		else if (puzzleCounter == 3) {
+			output.append("You lost this puzzle.");
+			setupPuzzle();
+		}
+		else {
+			int guess = Integer.parseInt(cmd);
 			if (guess == answerNumber) {
-				System.out.println("You have successfully solved the puzzle!");
-				getRewards();
-				break;
-			} else if (puzzleCounter == 3) {
-				System.out.println("You lost this puzzle.");
-				break;
+				output.append("You have successfully solved the puzzle!");
+				setIsCompleted(true);
 			}
 			else {
-				System.out.println("Incorrect number, try again!");
+				output.append("Incorrect number, try again!");
 				puzzleCounter++;
 			}
 		}
-
-		setupPuzzle();
+		return output.toString();
 	}
 
 	/**

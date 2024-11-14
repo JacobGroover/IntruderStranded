@@ -44,24 +44,26 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 			output.append("Unscramble the planets name: " + scrambledWord);
 			puzzleCounter++;
 		}
+		else if (puzzleCounter == 3) {
+			output.append("Incorrect word, you have lost the puzzle!");
+			setupPuzzle();
+		}
 		else {
 			if (cmd.equalsIgnoreCase(answerWord)) {
 				output.append("You have successfully solved the puzzle!");
 				setIsCompleted(true);
 				return output.toString();
 
-			} else {
+			}
+			else {
 				output.append("Incorrect word, try again. ");
 				puzzleCounter++;
 
-				if (puzzleCounter == 3) {
-					output.append("You have lost the puzzle!");
-					setupPuzzle();
-				}
 			}
 		}
+
 		return output.toString();
-		}
+	}
 
 
 			/**
