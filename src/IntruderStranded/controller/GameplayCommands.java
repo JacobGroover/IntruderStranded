@@ -421,6 +421,10 @@ public class GameplayCommands extends Commands {
 		throw new GameException("Invalid command");
 	}
 
+	protected String flee() throws GameException {
+		if (player.getPreviousRoom() == null) {
+			return "Nowhere to flee to.";
+		}
 
 		player.getCurrentRoom().getRoomEvents().addFirst(currentPuzzle);
 		currentPuzzle = null;
@@ -451,6 +455,7 @@ public class GameplayCommands extends Commands {
             return """
             Welcome to Intruder Stranded
             Enter north, south, east, or west to move
+            Enter look to look at the room
             Enter help for more commands
             
             """ + player.getCurrentRoom().display(player) + "\n";
