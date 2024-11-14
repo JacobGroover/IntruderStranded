@@ -4,6 +4,15 @@ import IntruderStranded.gameExceptions.GameException;
 
 import java.util.*;
 
+/**
+ * Interface: RoomEvent
+ * @author Jacob Groover
+ * @version 1.0
+ * Course: ITEC 3860 Fall 2024
+ * Written: November 14, 2024
+ *
+ * This interface is implemented by monsters and puzzles, and represents an event in a room.
+ */
 public interface RoomEvent {
 
 	/**
