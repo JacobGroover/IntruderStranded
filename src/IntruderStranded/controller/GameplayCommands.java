@@ -85,7 +85,6 @@ public class GameplayCommands extends Commands {
 			case "LOAD" -> loadGame();
 			case "INV" -> inventory(command);
 			case "EXIT" -> exit(command);
-			case "USE" -> useItem();
 			case "TEL" -> teleport(command);
 			default -> throw new GameException("Invalid command");
 		};
@@ -449,9 +448,6 @@ public class GameplayCommands extends Commands {
 		return moveTo(player.getPreviousRoom().getID());
 	}
 
-	private String useItem() {
-		// TODO - implement GameplayCommands.useItem
-		throw new UnsupportedOperationException();
 	}
 
 	/**
