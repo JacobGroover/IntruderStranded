@@ -233,7 +233,6 @@ public class Player extends Entity {
 	String useItem(Item item) throws GameException {
 		if (item instanceof Weapon weapon) {
 			this.equippedWeapon = weapon;
-			update();
 			return "You are now equipped with " + item.getItemName() + "!\nYour STATS: " + getStatus();
 		}
 

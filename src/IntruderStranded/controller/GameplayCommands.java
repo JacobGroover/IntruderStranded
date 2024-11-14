@@ -193,6 +193,7 @@ public class GameplayCommands extends Commands {
 	 * Saves the player's game to the database by calling the SaveManager.saveGame method.
 	 */
 	protected String saveGame() throws GameException {
+		player.update();
 		SaveManager.saveGame();
 		return "Game Saved";
 	}
