@@ -20,6 +20,11 @@ public class Monster extends Entity implements RoomEvent {
 	}
 
     @Override
+    public void delete() throws GameException {
+        roomDB.removeMonster(this);
+    }
+
+    @Override
     public int getDamage() {
         return damage;
     }

@@ -17,6 +17,11 @@ public abstract class Puzzle implements RoomEvent {
 		roomDB = new RoomDB(roomID, playerID);
 	}
 
+	@Override
+	public void delete() throws GameException {
+		roomDB.removePuzzle(this);
+	}
+
 	/**
 	 * Method: run
 	 * Abstract method to be implemented in child classes. Runs the primary functionality of a puzzle.

@@ -12,4 +12,9 @@ public interface RoomEvent {
 	 */
 	List<Item> getRewards() throws GameException;
 
+	/**
+	 * Method: delete
+	 * Deletes a RoomEvent from the database.
+	 */
+	void delete() throws GameException;
 }
