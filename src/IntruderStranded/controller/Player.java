@@ -92,7 +92,10 @@ public class Player extends Entity {
 	 * Calls getInventory method and uses it to return a String representation of Item objects.
 	 */
 	String displayInventory() throws GameException {
-		StringBuilder display = new StringBuilder("Item List:\n");
+		StringBuilder display = new StringBuilder();
+		display.append("Score: ").append(score).append('\n');
+		display.append("Your STATS: ").append(getStatus()).append('\n');
+		display.append("Item List:\n");
 		List<Item> inventory = getInventory().stream().distinct().toList();
 
 		for (int index = 0; index < 10; index++) {
@@ -261,8 +264,12 @@ public class Player extends Entity {
 		pdb.updatePlayer(this);
 	}
 
-	public int getScore() {
-		return this.score;
+	void addScore(int score) {
+		this.score += score;
+	}
+
+	int getScore() {
+		return score;
 	}
 
 	/**

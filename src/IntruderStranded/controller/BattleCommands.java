@@ -12,6 +12,7 @@ public class BattleCommands extends GameplayCommands {
     private final List<Monster> monsters;
     private Monster currentMonster;
     private boolean restartPrompted;
+    private int battleStartHealth;
     private static final String ACTION_PROMPT = """
             
             What would you like to do?
@@ -29,6 +30,7 @@ public class BattleCommands extends GameplayCommands {
         this.monsters = new ArrayList<>(monsters);
         this.originalMonsters = new ArrayList<>(monsters);
         this.currentMonster = monsters.getFirst();
+        battleStartHealth = player.getHealth();
     }
 
     @Override
@@ -119,19 +121,26 @@ public class BattleCommands extends GameplayCommands {
             monsters.remove(currentMonster);
             currentMonster.delete();
 
+            int scoreGained = player.getHealth() <= battleStartHealth / 2 ? 5 : 10;
+            if (currentMonster.getName().equals("Boss: Supreme Alien Commander")) {
+                scoreGained += 20;
+            }
+            player.addScore(scoreGained);
+
             String display = "You charged on " + currentMonster.getName() + "!\n"
                     + attackText + getBattleInfo()
-                    + "\n\nYou have defeated " + currentMonster.getName();
+                    + "\n\nYou have defeated " + currentMonster.getName()
+                    + "\n(+" + scoreGained + " score) New Score: " + player.getScore() + "\n\n";
 
             if (monsters.isEmpty()) {
                 String output = source.setRewards(currentMonster.getRewards());
                 source.reloadCurrentRoom();
                 changeGameState(source);
-                display += "\n\n" + player.getCurrentRoom().display(player) + (output.isEmpty() ? "" : "\n" + output);
+                display += player.getCurrentRoom().display(player) + (output.isEmpty() ? "" : "\n" + output);
                 return display;
             } else {
                 currentMonster = monsters.getFirst();
-                display += "\n\n" + currentMonster.getName() + " is blocking your path.\n";
+                display += currentMonster.getName() + " is blocking your path.\n";
                 display += getBattleInfo() + ACTION_PROMPT;
             }
 

@@ -103,8 +103,9 @@ public class GameplayCommands extends Commands {
 
 	private String getCurrentReward() {
 		if (!currentRewards.isEmpty()) {
+			player.addScore(5);
 			Item reward = currentRewards.getFirst();
-			return "\nYou have obtained an item!\n" + reward.display() + "\n\"Keep\" or \"Discard\" the item?";
+			return "\nYou have obtained an item! (+5 score)\n" + reward.display() + "\n\"Keep\" or \"Discard\" the item?";
 		}
 
 		return "";
