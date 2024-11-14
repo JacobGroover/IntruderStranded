@@ -22,6 +22,7 @@ public class Player extends Entity {
 	private Room previousRoom;
 	private int score;
 	private static final PlayerDB pdb = new PlayerDB();
+	private static final int BASE_DAMAGE = 10;
 
 	/**
 	 * One-argument Constructor for Player class
@@ -41,6 +42,17 @@ public class Player extends Entity {
 	 */
 	public static Player getById(int playerId) throws GameException {
 		return pdb.getPlayer(playerId);
+	}
+
+	@Override
+	public int getDamage() {
+		int damage = BASE_DAMAGE;
+
+		if (equippedWeapon != null) {
+			damage += equippedWeapon.getDamage();
+		}
+
+		return damage;
 	}
 
 	/**

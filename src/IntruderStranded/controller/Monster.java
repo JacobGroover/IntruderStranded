@@ -19,6 +19,7 @@ public class Monster extends Entity implements RoomEvent {
 		return roomDB.getRewards();
 	}
 
+    @Override
     public int getDamage() {
         return damage;
     }
