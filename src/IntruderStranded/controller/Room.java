@@ -245,11 +245,11 @@ public class Room {
 	}
 
 	/**
-	 * 
-	 * @param visited
+	 * Method: setVisited
+	 * Sets this room as visited.
 	 */
-	public void setVisited(boolean visited) throws GameException {
-		this.visited = visited;
+	public void setVisited() throws GameException {
+		this.visited = true;
 		rdb.setVisited();
 	}
 
