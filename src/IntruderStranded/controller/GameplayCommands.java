@@ -127,7 +127,7 @@ public class GameplayCommands extends Commands {
 		} else if (command == null) {
 			return getCurrentReward();
 		} else if (command.equals("KEEP")) {
-			if (player.inventoryFull()) {
+			if (!player.canAddToInventory(reward)) {
 				discardingReward = true;
 				return player.displayInventory() + "\nInventory is Full. Please pick an item to discard.";
 			}
@@ -241,6 +241,10 @@ public class GameplayCommands extends Commands {
 
 			if (item.isEmpty()) {
 				throw new GameException("Item does not exist in room");
+			}
+
+			if (!player.canAddToInventory(item.get())) {
+				throw new GameException("Inventory full");
 			}
 
 			player.getCurrentRoom().removeItem(item.get());

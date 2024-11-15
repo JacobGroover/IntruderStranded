@@ -74,7 +74,7 @@ public class Player extends Entity {
 	 * @param item
 	 */
 	void discardItem(Item item) throws GameException {
-		pdb.removeItem(getID(), item);
+		removeItem(item);
 		currentRoom.addItem(item);
 	}
 
@@ -133,6 +133,14 @@ public class Player extends Entity {
 
 	boolean inventoryFull() throws GameException {
 		return getInventory().stream().distinct().count() >= INVENTORY_CAPACITY;
+	}
+
+	boolean canAddToInventory(Item item) throws GameException {
+		if (getInventory().contains(item)) {
+			return true;
+		}
+
+		return !inventoryFull();
 	}
 
 	/**
