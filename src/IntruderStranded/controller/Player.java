@@ -245,7 +245,7 @@ public class Player extends Entity {
 			}
 			case MED_PACK -> {
 				removeItem(item);
-				setHealth(getHealth() + 20);
+				setHealth(Math.min(getHealth() + 20, 100));
 				return "You used the " + item.getItemName() + "\nYour STATS: " + getStatus();
 			}
 			case FREEZING_POTION -> {
