@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
  * Written: November 5, 2024
  * This class handles business logic for Room objects.
  */
-
 public class Room {
 
 	private int roomID;
@@ -84,6 +83,12 @@ public class Room {
 		return this.teleport;
 	}
 
+	/**
+	 * Method: canLeave
+	 * Checks if a player can leave a room.
+	 * @param player The current player.
+	 * @return True if the player can currently leave this room, otherwise false.
+	 */
 	boolean canLeave(Player player) throws GameException {
 		if (roomEvents.stream().anyMatch(e -> e instanceof Monster)) {
 			return false;
@@ -97,8 +102,11 @@ public class Room {
 	}
 
 	/**
+	 * Method: display
 	 * Returns a string representation of this room, with the room name, visited state, description, items and exits.
 	 * Calls rdb.getItems method to get a list of items in the room.
+	 * @param player The current player.
+	 * @return The string representation of this room.
 	 */
 	String display(Player player) throws GameException {
 		String status = visited ? "(Visited)" : "(Not visited)";
@@ -164,10 +172,12 @@ public class Room {
 	/**
 	 * Method: leaveRoom
 	 * Iterates through the List of Exits for this room to return the ID of the destination room in the given
-	 * direction from this room. If there is no Exit corresponding to the given direction, a GameException
-	 * will be thrown.
+	 * direction from this room. If there is no Exit corresponding to the given direction, or the player cannot
+	 * leave the room yet, a GameException will be thrown. Otherwise, the room will be marked as visited before
+	 * returning the destination room id.
 	 * @param player The current player.
 	 * @param direction The direction to go.
+	 * @return The id of the destination room.
 	 */
 	int leaveRoom(Player player, Direction direction) throws GameException {
 		if (!canLeave(player)) {
@@ -215,34 +225,56 @@ public class Room {
 		return rdb.getItems();
 	}
 
+	/**
+	 * Method: getRoomEvents
+	 * Gets all room events in this room.
+	 * @return A list of room events.
+	 */
 	List<RoomEvent> getRoomEvents() {
 		return this.roomEvents;
 	}
 
+	/**
+	 * Method: getRoomName
+	 * Gets the name of this room.
+	 * @return The name of this room.
+	 */
 	public String getRoomName() {
 		return this.roomName;
 	}
 
 	/**
-	 * 
-	 * @param roomName
+	 * Method: setRoomName
+	 * Sets the name of this room.
+	 * @param roomName The name to set.
 	 */
 	public void setRoomName(String roomName) {
 		this.roomName = roomName;
 	}
 
+	/**
+	 * Method: getRoomDescription
+	 * Gets the description of this room.
+	 * @return The description of this room.
+	 */
 	public String getRoomDescription() {
 		return this.roomDescription;
 	}
 
 	/**
-	 * 
-	 * @param roomDescription
+	 * Method: setRoomDescription
+	 * Sets the description of this room.
+	 * @param roomDescription The description to set.
 	 */
 	public void setRoomDescription(String roomDescription) {
 		this.roomDescription = roomDescription;
 	}
 
+	/**
+	 * Method: getVisited
+	 * Gets the visited status of this room.
+	 * @return True if this room has been visited, otherwise false.
+	 */
 	public boolean getVisited() {
 		return this.visited;
 	}
