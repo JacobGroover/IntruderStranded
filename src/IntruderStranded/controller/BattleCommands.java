@@ -6,6 +6,17 @@ import IntruderStranded.model.GameDBCreate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class: BattleCommands
+ * @author Fareed Ahmed
+ * @version 1.0
+ * Course: ITEC 3860 Fall 2024
+ * Written: November 15, 2024
+ *
+ * This class is the GameplayCommands subclass for battle commands. Handles all user commands sent
+ * from GameController and returns appropriate replies or exceptions.
+ * Relevant while the player is in a monster fight.
+ */
 public class BattleCommands extends GameplayCommands {
     private final GameplayCommands source;
     private final List<Monster> originalMonsters;
@@ -33,6 +44,12 @@ public class BattleCommands extends GameplayCommands {
         battleStartHealth = player.getHealth();
     }
 
+    /**
+     * Method: executeCommand
+     * Executes a command, returning the string to display or throwing an exception in response.
+     * @param command The command entered by the user.
+     * @return The string to display.
+     */
     @Override
     String executeCommand(String command) throws GameException {
         if (isExiting) {
@@ -55,6 +72,11 @@ public class BattleCommands extends GameplayCommands {
         };
     }
 
+    /**
+     * Method: restart
+     * Handles restarting a battle.
+     * @param command The command entered by the user.
+     */
     private void restart(String command) throws GameException {
         if (command.equals("YES")) {
             changeGameState(new BattleCommands(source, originalMonsters));
@@ -72,6 +94,11 @@ public class BattleCommands extends GameplayCommands {
         }
     }
 
+    /**
+     * Method: help
+     * Returns the help text for battle commands.
+     * @return The help string.
+     */
     @Override
     String help() {
         return """
@@ -88,11 +115,22 @@ public class BattleCommands extends GameplayCommands {
             """;
     }
 
+    /**
+     * Method: getBattleInfo
+     * Gets the current state of the battle.
+     * @return The string to display.
+     */
     private String getBattleInfo() {
         return "\nYour STATS: " + player.getStatus()
                 + "\n" + currentMonster.getName() + " STATS: " + currentMonster.getStatus();
     }
 
+    /**
+     * Method: useItem
+     * Uses an item during a battle.
+     * @param item The item to use.
+     * @return The string to display.
+     */
     @Override
     protected String useItem(Item item) throws GameException {
         if (item.getConsumableType() == ConsumableType.FREEZING_POTION) {
@@ -104,11 +142,21 @@ public class BattleCommands extends GameplayCommands {
         return player.useItem(item);
     }
 
+    /**
+     * Method: onInventoryClose
+     * Gets text to display after the player closes their inventory.
+     * @return The string to display.
+     */
     @Override
     protected String onInventoryClose() {
         return getBattleInfo() + ACTION_PROMPT;
     }
 
+    /**
+     * Method: attack
+     * Handles attacking the monster and damage calculations.
+     * @return The string to display.
+     */
     private String attack() throws GameException {
         boolean monsterImmune = currentMonster.getName().equals("Slime") && !player.getEquippedWeapon().getItemName().equals("Flame Knife");
         String attackText = monsterImmune ? "The monster is immune to your current weapon!\n" : "You landed a hit!\n";
@@ -169,6 +217,11 @@ public class BattleCommands extends GameplayCommands {
                 + getBattleInfo() + ACTION_PROMPT;
     }
 
+    /**
+     * Method: defend
+     * Handles defending from the monster and damage calculations.
+     * @return The string to display.
+     */
     private String defend() {
         player.setHealth(player.getHealth() - currentMonster.getDamage() / 2);
 
@@ -179,11 +232,21 @@ public class BattleCommands extends GameplayCommands {
         return currentMonster.getName() + " attacked you!\n" + getBattleInfo();
     }
 
+    /**
+     * Method: onPlayerLose
+     * Handles the player losing.
+     * @return The string to display.
+     */
     private String onPlayerLose() {
         restartPrompted = true;
         return "You have been defeated\nWould you like to restart?";
     }
 
+    /**
+     * Method: flee
+     * Handles fleeing from this battle into the player's previous room.
+     * @return The string to display.
+     */
     @Override
     protected String flee() throws GameException {
         player.getCurrentRoom().getRoomEvents().addFirst(currentMonster);
@@ -191,6 +254,11 @@ public class BattleCommands extends GameplayCommands {
         return moveTo(player.getPreviousRoom().getID());
     }
 
+    /**
+     * Method: getIntroText
+     * Gets the text to show when the battle starts.
+     * @return The string to display.
+     */
     @Override
     protected String getIntroText() {
         return getBattleInfo() + ACTION_PROMPT;
