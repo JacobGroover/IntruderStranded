@@ -1,3 +1,5 @@
+UPDATE Player SET CurrentRoom = 1, PreviousRoom = -1, Score = 0, Health = 100, Weapon = -1 WHERE PlayerID = ?;
+
 DELETE FROM MonsterRoom WHERE PlayerID = ?;
 
 INSERT INTO MonsterRoom
