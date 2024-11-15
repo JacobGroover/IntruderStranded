@@ -49,6 +49,7 @@ public class NumberGuessingPuzzle extends Puzzle {
 			} else if (puzzleCounter == 3) {
 				output.append("You lost this puzzle.");
 				setupPuzzle();
+				output.append('\n').append(run(null));
 			} else {
 
 				int guess = Integer.parseInt(cmd);

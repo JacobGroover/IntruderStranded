@@ -61,6 +61,7 @@ public class CombinationPuzzle extends Puzzle {
 		} else if (puzzleCounter >= 5) {
 			output.append("You've lost the puzzle, and cannot open the chest.");
 			setupPuzzle();
+			output.append('\n').append(run(null));
 		} else {
 
 			try {

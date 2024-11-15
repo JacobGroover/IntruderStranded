@@ -36,6 +36,7 @@ public class SandPuzzle extends Puzzle {
 		else if (puzzleCounter == 3) {
 			output.append("You've lost the puzzle, and fallen into the sand.");
 			setupPuzzle();
+			output.append('\n').append(run(null));
 		}
 		else {
 			try {

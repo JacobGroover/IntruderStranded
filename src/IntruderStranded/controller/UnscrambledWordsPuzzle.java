@@ -46,6 +46,7 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 		else if (puzzleCounter == 3) {
 			output.append("Incorrect word, you have lost the puzzle!");
 			setupPuzzle();
+			output.append('\n').append(run(null));
 		}
 		else {
 			if (cmd.equalsIgnoreCase(answerWord)) {
