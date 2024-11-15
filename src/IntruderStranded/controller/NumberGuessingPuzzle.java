@@ -52,7 +52,7 @@ public class NumberGuessingPuzzle extends Puzzle {
 			int guess = Integer.parseInt(cmd);
 			if (guess == answerNumber) {
 				output.append("You have successfully solved the puzzle!");
-				setIsCompleted(true);
+				setCompleted();
 			}
 			else {
 				output.append("Incorrect number, try again!");

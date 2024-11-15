@@ -40,7 +40,7 @@ public class SandPuzzle extends Puzzle {
 		else {
 			if (cmd.equals("946")) {
 				output.append("You have entered the correct number! You toss the rope to grab the missing item.");
-				setIsCompleted(true);
+				setCompleted();
 
 			} else {
 				output.append("The number you've entered is incorrect, try again.");

@@ -51,7 +51,7 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 		else {
 			if (cmd.equalsIgnoreCase(answerWord)) {
 				output.append("You have successfully solved the puzzle!");
-				setIsCompleted(true);
+				setCompleted();
 				return output.toString();
 
 			}

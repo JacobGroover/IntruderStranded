@@ -93,7 +93,7 @@ public class CombinationPuzzle extends Puzzle {
 					output.append("Enter a number between 0 and 9:");
 
 				} else if (answerArray.equals(guessArray)) {
-					setIsCompleted(true);
+					setCompleted();
 					output.append("You've solved the puzzle, and can now open the chest!");
 
 				} else {
