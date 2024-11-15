@@ -121,10 +121,18 @@ public class GameplayCommands extends Commands {
 
 		if (discardingReward) {
 			Item item = player.getInventoryItemByName(command);
+
+			if (!item.canDiscard()) {
+				return discardItem(item);
+			}
+
 			discardingReward = false;
 			player.addItem(reward);
 			currentRewards.remove(reward);
-			return discardItem(item) + getCurrentReward();
+			if (currentRewards.isEmpty()) {
+				return discardItem(reward) + "\n" + player.getCurrentRoom().display(player);
+			}
+			return discardItem(reward) + getCurrentReward();
 		} else if (command == null) {
 			return getCurrentReward();
 		} else if (command.equals("KEEP")) {
@@ -142,6 +150,9 @@ public class GameplayCommands extends Commands {
 		} else if (command.equals("DISCARD")) {
 			if (reward.canDiscard()) {
 				currentRewards.remove(reward);
+				if (currentRewards.isEmpty()) {
+					return discardItem(reward) + "\n" + player.getCurrentRoom().display(player);
+				}
 				return discardItem(reward) + getCurrentReward();
 			} else {
 				return discardItem(reward);
@@ -274,7 +285,7 @@ public class GameplayCommands extends Commands {
 		}
 
 		player.discardItem(item);
-		return "You have discarded the item";
+		return "You have discarded the item\n";
 	}
 
 	protected String onInventoryClose() throws GameException {
