@@ -34,8 +34,7 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 	 * If it is equal, return "You have successfully solved the puzzle!" and call getRewards method from
 	 * the implemented RoomEvent interface.
 	 *
-	 * @return
-	 */
+     */
 	@Override()
 	String run(String cmd) {
 		StringBuilder output = new StringBuilder();

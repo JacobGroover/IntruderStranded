@@ -1,5 +1,7 @@
 package IntruderStranded.controller;
 
+import IntruderStranded.gameExceptions.GameException;
+
 import java.util.Random;
 import java.util.Scanner;
 
@@ -40,25 +42,28 @@ public class NumberGuessingPuzzle extends Puzzle {
 	public String run(String cmd) {
 		StringBuilder output = new StringBuilder();
 
-		if(puzzleCounter == -1) {
-			output.append("Guess a number between 1 and 10:");
-			puzzleCounter ++;
-		}
-		else if (puzzleCounter == 3) {
-			output.append("You lost this puzzle.");
-			setupPuzzle();
-		}
-		else {
-			int guess = Integer.parseInt(cmd);
-			if (guess == answerNumber) {
-				output.append("You have successfully solved the puzzle!");
-				setCompleted();
-			}
-			else {
-				output.append("Incorrect number, try again!");
+		try {
+			if (puzzleCounter == -1) {
+				output.append("Guess a number between 1 and 10:");
 				puzzleCounter++;
+			} else if (puzzleCounter == 3) {
+				output.append("You lost this puzzle.");
+				setupPuzzle();
+			} else {
+
+				int guess = Integer.parseInt(cmd);
+				if (guess == answerNumber) {
+					output.append("You have successfully solved the puzzle!");
+					setCompleted();
+				} else {
+					output.append("Incorrect number, try again!");
+					puzzleCounter++;
+				}
 			}
+		} catch (NumberFormatException e) {
+			output.append("You have entered an invalid number, try again!");
 		}
+
 		return output.toString();
 	}
 

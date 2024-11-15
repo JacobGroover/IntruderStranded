@@ -68,7 +68,8 @@ public class CombinationPuzzle extends Puzzle {
 				boolean guessIsHot = isHot(guessInt);
 
 				if (guessInt < 0 || guessInt > 9) {
-					throw new GameException("Please enter a number between 0 and 9.");
+					output.append("Please enter a number between 0 and 9.");
+					return output.toString();
 				}
 
 				boolean correctGuess = false;
@@ -101,8 +102,8 @@ public class CombinationPuzzle extends Puzzle {
 					output.append("Enter a number between 0 and 9:");
 				}
 
-			} catch (NumberFormatException | GameException ex) {
-				System.out.println("Please enter a valid number.");
+			} catch (NumberFormatException ex) {
+				output.append("Please enter a valid number.");
 			}
 		}
 
