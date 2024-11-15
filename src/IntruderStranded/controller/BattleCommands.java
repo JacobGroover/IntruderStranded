@@ -12,7 +12,7 @@ public class BattleCommands extends GameplayCommands {
     private final List<Monster> monsters;
     private Monster currentMonster;
     private boolean restartPrompted;
-    private int battleStartHealth;
+    private final int battleStartHealth;
     private static final String ACTION_PROMPT = """
             
             What would you like to do?
