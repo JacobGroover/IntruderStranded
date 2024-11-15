@@ -58,10 +58,10 @@ public class GameplayCommands extends Commands {
 	String executeCommand(String command) throws GameException {
 		if (isExiting) {
 			return exit(command);
-		} else if (command.equals("HELP")) {
-			return help();
 		} else if (currentRewards != null && !currentRewards.isEmpty()) {
 			return giveRewards(command);
+		} else if (command.equals("HELP")) {
+			return help();
 		} else if (command.equals("HINT")) {
 			return hint();
 		} else if (currentPuzzle != null) {
@@ -73,6 +73,8 @@ public class GameplayCommands extends Commands {
 			}
 
 			return runPuzzle(command);
+		} else if (command.equals("EXIT")) {
+			return exit(command);
 		} else if (isManagingInventory) {
 			return inventory(command);
 		} else if (teleportCounter != 0) {
@@ -84,8 +86,7 @@ public class GameplayCommands extends Commands {
 			case "SAVE" -> saveGame();
 			case "LOAD" -> loadGame();
 			case "INV" -> inventory(command);
-			case "EXIT" -> exit(command);
-			case "TEL" -> teleport(command);
+            case "TEL" -> teleport(command);
 			default -> throw new GameException("Invalid command");
 		};
 	}
