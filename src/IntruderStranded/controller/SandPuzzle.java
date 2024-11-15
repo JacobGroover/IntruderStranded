@@ -38,13 +38,18 @@ public class SandPuzzle extends Puzzle {
 			setupPuzzle();
 		}
 		else {
-			if (cmd.equals("946")) {
-				output.append("You have entered the correct number! You toss the rope to grab the missing item.");
-				setIsCompleted(true);
+			try {
+				int guess = Integer.parseInt(cmd);
+				if (guess == 946) {
+					output.append("You have entered the correct number! You toss the rope to grab the missing item.");
+					setIsCompleted(true);
 
-			} else {
-				output.append("The number you've entered is incorrect, try again.");
-				puzzleCounter ++;
+				} else {
+					output.append("The number you've entered is incorrect, try again.");
+					puzzleCounter++;
+				}
+			} catch (NumberFormatException e) {
+				output.append("Please enter a valid number.");
 			}
 		}
 
