@@ -135,16 +135,12 @@ public class Player extends Entity {
 		return pdb.getInventory(getID());
 	}
 
-	boolean inventoryFull() throws GameException {
-		return getInventory().stream().distinct().count() >= INVENTORY_CAPACITY;
-	}
-
 	boolean canAddToInventory(Item item) throws GameException {
 		if (getInventory().contains(item)) {
 			return true;
 		}
 
-		return !inventoryFull();
+        return getInventory().stream().distinct().count() < INVENTORY_CAPACITY;
 	}
 
 	/**
