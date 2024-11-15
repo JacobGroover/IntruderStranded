@@ -84,6 +84,10 @@ public class Player extends Entity {
 	 * @param item The item to remove.
 	 */
 	void removeItem(Item item) throws GameException {
+		if (item.equals(equippedWeapon)) {
+			equippedWeapon = null;
+		}
+
 		pdb.removeItem(getID(), item);
 	}
 
