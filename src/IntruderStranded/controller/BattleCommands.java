@@ -136,7 +136,11 @@ public class BattleCommands extends GameplayCommands {
                 String output = source.setRewards(currentMonster.getRewards());
                 source.reloadCurrentRoom();
                 changeGameState(source);
-                display += player.getCurrentRoom().display(player) + (output.isEmpty() ? "" : "\n" + output);
+                if (currentMonster.getRewards().isEmpty()) {
+                    display += player.getCurrentRoom().display(player);
+                } else {
+                    display += output;
+                }
                 return display;
             } else {
                 currentMonster = monsters.getFirst();
