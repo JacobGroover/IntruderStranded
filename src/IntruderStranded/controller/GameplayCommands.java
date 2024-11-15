@@ -456,9 +456,8 @@ public class GameplayCommands extends Commands {
 		reloadCurrentRoom();
 
 		if (command.equals("YES") || command.equals("Y")) {
-			SaveManager.saveGame();
 			changeGameState(new MainMenuCommands(player));
-			return "";
+			return saveGame();
 		}
 
 		if (command.equals("NO") || command.equals("N")) {
@@ -500,13 +499,11 @@ public class GameplayCommands extends Commands {
 		introTextPrinted = true;
 
         try {
-			reloadCurrentRoom();
-
             return """
             Welcome to Intruder Stranded
-            Enter north, south, east, or west to move
-            Enter look to look at the room
-            Enter help for more commands
+            Enter "North", "South", "East", or "West" to move
+            Enter "Look" to look at the room
+            Enter "Help" for more commands
             
             """ + player.getCurrentRoom().display(player) + "\n";
         } catch (GameException exception) {
