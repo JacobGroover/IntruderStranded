@@ -30,8 +30,8 @@ public class PlayerDB {
 		try {
 			int weaponItemId = player.getEquippedWeapon() != null ? player.getEquippedWeapon().getItemID() : -1;
 			int previousRoomId = player.getPreviousRoom() != null ? player.getPreviousRoom().getID() : -1;
-			DBService.getDB().updatePrepared("UPDATE Player SET Health = ?, PreviousRoom = ?, CurrentRoom = ?, Weapon = ? WHERE PlayerID = ?",
-					player.getHealth(), previousRoomId, player.getCurrentRoom().getID(), weaponItemId, player.getID());
+			DBService.getDB().updatePrepared("UPDATE Player SET Health = ?, PreviousRoom = ?, CurrentRoom = ?, Weapon = ?, Score = ? WHERE PlayerID = ?",
+					player.getHealth(), previousRoomId, player.getCurrentRoom().getID(), weaponItemId, player.getScore(), player.getID());
 		} catch (SQLException exception) {
 			throw new GameException(exception.getMessage());
 		}

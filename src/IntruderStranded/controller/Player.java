@@ -317,7 +317,7 @@ public class Player extends Entity {
 	 * Gets the score of this player.
 	 * @return The score of this player.
 	 */
-	int getScore() {
+	public int getScore() {
 		return score;
 	}
 
