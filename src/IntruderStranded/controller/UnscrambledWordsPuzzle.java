@@ -1,13 +1,13 @@
 package IntruderStranded.controller;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Class: UnscrambleWordsPuzzle
- * @author
+ * @author Hannah Jensen
  * @version 1.0
  * Course: ITEC 3860 Fall 2024
- * Written: October 25th, 2024
+ * Written: November 11th, 2024
  * This class details the implementation for the UnscrambleWordsPuzzle
  */
 public class UnscrambledWordsPuzzle extends Puzzle {
@@ -15,14 +15,14 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 	private String answerWord;
 	private String scrambledWord;
 
+
 	/**
 	 * No-argument Constructor for UnscrambledWordsPuzzle class
 	 * Calls setupPuzzle() method to assign the answerWord, scrambledWord, and puzzleCounter class attributes.
 	 */
-	public UnscrambledWordsPuzzle(int id) {
-		super(id);
-		// TODO - implement UnscrambledWordsPuzzle.UnscrambledWordsPuzzle
-		throw new UnsupportedOperationException();
+	public UnscrambledWordsPuzzle(int id, int roomID, int playerID) {
+		super(id, roomID, playerID);
+		setupPuzzle();
 	}
 
 	/**
@@ -33,49 +33,96 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 	 * If the puzzleCounter reaches 3, set puzzleCounter to -1 and return "You lost the puzzle."
 	 * If it is equal, return "You have successfully solved the puzzle!" and call getRewards method from
 	 * the implemented RoomEvent interface.
-	 * @param cmd
-	 */
+	 *
+     */
 	@Override()
 	String run(String cmd) {
-		// TODO - implement UnscrambledWordsPuzzle.run
-		throw new UnsupportedOperationException();
+		StringBuilder output = new StringBuilder();
+
+		if (puzzleCounter == -1) {
+			output.append("Unscramble the planets name: " + scrambledWord);
+			puzzleCounter++;
+		}
+		else if (puzzleCounter == 3) {
+			output.append("Incorrect word, you have lost the puzzle!");
+			setupPuzzle();
+		}
+		else {
+			if (cmd.equalsIgnoreCase(answerWord)) {
+				output.append("You have successfully solved the puzzle!");
+				setIsCompleted(true);
+				return output.toString();
+
+			}
+			else {
+				output.append("Incorrect word, try again. ");
+				puzzleCounter++;
+
+			}
+		}
+
+		return output.toString();
 	}
 
-	/**
-	 * Method: setupPuzzle
-	 * Generates a random number between 1 and 8. Depending on which number is chosen assigns the
-	 * answerWord class attribute to a planet name:
-	 * 1 - MERCURY
-	 * 2 - VENUS
-	 * 3 - EARTH
-	 * 4 - MARS
-	 * 5 - JUPITER
-	 * 6 - SATURN
-	 * 7 - URANUS
-	 * 8 - NEPTUNE
-	 * 
-	 * Once the word is assigned, a scrambled version of that word is then assigned to the scrambledWord
-	 * class attribute.
-	 * Sets the puzzleCounter class attribute to -1.
-	 */
-	void setupPuzzle() {
-		// TODO - implement UnscrambledWordsPuzzle.setupPuzzle
-		throw new UnsupportedOperationException();
+
+			/**
+			 * Method: setupPuzzle
+			 * Generates a random number between 1 and 8. Depending on which number is chosen assigns the
+			 * answerWord class attribute to a planet name:
+			 * 1 - MERCURY
+			 * 2 - VENUS
+			 * 3 - EARTH
+			 * 4 - MARS
+			 * 5 - JUPITER
+			 * 6 - SATURN
+			 * 7 - URANUS
+			 * 8 - NEPTUNE
+			 *
+			 * Once the word is assigned, a scrambled version of that word is then assigned to the scrambledWord
+			 * class attribute.
+			 * Sets the puzzleCounter class attribute to -1.
+			 */
+			void setupPuzzle () {
+				Random random = new Random();
+
+				List<String> planets = new ArrayList<>();
+				planets.add("MERCURY");
+				planets.add("VENUS");
+				planets.add("EARTH");
+				planets.add("MARS");
+				planets.add("JUPITER");
+				planets.add("SATURN");
+				planets.add("URANUS");
+				planets.add("NEPTUNE");
+
+				answerWord = planets.get(random.nextInt(planets.size()));
+
+				scrambledWord = scrambleWord(answerWord);
+
+				puzzleCounter = -1;
+			}
+
+
+	public String scrambleWord(String word) {
+		List<Character> charWord = new ArrayList<>();
+		for(char c : word.toCharArray()) {
+			charWord.add(c);
+		}
+
+		Collections.shuffle(charWord);
+
+		StringBuilder scrambledWord = new StringBuilder();
+		for(char c : charWord) {
+			scrambledWord.append(c);
+		}
+		return scrambledWord.toString();
 	}
+
 
 	@Override
 	String getHint() {
 		return "The word is based on a planet in our solar system";
 	}
 
-	/**
-	 * Method: getRewards
-	 * Gets the rewards from completing this puzzle.
-	 */
-	@Override()
-	public List<Item> getRewards() {
-		// TODO - implement UnscrambledWordsPuzzle.getRewards
-		throw new UnsupportedOperationException();
-	}
 
 }
