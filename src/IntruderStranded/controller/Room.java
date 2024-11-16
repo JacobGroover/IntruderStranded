@@ -102,6 +102,22 @@ public class Room {
 	}
 
 	/**
+	 * Method: canEnter
+	 * Checks if a player can enter a room.
+	 * @param player The current player.
+	 * @return True if the player can currently enter this room, otherwise false.
+	 */
+	boolean canEnter(Player player) throws GameException {
+		String[] missingParts = { "Missing Wheel", "Missing Control Panel", "Missing Engine", "Missing Wing", "Missing Chair" };
+
+		if (roomName.equalsIgnoreCase("Boss Room") && !player.hasItems(missingParts)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Method: display
 	 * Returns a string representation of this room, with the room name, visited state, description, items and exits.
 	 * Calls rdb.getItems method to get a list of items in the room.
@@ -193,6 +209,9 @@ public class Room {
 					setVisited();
 				}
 
+				if (!destination.canEnter(player)) {
+					throw new GameException("Can't go here yet");
+				}
 
 				return destination;
 			}
