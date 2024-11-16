@@ -109,7 +109,7 @@ public class Player extends Entity {
 		List<Item> inventory = getInventory();
 		List<Item> itemTypes = inventory.stream().distinct().toList();
 
-		for (int index = 0; index < 10; index++) {
+		for (int index = 0; index < INVENTORY_CAPACITY; index++) {
 			if (index >= itemTypes.size()) {
 				display.append("empty,\n");
 				continue;
