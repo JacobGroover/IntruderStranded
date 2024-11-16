@@ -33,6 +33,7 @@ class GameplayCommandsTest {
         gameDBCreate.buildTables();
         PlayerDB playerDB = new PlayerDB();
         playerDB.addPlayer("Test User", "", "");
+        gameDBCreate.newGame(1);
     }
 
     @BeforeEach
@@ -73,6 +74,14 @@ class GameplayCommandsTest {
         return callGameplayCommandsMethod("getCommandArgument", command.toUpperCase());
     }
 
+    private void assertResponse(String command, String expectedResponse) throws Throwable {
+        try {
+            assertEquals(expectedResponse, callExecuteCommand(command));
+        } catch (GameException exception) {
+            assertEquals(exception.getMessage(), expectedResponse);
+        }
+    }
+
     @Test
     void exit() throws Throwable {
         assertEquals("Do you want to save your game?", callExecuteCommand("exit"));
@@ -83,7 +92,7 @@ class GameplayCommandsTest {
 
         for (String command : List.of("yes", "y", "no", "n")) {
             assertEquals("Do you want to save your game?", callExecuteCommand("exit"));
-            assertEquals("", callExecuteCommand(command));
+            assertEquals(command.startsWith("y") ? "Game Saved" : "", callExecuteCommand(command));
             beforeEach();
         }
     }
@@ -105,7 +114,17 @@ class GameplayCommandsTest {
     }
 
     @Test
-    void teleport() {
+    void teleport() throws Throwable {
+        assertResponse("tel", "Invalid command");
+        new PlayerDB().addItem(1, new Item(1)); // add cell door key to allow leaving room
+        assertResponse("tel", "Where would you like to teleport? Level -2 (Cell), Level -1 (Armory), Level 0 (Inside), Level 0 (Outside). Please enter a number.");
+        assertResponse("aaaa", "This level does not exist.");
+        assertResponse("-2", "You are already in this level.");
+        assertResponse("0", "Please enter \"inside\" or \"outside\"");
+        assertResponse("bbbb", "Please enter \"inside\" or \"outside\"");
+        assertResponse("Inside", "Are you sure you want to teleport?");
+        assertResponse("cccc", "Please enter yes or no.");
+        assertResponse("no", "");
 
     }
 }
