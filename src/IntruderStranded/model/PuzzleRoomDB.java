@@ -8,8 +8,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface PuzzleRoomDB extends RoomDBInfoProvider {
-	default List<Puzzle> getPuzzles() throws GameException {
+public record PuzzleRoomDB(int roomID, int playerID) {
+	List<Puzzle> getPuzzles() throws GameException {
 		try {
 			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT * FROM Puzzle WHERE RoomID = ? AND PlayerID = ?", roomID(), playerID());
 			List<Puzzle> puzzles = new ArrayList<>();
@@ -35,7 +35,7 @@ public interface PuzzleRoomDB extends RoomDBInfoProvider {
 		}
 	}
 
-	default void removePuzzle(Puzzle puzzle) throws GameException {
+	void removePuzzle(Puzzle puzzle) throws GameException {
 		try {
 			DBService.getDB().updatePrepared("DELETE FROM Puzzle WHERE PuzzleID = ?", puzzle.getID());
 		} catch (SQLException exception) {

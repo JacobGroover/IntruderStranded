@@ -5,6 +5,7 @@ import IntruderStranded.gameExceptions.GameException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -16,7 +17,8 @@ import java.util.Optional;
  *
  * This class handles getting and setting player data from the database.
  */
-public class PlayerDB implements InventoryDB {
+public class PlayerDB {
+	InventoryDB inventoryDB = new InventoryDB();
 
 	/**
 	 * Method: updatePlayer
@@ -193,4 +195,32 @@ public class PlayerDB implements InventoryDB {
 		return username;
 	}
 
+	/**
+	 * Method: getInventory
+	 * Gets the inventory of the player with the given player id.
+	 * @param playerID The id of the player.
+	 */
+	public List<Item> getInventory(int playerID) throws GameException {
+		return inventoryDB.getInventory(playerID);
+	}
+
+	/**
+	 * Method: addItem
+	 * Adds an item into the inventory of the player with the given player id.
+	 * @param playerID The id of the player.
+	 * @param item The item to add.
+	 */
+	public void addItem(int playerID, Item item) throws GameException {
+		inventoryDB.addItem(playerID, item);
+	}
+
+	/**
+	 * Method: removeItem
+	 * Removes an item from the inventory of the player with the given player id.
+	 * @param playerID The id of the player.
+	 * @param item The item to remove.
+	 */
+	public void removeItem(int playerID, Item item) throws GameException {
+		inventoryDB.removeItem(playerID, item);
+	}
 }
