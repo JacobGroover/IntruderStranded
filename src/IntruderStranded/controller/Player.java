@@ -105,15 +105,16 @@ public class Player extends Entity {
 		display.append("Score: ").append(score).append('\n');
 		display.append("Your STATS: ").append(getStatus()).append('\n');
 		display.append("Item List:\n");
-		List<Item> inventory = getInventory().stream().distinct().toList();
+		List<Item> inventory = getInventory();
+		List<Item> itemTypes = inventory.stream().distinct().toList();
 
 		for (int index = 0; index < 10; index++) {
-			if (index >= inventory.size()) {
+			if (index >= itemTypes.size()) {
 				display.append("empty,\n");
 				continue;
 			}
 
-			Item item = inventory.get(index);
+			Item item = itemTypes.get(index);
 			long quantity = inventory.stream().filter(i -> i.equals(item)).count();
 			if (quantity > 1) {
 				display.append(quantity).append(' ');
