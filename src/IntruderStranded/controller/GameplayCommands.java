@@ -505,7 +505,7 @@ public class GameplayCommands extends Commands {
             Enter "Look" to look at the room
             Enter "Help" for more commands
             
-            """ + player.getCurrentRoom().display(player) + "\n";
+            """ + player.getCurrentRoom().display(player) + enterRoom();
         } catch (GameException exception) {
             return exception.getMessage();
         }
