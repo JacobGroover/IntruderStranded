@@ -31,7 +31,7 @@ public class GameplayCommands extends Commands {
 	/**
 	 * One-Argument Constructor for the GameplayCommands class
 	 * Calls parent one-argument constructor, then initializes booleans to false.
-	 * @param player
+	 * @param player The current player.
 	 */
 	public GameplayCommands(Player player) {
 		super(player);
@@ -52,7 +52,8 @@ public class GameplayCommands extends Commands {
 	 * Battle commands - Attack, Defend
 	 *
 	 * Throws an exception for an invalid command
-	 * @param command
+	 * @param command The command to execute.
+	 * @return The string to display.
 	 */
 	@Override
 	String executeCommand(String command) throws GameException {
@@ -91,6 +92,12 @@ public class GameplayCommands extends Commands {
 		};
 	}
 
+	/**
+	 * Method: runPuzzle
+	 * Handles running puzzles.
+	 * @param command The string entered by the player.
+	 * @return The string to display.
+	 */
 	private String runPuzzle(String command) throws GameException {
 		String output = currentPuzzle.run(command);
 		if (currentPuzzle.getIsCompleted()) {
@@ -102,6 +109,11 @@ public class GameplayCommands extends Commands {
 		return output;
 	}
 
+	/**
+	 * Method: getCurrentReward
+	 * Gets the text to display for the current reward.
+	 * @return The string to display.
+	 */
 	private String getCurrentReward() {
 		if (!currentRewards.isEmpty()) {
 			player.addScore(5);
@@ -112,6 +124,12 @@ public class GameplayCommands extends Commands {
 		return "";
 	}
 
+	/**
+	 * Method: giveRewards
+	 * Handles giving rewards to the player after a puzzle or monster fight.
+	 * @param command The string entered by the player.
+	 * @return The string to display.
+	 */
 	protected String giveRewards(String command) throws GameException {
 		if (currentRewards.isEmpty()) {
 			return "";
@@ -162,6 +180,12 @@ public class GameplayCommands extends Commands {
 		}
 	}
 
+	/**
+	 * Method: setRewards
+	 * Sets the current rewards to give to the player.
+	 * @param rewards The list of items.
+	 * @return The string to display.
+	 */
 	protected String setRewards(List<Item> rewards) throws GameException {
 		currentRewards = rewards;
 		return giveRewards(null);
@@ -188,6 +212,7 @@ public class GameplayCommands extends Commands {
 	/**
 	 * Method: look
 	 * returns the description for the room the player is currently in.
+	 * If the room has a puzzle, starts it.
 	 */
 	private String look() throws GameException {
 		List<RoomEvent> roomEvents = player.getCurrentRoom().getRoomEvents();
@@ -275,10 +300,22 @@ public class GameplayCommands extends Commands {
 		throw new GameException("Invalid command");
 	}
 
+	/**
+	 * Method: useItem
+	 * Uses an item in the player's inventory.
+	 * @param item The item to use.
+	 * @return The string to display.
+	 */
 	protected String useItem(Item item) throws GameException {
 		return player.useItem(item);
 	}
 
+	/**
+	 * Method: discardItem
+	 * Attempts to discard an item in the player's inventory.
+	 * @param item The item to discard.
+	 * @return The string to display.
+	 */
 	private String discardItem(Item item) throws GameException {
 		if (!item.canDiscard()) {
 			return "Item cannot be discarded";
@@ -288,6 +325,11 @@ public class GameplayCommands extends Commands {
 		return "You have discarded the item\n";
 	}
 
+	/**
+	 * Method: onInventoryClose
+	 * Gets text to display after the player closes their inventory.
+	 * @return The string to display.
+	 */
 	protected String onInventoryClose() throws GameException {
 		return player.getCurrentRoom().display(player);
 	}
@@ -469,6 +511,11 @@ public class GameplayCommands extends Commands {
 		throw new GameException("Invalid command");
 	}
 
+	/**
+	 * Method: flee
+	 * Handles the player fleeing from a puzzle.
+	 * @return The string to display.
+	 */
 	protected String flee() throws GameException {
 		if (player.getPreviousRoom() == null) {
 			return "Nowhere to flee to.";
@@ -479,6 +526,10 @@ public class GameplayCommands extends Commands {
 		return moveTo(player.getPreviousRoom());
 	}
 
+	/**
+	 * Method: reloadCurrentRoom
+	 * Reloads the current room from the database.
+	 */
 	protected void reloadCurrentRoom() throws GameException {
 		player.setCurrentRoom(Room.getById(player.getCurrentRoom().getID(), player.getID()));
 	}
