@@ -4,6 +4,7 @@ import IntruderStranded.gameExceptions.GameException;
 import IntruderStranded.model.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class: Room
@@ -63,6 +64,19 @@ public class Room {
 	}
 
 	/**
+	 * Method: getNameFromId
+	 * Gets the name of a room from its id.
+	 * @param roomId The id of the room to get.
+	 * @return The name of the room with the given id.
+	 * @throws GameException
+	 */
+	public static String getNameFromId(int roomId) throws GameException {
+		RoomDB rdb = new RoomDB(roomId, -1);
+		Room room = rdb.getRoom();
+		return room.getRoomName();
+	}
+
+	/**
 	 * Method: allowsTeleport
 	 * Getter for teleport class attribute
 	 */
@@ -75,30 +89,46 @@ public class Room {
 	 * Calls rdb.getItems method to get a list of items in the room.
 	 */
 	String display() throws GameException {
-		String status;
-
-		if (visited) {
-			status = "(Visited)";
-		} else {
-			status = "(Not Visited)";
-		}
+		String status = visited ? "(Visited)" : "(Not visited)";
 
 		List<Item> items = rdb.getItems();
-		String itemList = "";
-		if (items.isEmpty()) {
-			itemList = "No items in this room.";
-		} else {
-			for (Item item : items) {
-				itemList += item.display() + ", ";
-			}
-			itemList = itemList.substring(0, itemList.length() - 2);
+		String itemList = items.stream()
+				.map(Item::display)
+				.collect(Collectors.joining("\n"));
+
+		if (!itemList.isEmpty()) {
+			itemList = "\nItems in room:\n" + itemList;
 		}
 
+		String exitList = exits.stream()
+				.filter(e -> !e.getDirection().isTeleport())
+				.map(Exit::display)
+				.collect(Collectors.joining(", "));
 
-		String display = roomName + " " + status + "\n Current Level: " + level +
-				"\n" + roomDescription + "\n" + itemList;
+		return roomName + " " + status + "\nCurrent Level: Level " + level +
+				"\n\n" + limitStringWidth(roomDescription, 90) + itemList
+				+ "\n" + exitList;
+	}
 
-		return display;
+	/**
+	 * Method: limitStringWidth
+	 * Breaks up a string into lines with a limited number of characters.
+	 * @param str The string to limit.
+	 * @param lineLimit The minimum number of characters a line will have (except for the last line).
+	 * @return The string with its width limited.
+	 */
+	private String limitStringWidth(String str, int lineLimit) {
+		StringBuilder stringBuilder = new StringBuilder(str);
+		int breakIndex = lineLimit;
+
+		for (int i = 0; i != -1; i = stringBuilder.indexOf(" ", i + 1)) {
+			if (i >= breakIndex) {
+				stringBuilder.replace(i, i + 1, "\n");
+				breakIndex += lineLimit;
+			}
+		}
+
+		return stringBuilder.toString();
 	}
 
 	/**
@@ -108,9 +138,7 @@ public class Room {
 	 */
 	boolean canTeleport()  {
 		for (Exit exit : exits) {
-			Direction direction = exit.getDirection();
-			if (direction == Direction.TEL0IN || direction == Direction.TEL0OUT ||
-					direction == Direction.TEL1 || direction == Direction.TEL2) {
+			if (exit.getDirection().isTeleport()) {
 				return true;
 			}
 		}
@@ -122,16 +150,15 @@ public class Room {
 	 * Iterates through the List of Exits for this room to return the ID of the destination room in the given
 	 * direction from this room. If there is no Exit corresponding to the given direction, a GameException
 	 * will be thrown.
-	 * @param command
+	 * @param direction The direction to go.
 	 */
-	int leaveRoom(String command) throws GameException {
-		Direction direction = Direction.parseDirection(command);
-
+	int leaveRoom(Direction direction) throws GameException {
 		for (Exit exit : exits) {
 			if (exit.getDirection() == direction) {
 				return exit.getDestinationID();
 			}
 		}
+
 		throw new GameException("Invalid direction.");
 	}
 
@@ -151,6 +178,16 @@ public class Room {
 	 */
 	void removeItem(Item item) throws GameException {
 		rdb.removeItem(item);
+	}
+
+	/**
+	 * Method: getItems
+	 * Gets the items in this room.
+	 * @return The list of items in this room.
+	 * @throws GameException
+	 */
+	List<Item> getItems() throws GameException {
+		return rdb.getItems();
 	}
 
 	List<RoomEvent> getRoomEvents() {
@@ -218,6 +255,15 @@ public class Room {
     public int getID() {
         return roomID;
     }
+
+	/**
+	 * Method: getLevel
+	 * Gets the level of the room.
+	 * @return The level of the room.
+	 */
+	public String getLevel() {
+		return level;
+	}
 
 	/**
 	 * Method: setLevel

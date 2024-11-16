@@ -13,13 +13,13 @@ public enum Direction {
 	TEL1,
 	TEL2;
 
-	private static final Map<String, Direction> directionMap = new HashMap<>();
+	private static final Map<String, Direction> physicalDirectionMap = new HashMap<>();
 
 	static {
-		directionMap.put("NORTH", NORTH);
-		directionMap.put("SOUTH", SOUTH);
-		directionMap.put("EAST", EAST);
-		directionMap.put("WEST", WEST);
+		physicalDirectionMap.put("NORTH", NORTH);
+		physicalDirectionMap.put("SOUTH", SOUTH);
+		physicalDirectionMap.put("EAST", EAST);
+		physicalDirectionMap.put("WEST", WEST);
 	}
 
 	/**
@@ -30,6 +30,14 @@ public enum Direction {
 	 * does not represent a direction.
 	 */
 	public static Direction parseDirection(String direction) {
-		return directionMap.get(direction);
+		return physicalDirectionMap.get(direction);
+	}
+
+	public boolean isTeleport() {
+		return !physicalDirectionMap.containsValue(this);
+	}
+
+	public String getTitleCaseString() {
+		return name().charAt(0) + name().toLowerCase().substring(1);
 	}
 }
