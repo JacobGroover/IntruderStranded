@@ -158,8 +158,8 @@ public class BattleCommands extends GameplayCommands {
      * @return The string to display.
      */
     private String attack() throws GameException {
-        boolean monsterImmune = currentMonster.getName().equals("Slime") && !player.getEquippedWeapon().getItemName().equals("Flame Knife");
-        String attackText = monsterImmune ? "The monster is immune to your current weapon!\n" : "You landed a hit!\n";
+        boolean monsterImmune = currentMonster.getName().equals("Slime") && (player.getEquippedWeapon() == null || !player.getEquippedWeapon().getItemName().equals("Flame Knife"));
+        String attackText = monsterImmune ? "The monster is immune to your attack!\n" : "You landed a hit!\n";
 
         if (!monsterImmune) {
             currentMonster.setHealth(Math.max(currentMonster.getHealth() - player.getDamage(), 0));
