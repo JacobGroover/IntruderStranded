@@ -596,7 +596,7 @@ public class GameplayCommands extends Commands {
 	 */
 	String teleport(String command) throws GameException {
 		if (teleportCounter == 0) {
-			if (!player.getCurrentRoom().allowsTeleport()) {
+			if (!player.getCurrentRoom().allowsTeleport() || !player.getCurrentRoom().canLeave(player)) {
 				throw new GameException("Invalid command");
 			}
 
