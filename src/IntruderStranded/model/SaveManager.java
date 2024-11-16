@@ -28,4 +28,17 @@ public class SaveManager {
             throw new GameException(exception.getMessage());
         }
     }
+
+    /**
+     * Method: rollbackGame
+     * Rolls back any changes which have occurred since the last save.
+     * @throws GameException
+     */
+    public static void rollbackGame() throws GameException {
+        try {
+            DBService.getDB().rollbackTransaction();
+        } catch (SQLException exception) {
+            throw new GameException(exception.getMessage());
+        }
+    }
 }

@@ -71,7 +71,7 @@ public class Room {
 	 * @throws GameException
 	 */
 	public static String getNameFromId(int roomId) throws GameException {
-		RoomDB rdb = new RoomDB(roomId, -1);
+		RoomDB rdb = new RoomDB(roomId);
 		Room room = rdb.getRoom();
 		return room.getRoomName();
 	}
@@ -84,11 +84,23 @@ public class Room {
 		return this.teleport;
 	}
 
+	boolean canLeave(Player player) throws GameException {
+		if (roomEvents.stream().anyMatch(e -> e instanceof Monster)) {
+			return false;
+		}
+
+		if (!visited && roomName.equalsIgnoreCase("Cell") && !player.hasItem("Cell Door Key")) {
+			return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * Returns a string representation of this room, with the room name, visited state, description, items and exits.
 	 * Calls rdb.getItems method to get a list of items in the room.
 	 */
-	String display() throws GameException {
+	String display(Player player) throws GameException {
 		String status = visited ? "(Visited)" : "(Not visited)";
 
 		List<Item> items = rdb.getItems();
@@ -100,14 +112,18 @@ public class Room {
 			itemList = "\nItems in room:\n" + itemList;
 		}
 
-		String exitList = exits.stream()
+		String exitText = exits.stream()
 				.filter(e -> !e.getDirection().isTeleport())
 				.map(Exit::display)
 				.collect(Collectors.joining(", "));
 
+		if (allowsTeleport()) {
+			exitText += "\nThe teleportation feature can be activated.";
+		}
+
 		return roomName + " " + status + "\nCurrent Level: Level " + level +
 				"\n\n" + limitStringWidth(roomDescription, 90) + itemList
-				+ "\n" + exitList;
+				+ (canLeave(player) ? "\n" + exitText : "");
 	}
 
 	/**
@@ -136,7 +152,7 @@ public class Room {
 	 * Iterates through the List of Exits and checks whether the List contains TEL Directions.
 	 * Should be called from the Room constructor right after the Room data is retrieved from the database.
 	 */
-	boolean canTeleport()  {
+	private boolean canTeleport()  {
 		for (Exit exit : exits) {
 			if (exit.getDirection().isTeleport()) {
 				return true;
@@ -150,11 +166,17 @@ public class Room {
 	 * Iterates through the List of Exits for this room to return the ID of the destination room in the given
 	 * direction from this room. If there is no Exit corresponding to the given direction, a GameException
 	 * will be thrown.
+	 * @param player The current player.
 	 * @param direction The direction to go.
 	 */
-	int leaveRoom(Direction direction) throws GameException {
+	int leaveRoom(Player player, Direction direction) throws GameException {
+		if (!canLeave(player)) {
+			throw new GameException("Can't leave room yet");
+		}
+
 		for (Exit exit : exits) {
 			if (exit.getDirection() == direction) {
+				setVisited(true);
 				return exit.getDestinationID();
 			}
 		}
@@ -223,11 +245,12 @@ public class Room {
 	}
 
 	/**
-	 * 
-	 * @param visited
+	 * Method: setVisited
+	 * Sets this room as visited.
 	 */
-	public void setVisited(boolean visited) {
-		this.visited = visited;
+	public void setVisited() throws GameException {
+		this.visited = true;
+		rdb.setVisited();
 	}
 
 	/**

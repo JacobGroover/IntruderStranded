@@ -21,7 +21,13 @@ public abstract class Entity {
 		this.health = health;
 	}
 
+	abstract public int getDamage();
+
     public int getID() {
         return id;
     }
+
+	String getStatus() {
+		return "Health = " + getHealth() + ", Damage = " + getDamage();
+	}
 }

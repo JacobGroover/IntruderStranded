@@ -9,6 +9,7 @@ public class Monster extends Entity implements RoomEvent {
 	private String name;
 	private int damage;
 	private final RoomDB roomDB;
+    private int freezeCounter = -1;
 
 	public Monster(int id, int roomID, int playerID) {
 		super(id);
@@ -19,6 +20,12 @@ public class Monster extends Entity implements RoomEvent {
 		return roomDB.getRewards();
 	}
 
+    @Override
+    public void delete() throws GameException {
+        roomDB.removeMonster(this);
+    }
+
+    @Override
     public int getDamage() {
         return damage;
     }
@@ -33,5 +40,18 @@ public class Monster extends Entity implements RoomEvent {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    boolean isFrozen() {
+        return freezeCounter >= 0;
+    }
+
+    void tickFreeze() {
+        freezeCounter--;
+    }
+
+    void freeze() {
+        freezeCounter = 2;
+        setHealth(getHealth() - 10);
     }
 }

@@ -38,9 +38,9 @@ public record MonsterRoomDB(int roomID, int playerID) {
 			int quantity = resultSet.getInt("MonsterQuantity");
 
 			if (quantity <= 1) {
-				DBService.getDB().updatePrepared("DELETE FROM MonsterRoom WHERE MonsterID = ?", monster.getID());
+				DBService.getDB().updatePrepared("DELETE FROM MonsterRoom WHERE MonsterID = ? AND RoomID = ? AND PlayerID = ?", monster.getID(), roomID(), playerID());
 			} else {
-				DBService.getDB().updatePrepared("UPDATE MonsterRoom SET MonsterQuantity = ? WHERE MonsterID = ?", quantity - 1, monster.getID());
+				DBService.getDB().updatePrepared("UPDATE MonsterRoom SET MonsterQuantity = ? WHERE MonsterID = ? AND RoomID = ? AND PlayerID = ?", quantity - 1, monster.getID(), roomID(), playerID());
 			}
 
 			resultSet.getStatement().close();

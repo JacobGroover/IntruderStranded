@@ -33,3 +33,7 @@ INSERT INTO Puzzle
 (?, 28, 9, 3),
 (?, 29, 10, 3),
 (?, 30, 11, 0);
+
+DELETE FROM ItemRoom WHERE PlayerID = ?;
+DELETE FROM VisitRoom WHERE PlayerID = ?;
+DELETE FROM Inventory WHERE PlayerID = ?;

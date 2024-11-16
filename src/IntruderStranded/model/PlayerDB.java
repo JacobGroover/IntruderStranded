@@ -18,7 +18,8 @@ import java.util.Optional;
  * This class handles getting and setting player data from the database.
  */
 public class PlayerDB {
-	InventoryDB inventoryDB = new InventoryDB();
+	private final InventoryDB inventoryDB = new InventoryDB();
+	private final WeaponDB weaponDB = new WeaponDB();
 
 	/**
 	 * Method: updatePlayer
@@ -27,8 +28,10 @@ public class PlayerDB {
 	 */
 	public void updatePlayer(Player player) throws GameException {
 		try {
+			int weaponItemId = player.getEquippedWeapon() != null ? player.getEquippedWeapon().getItemID() : -1;
+			int previousRoomId = player.getPreviousRoom() != null ? player.getPreviousRoom().getID() : -1;
 			DBService.getDB().updatePrepared("UPDATE Player SET Health = ?, PreviousRoom = ?, CurrentRoom = ?, Weapon = ? WHERE PlayerID = ?",
-					player.getHealth(), player.getPreviousRoom().getID(), player.getCurrentRoom().getID(), player.getWeapon(), player.getID());
+					player.getHealth(), previousRoomId, player.getCurrentRoom().getID(), weaponItemId, player.getID());
 		} catch (SQLException exception) {
 			throw new GameException(exception.getMessage());
 		}
@@ -46,8 +49,12 @@ public class PlayerDB {
 			Player player = new Player(playerID);
 			player.setUsername(resultSet.getString("Username"));
 			player.setScore(resultSet.getInt("Score"));
-			player.setWeapon(resultSet.getInt("Weapon"));
 			player.setHealth(resultSet.getInt("Health"));
+
+			int weaponItemId = resultSet.getInt("Weapon");
+			if (weaponItemId != -1) {
+				player.setEquippedWeapon(weaponDB.getWeapon(weaponItemId));
+			}
 
 			player.setCurrentRoom(Room.getById(resultSet.getInt("CurrentRoom"), playerID));
 			int previousRoomId = resultSet.getInt("PreviousRoom");

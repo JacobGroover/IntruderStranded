@@ -14,7 +14,7 @@ public record RewardDB(int roomID) {
 	 */
 	List<Item> getRewards() throws GameException {
 		try {
-			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT Item.* FROM Rewards LEFT JOIN Item ON Rewards.ItemID = Item.ItemID WHERE RoomID = ?", roomID());
+			ResultSet resultSet = DBService.getDB().queryPrepared("SELECT Item.* FROM Reward LEFT JOIN Item ON Reward.ItemID = Item.ItemID WHERE RoomID = ?", roomID());
 			return ItemDB.itemsFromResultSet(resultSet, false);
 		} catch (SQLException exception) {
 			throw new GameException(exception.getMessage());

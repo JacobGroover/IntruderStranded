@@ -5,12 +5,14 @@ public class Item {
 	private final int itemID;
 	private String itemName;
 	private String itemDescription;
+	private boolean canDiscard;
+	private ConsumableType consumableType;
 
 	/**
 	 * Returns the name and description of the item as a string.
 	 */
 	String display() {
-		return itemName + "- " + itemDescription;
+		return itemName + " - " + itemDescription;
 	}
 
 	/**
@@ -48,5 +50,30 @@ public class Item {
 
     public int getItemID() {
         return itemID;
+    }
+
+    public boolean canDiscard() {
+        return canDiscard;
+    }
+
+    public void setCanDiscard(boolean canDiscard) {
+        this.canDiscard = canDiscard;
+    }
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Item other) {
+			return itemID == other.itemID;
+		}
+
+		return false;
+	}
+
+    public ConsumableType getConsumableType() {
+        return consumableType;
+    }
+
+    public void setConsumableType(ConsumableType consumableType) {
+        this.consumableType = consumableType;
     }
 }

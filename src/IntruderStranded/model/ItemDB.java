@@ -1,5 +1,6 @@
 package IntruderStranded.model;
 
+import IntruderStranded.controller.ConsumableType;
 import IntruderStranded.controller.Item;
 import IntruderStranded.controller.Weapon;
 
@@ -45,6 +46,8 @@ public final class ItemDB {
 
             item.setItemName(resultSet.getString("ItemName"));
             item.setItemDescription(resultSet.getString("ItemDescription"));
+            item.setConsumableType(ConsumableType.values()[resultSet.getInt("ConsumableType")]);
+            item.setCanDiscard(resultSet.getBoolean("CanDiscard"));
             int quantity = withQuantity ? resultSet.getInt("ItemQuantity") : 1;
             items.addAll(Collections.nCopies(quantity, item));
         }

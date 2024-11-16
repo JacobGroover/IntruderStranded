@@ -17,14 +17,13 @@ import java.util.List;
  * This class – Holds the Room data for the Intruder Stranded game.
  */
 public class RoomDB {
-	int roomID;
-	VisitRoomDB visitRoomDB;
-	ItemRoomDB itemRoomDB;
-	ExitDB exitDB;
-	MonsterRoomDB monsterRoomDB;
-	PuzzleRoomDB puzzleRoomDB;
-	RewardDB rewardDB;
-
+	private final int roomID;
+	private final ExitDB exitDB;
+	private final RewardDB rewardDB;
+	private VisitRoomDB visitRoomDB;
+	private ItemRoomDB itemRoomDB;
+	private MonsterRoomDB monsterRoomDB;
+	private PuzzleRoomDB puzzleRoomDB;
 	public RoomDB(int roomID) {
 		this.roomID = roomID;
 		exitDB = new ExitDB(roomID);
@@ -39,12 +38,6 @@ public class RoomDB {
 		monsterRoomDB = new MonsterRoomDB(roomID, playerID);
 		puzzleRoomDB = new PuzzleRoomDB(roomID, playerID);
 		rewardDB = new RewardDB(roomID);
-	}
-
-	public void updateRoom(Room room) throws GameException {
-		if (room.getVisited()) {
-			visitRoomDB.setVisited();
-		}
 	}
 
 	public Room getRoom() throws GameException {

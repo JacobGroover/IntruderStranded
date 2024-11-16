@@ -45,9 +45,9 @@ public class InventoryDB {
 
 			if (exists) {
 				int quantity = resultSet.getInt("ItemQuantity");
-				DBService.getDB().updatePrepared("UPDATE Inventory SET Quantity = ?", quantity + 1);
+				DBService.getDB().updatePrepared("UPDATE Inventory SET ItemQuantity = ?", quantity + 1);
 			} else {
-				DBService.getDB().updatePrepared("INSERT INTO Inventory (ItemID, PlayerID, ItemQuantity), (?, ?, ?)", item.getItemID(), playerID, 1);
+				DBService.getDB().updatePrepared("INSERT INTO Inventory (ItemID, PlayerID, ItemQuantity) VALUES (?, ?, ?)", item.getItemID(), playerID, 1);
 			}
 
 			resultSet.getStatement().close();
