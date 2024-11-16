@@ -48,7 +48,7 @@ CREATE TABLE MonsterRoom (
 );
 
 CREATE TABLE Puzzle (
-    PuzzleID        INT NOT NULL PRIMARY KEY,
+    PuzzleID        INTEGER NOT NULL PRIMARY KEY,
     PuzzleType      INT NOT NULL,
     RoomID          INT NOT NULL,
     PlayerID        INT NOT NULL

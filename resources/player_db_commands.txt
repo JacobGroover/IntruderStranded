@@ -23,18 +23,18 @@ INSERT INTO MonsterRoom
 DELETE FROM Puzzle WHERE PlayerID = ?;
 
 INSERT INTO Puzzle
-(PlayerID, RoomID, PuzzleID, PuzzleType) VALUES
-(?, 1, 1, 2),
-(?, 3, 2, 0),
-(?, 8, 3, 1),
-(?, 9, 4, 2),
-(?, 12, 5, 0),
-(?, 15, 6, 1),
-(?, 23, 7, 2),
-(?, 25, 8, 1),
-(?, 28, 9, 3),
-(?, 29, 10, 3),
-(?, 30, 11, 0);
+(PlayerID, RoomID, PuzzleType) VALUES
+(?, 1, 2),
+(?, 3, 0),
+(?, 8, 1),
+(?, 9, 2),
+(?, 12, 0),
+(?, 15, 1),
+(?, 23, 2),
+(?, 25, 1),
+(?, 28, 3),
+(?, 29, 3),
+(?, 30, 0);
 
 DELETE FROM ItemRoom WHERE PlayerID = ?;
 DELETE FROM VisitRoom WHERE PlayerID = ?;
