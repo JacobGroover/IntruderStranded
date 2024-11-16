@@ -45,7 +45,7 @@ public class InventoryDB {
 
 			if (exists) {
 				int quantity = resultSet.getInt("ItemQuantity");
-				DBService.getDB().updatePrepared("UPDATE Inventory SET ItemQuantity = ?", quantity + 1);
+				DBService.getDB().updatePrepared("UPDATE Inventory SET ItemQuantity = ? WHERE ItemID = ? AND PlayerID = ?", quantity + 1, item.getItemID(), playerID);
 			} else {
 				DBService.getDB().updatePrepared("INSERT INTO Inventory (ItemID, PlayerID, ItemQuantity) VALUES (?, ?, ?)", item.getItemID(), playerID, 1);
 			}
@@ -69,9 +69,9 @@ public class InventoryDB {
 			int quantity = resultSet.getInt("ItemQuantity");
 
 			if (quantity <= 1) {
-				DBService.getDB().updatePrepared("DELETE FROM Inventory WHERE ItemID = ?", item.getItemID());
+				DBService.getDB().updatePrepared("DELETE FROM Inventory WHERE ItemID = ? AND PlayerID = ?", item.getItemID(), playerID);
 			} else {
-				DBService.getDB().updatePrepared("UPDATE Inventory SET ItemQuantity = ? WHERE ItemID = ?", quantity - 1, item.getItemID());
+				DBService.getDB().updatePrepared("UPDATE Inventory SET ItemQuantity = ? WHERE ItemID = ? AND PlayerID = ?", quantity - 1, item.getItemID(), playerID);
 			}
 
 			resultSet.getStatement().close();
