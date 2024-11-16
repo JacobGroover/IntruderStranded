@@ -3,6 +3,7 @@ package IntruderStranded.controller;
 import IntruderStranded.model.*;
 import IntruderStranded.gameExceptions.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -294,6 +295,20 @@ public class Player extends Entity {
 	 */
 	boolean hasItem(String itemName) throws GameException {
 		return getInventory().stream().anyMatch(i -> i.getItemName().equalsIgnoreCase(itemName));
+	}
+
+	/**
+	 * Method: hasItems
+	 * Checks if the player has items with all of the given names in their inventory.
+	 * @param itemNames The item names to check for.
+	 * @return True if the player has items with the given names in their inventory, otherwise false.
+	 */
+	boolean hasItems(String... itemNames) throws GameException {
+		List<Item> inventory = getInventory();
+
+		return Arrays.stream(itemNames).allMatch(
+				name -> inventory.stream().anyMatch(i -> i.getItemName().equalsIgnoreCase(name))
+		);
 	}
 
 	/**
