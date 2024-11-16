@@ -173,24 +173,28 @@ public class Room {
 	 * Method: leaveRoom
 	 * Iterates through the List of Exits for this room to return the ID of the destination room in the given
 	 * direction from this room. If there is no Exit corresponding to the given direction, or the player cannot
-	 * leave the room yet, a GameException will be thrown. Otherwise, the room will be marked as visited before
-	 * returning the destination room id.
+	 * leave the room yet, or the player cannot enter the destination room yet, a GameException will be thrown.
+	 * Otherwise, this room will be marked as visited before returning the destination room.
 	 * @param player The current player.
 	 * @param direction The direction to go.
-	 * @return The id of the destination room.
+	 * @return The destination room.
 	 */
-	int leaveRoom(Player player, Direction direction) throws GameException {
+	Room leaveRoom(Player player, Direction direction) throws GameException {
 		if (!canLeave(player)) {
 			throw new GameException("Can't leave room yet");
 		}
 
 		for (Exit exit : exits) {
 			if (exit.getDirection() == direction) {
+				Room destination = Room.getById(exit.getDestinationID(), player.getID());
+
 				if (!visited) {
 					player.addScore(5);
+					setVisited();
 				}
-				setVisited();
-				return exit.getDestinationID();
+
+
+				return destination;
 			}
 		}
 

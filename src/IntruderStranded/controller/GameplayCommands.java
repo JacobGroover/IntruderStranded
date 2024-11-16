@@ -333,19 +333,19 @@ public class GameplayCommands extends Commands {
 	 * @throws GameException
 	 */
 	private String moveInDirection(Direction direction) throws GameException {
-		int destinationId = player.getCurrentRoom().leaveRoom(player, direction);
-		return moveTo(destinationId);
+		Room destination = player.getCurrentRoom().leaveRoom(player, direction);
+		return moveTo(destination);
 	}
 
 	/**
 	 * Method: moveTo
 	 * Moves to the given room.
-	 * @param destinationId The id of the room to move to.
+	 * @param destination The room to move to.
 	 * @return The text returned by the move.
 	 * @throws GameException
 	 */
-	protected String moveTo(int destinationId) throws GameException {
-		player.setCurrentRoom(Room.getById(destinationId, player.getID()));
+	protected String moveTo(Room destination) throws GameException {
+		player.setCurrentRoom(destination);
 		player.update();
 		return "\n" + player.getCurrentRoom().display(player) + enterRoom();
 	}
@@ -476,7 +476,7 @@ public class GameplayCommands extends Commands {
 
 		player.getCurrentRoom().getRoomEvents().addFirst(currentPuzzle);
 		currentPuzzle = null;
-		return moveTo(player.getPreviousRoom().getID());
+		return moveTo(player.getPreviousRoom());
 	}
 
 	protected void reloadCurrentRoom() throws GameException {

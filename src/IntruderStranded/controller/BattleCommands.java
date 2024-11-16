@@ -251,7 +251,7 @@ public class BattleCommands extends GameplayCommands {
     protected String flee() throws GameException {
         player.getCurrentRoom().getRoomEvents().addFirst(currentMonster);
         changeGameState(source);
-        return moveTo(player.getPreviousRoom().getID());
+        return moveTo(player.getPreviousRoom());
     }
 
     /**
