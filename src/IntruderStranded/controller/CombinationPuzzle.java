@@ -85,7 +85,7 @@ public class CombinationPuzzle extends Puzzle {
 
 
 				if (!correctGuess) {
-					output.append("Incorrect number, try again. \n You have " + (6 - puzzleCounter) + " guesses left.\n");
+					output.append("Incorrect number, try again.\nYou have " + (6 - puzzleCounter) + " guesses left.\n");
 					if (guessIsHot) {
 						output.append("You were close to a digit in the combination\n");
 					} else {
