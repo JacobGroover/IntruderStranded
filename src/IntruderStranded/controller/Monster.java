@@ -120,7 +120,7 @@ public class Monster extends Entity implements RoomEvent {
      * Freezes this monster.
      */
     void freeze() {
-        freezeCounter = 2;
+        freezeCounter = 1;
         setHealth(getHealth() - 10);
     }
 }
