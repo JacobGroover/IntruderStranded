@@ -29,7 +29,7 @@ public class SandPuzzle extends Puzzle {
 		StringBuilder output = new StringBuilder();
 
 		if(puzzleCounter == -1) {
-			output.append("To throw this rope, you must align these numbers: \n " +
+			output.append("To throw this rope, you must align these numbers:\n" +
 					"The first is half of 18, The second is the number of seasons, The third is the sides of a hexagon.");
 			puzzleCounter ++;
 		}
@@ -58,9 +58,6 @@ public class SandPuzzle extends Puzzle {
 
 	@Override()
 	void setupPuzzle() {
-		System.out.println("You encounter a part of their ship slowly sinking into a pool of moving sand. \n" +
-				"The goal is to use a rope to retrieve the part before it disappears beneath the sand. \n" +
-				"You a limited number of attempts to succeed before addition help is offered.");
 		puzzleCounter = -1;
 	}
 
