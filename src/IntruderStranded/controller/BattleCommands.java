@@ -158,7 +158,8 @@ public class BattleCommands extends GameplayCommands {
      * @return The string to display.
      */
     private String attack() throws GameException {
-        boolean monsterImmune = currentMonster.getName().equals("Slime") && (player.getEquippedWeapon() == null || !player.getEquippedWeapon().getItemName().equals("Flame Knife"));
+        final boolean monsterImmune = currentMonster.getName().equalsIgnoreCase("Slime") && (player.getEquippedWeapon() == null || !player.getEquippedWeapon().getItemName().equalsIgnoreCase("Flame Knife"));
+        final boolean finalBoss = currentMonster.getName().equalsIgnoreCase("Boss: Supreme Alien Commander");
         String attackText = monsterImmune ? "The monster is immune to your attack!\n" : "You landed a hit!\n";
 
         if (!monsterImmune) {
@@ -170,7 +171,7 @@ public class BattleCommands extends GameplayCommands {
             currentMonster.delete();
 
             int scoreGained = player.getHealth() <= battleStartHealth / 2 ? 5 : 10;
-            if (currentMonster.getName().equals("Boss: Supreme Alien Commander")) {
+            if (finalBoss) {
                 scoreGained += 20;
             }
             player.addScore(scoreGained);
@@ -178,14 +179,17 @@ public class BattleCommands extends GameplayCommands {
             String display = "You charged on " + currentMonster.getName() + "!\n"
                     + attackText + getBattleInfo()
                     + "\n\nYou have defeated " + currentMonster.getName()
-                    + "\n(+" + scoreGained + " score) New Score: " + player.getScore() + "\n\n";
+                    + "\n(+" + scoreGained + " score) New Score: " + player.getScore() + "\n";
 
             if (monsters.isEmpty()) {
                 String output = source.setRewards(currentMonster.getRewards());
                 source.reloadCurrentRoom();
                 changeGameState(source);
-                if (currentMonster.getRewards().isEmpty()) {
-                    display += player.getCurrentRoom().display(player);
+                if (finalBoss) {
+                    display += "\nYou have beaten the final boss and won the game!\nScore: " + player.getScore();
+                }
+                else if (currentMonster.getRewards().isEmpty()) {
+                    display += "\n" + player.getCurrentRoom().display(player);
                 } else {
                     display += output;
                 }
