@@ -176,7 +176,7 @@ public class Room {
 
 		for (Exit exit : exits) {
 			if (exit.getDirection() == direction) {
-				setVisited(true);
+				setVisited();
 				return exit.getDestinationID();
 			}
 		}
