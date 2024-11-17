@@ -3,6 +3,7 @@ package IntruderStranded.controller;
 import IntruderStranded.model.*;
 import IntruderStranded.gameExceptions.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,12 +40,16 @@ public class Player extends Entity {
 	 * Gets a player by their id by calling the PlayerDB.getPlayer method.
 	 * @param playerId The player id.
 	 * @return The player object with the given id.
-	 * @throws GameException
 	 */
 	public static Player getById(int playerId) throws GameException {
 		return pdb.getPlayer(playerId);
 	}
 
+	/**
+	 * Method: getDamage
+	 * Gets the current damage of this player.
+	 * @return The damage value.
+	 */
 	@Override
 	public int getDamage() {
 		int damage = BASE_DAMAGE;
@@ -60,7 +65,7 @@ public class Player extends Entity {
 	 * Method: addItem
 	 * Adds item to game session database Inventory table by calling
 	 * PlayerDB.addItem method.
-	 * @param item
+	 * @param item The item to add.
 	 */
 	void addItem(Item item) throws GameException {
 		pdb.addItem(getID(), item);
@@ -71,10 +76,10 @@ public class Player extends Entity {
 	 * Removes item from game session database Inventory table by calling
 	 * PlayerDB.removeItem method.
 	 * Adds item to currentRoom by calling currentRoom.addItem method.
-	 * @param item
+	 * @param item The item to discard.
 	 */
 	void discardItem(Item item) throws GameException {
-		pdb.removeItem(getID(), item);
+		removeItem(item);
 		currentRoom.addItem(item);
 	}
 
@@ -84,24 +89,33 @@ public class Player extends Entity {
 	 * @param item The item to remove.
 	 */
 	void removeItem(Item item) throws GameException {
+		if (item.equals(equippedWeapon)) {
+			equippedWeapon = null;
+		}
+
 		pdb.removeItem(getID(), item);
 	}
 
 	/**
 	 * Method: displayInventory
 	 * Calls getInventory method and uses it to return a String representation of Item objects.
+	 * @return The string to display.
 	 */
 	String displayInventory() throws GameException {
-		StringBuilder display = new StringBuilder("Item List:\n");
-		List<Item> inventory = getInventory().stream().distinct().toList();
+		StringBuilder display = new StringBuilder();
+		display.append("Score: ").append(score).append('\n');
+		display.append("Your STATS: ").append(getStatus()).append('\n');
+		display.append("Item List:\n");
+		List<Item> inventory = getInventory();
+		List<Item> itemTypes = inventory.stream().distinct().toList();
 
-		for (int index = 0; index < 10; index++) {
-			if (index >= inventory.size()) {
+		for (int index = 0; index < INVENTORY_CAPACITY; index++) {
+			if (index >= itemTypes.size()) {
 				display.append("empty,\n");
 				continue;
 			}
 
-			Item item = inventory.get(index);
+			Item item = itemTypes.get(index);
 			long quantity = inventory.stream().filter(i -> i.equals(item)).count();
 			if (quantity > 1) {
 				display.append(quantity).append(' ');
@@ -113,6 +127,13 @@ public class Player extends Entity {
 		return display.toString();
 	}
 
+	/**
+	 * Method: getInventoryItemByName
+	 * Gets an item in the player's inventory with the given name. Throws a GameException
+	 * if no item with that name exists in the player's inventory.
+	 * @param name The item name.
+	 * @return The item.
+	 */
 	Item getInventoryItemByName(String name) throws GameException {
 		return getInventory().stream()
 				.filter(i -> i.getItemName().equalsIgnoreCase(name))
@@ -123,13 +144,24 @@ public class Player extends Entity {
 	/**
 	 * Method: getInventory
 	 * Returns an ArrayList of Item objects by calling PlayerDB.getInventory method.
+	 * @return The list of items.
 	 */
 	private List<Item> getInventory() throws GameException {
 		return pdb.getInventory(getID());
 	}
 
-	boolean inventoryFull() throws GameException {
-		return getInventory().stream().distinct().count() >= INVENTORY_CAPACITY;
+	/**
+	 * Method: canAddToInventory
+	 * Checks if an item can be added to the player's inventory.
+	 * @param item The item to add.
+	 * @return True if the item can be added, otherwise false.
+	 */
+	boolean canAddToInventory(Item item) throws GameException {
+		if (getInventory().contains(item)) {
+			return true;
+		}
+
+        return getInventory().stream().distinct().count() < INVENTORY_CAPACITY;
 	}
 
 	/**
@@ -227,8 +259,10 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * 
-	 * @param item
+	 * Method: useItem
+	 * Uses an item and returns the result.
+	 * @param item The item to use.
+	 * @return The string to display.
 	 */
 	String useItem(Item item) throws GameException {
 		if (item instanceof Weapon weapon) {
@@ -242,7 +276,7 @@ public class Player extends Entity {
 			}
 			case MED_PACK -> {
 				removeItem(item);
-				setHealth(getHealth() + 20);
+				setHealth(Math.min(getHealth() + 20, 100));
 				return "You used the " + item.getItemName() + "\nYour STATS: " + getStatus();
 			}
 			case FREEZING_POTION -> {
@@ -253,53 +287,105 @@ public class Player extends Entity {
 		return item.display();
 	}
 
+	/**
+	 * Method: hasItem
+	 * Checks if the player has an item with the given name in their inventory.
+	 * @param itemName The item name to check for.
+	 * @return True if the player has an item with this name in their inventory, otherwise false.
+	 */
 	boolean hasItem(String itemName) throws GameException {
 		return getInventory().stream().anyMatch(i -> i.getItemName().equalsIgnoreCase(itemName));
 	}
 
+	/**
+	 * Method: hasItems
+	 * Checks if the player has items with all of the given names in their inventory.
+	 * @param itemNames The item names to check for.
+	 * @return True if the player has items with the given names in their inventory, otherwise false.
+	 */
+	boolean hasItems(String... itemNames) throws GameException {
+		List<Item> inventory = getInventory();
+
+		return Arrays.stream(itemNames).allMatch(
+				name -> inventory.stream().anyMatch(i -> i.getItemName().equalsIgnoreCase(name))
+		);
+	}
+
+	/**
+	 * Method: update
+	 * Updates this player in the database.
+	 */
 	void update() throws GameException {
 		pdb.updatePlayer(this);
 	}
 
-	public int getScore() {
-		return this.score;
+	/**
+	 * Method: addScore
+	 * Adds the given number to this player's score.
+	 * @param score The score to add.
+	 */
+	void addScore(int score) {
+		this.score += score;
 	}
 
 	/**
-	 * 
-	 * @param score
+	 * Method: getScore
+	 * Gets the score of this player.
+	 * @return The score of this player.
+	 */
+	public int getScore() {
+		return score;
+	}
+
+	/**
+	 * Method: setScore
+	 * Sets the score of this player.
+	 * @param score The score to set.
 	 */
 	public void setScore(int score) {
 		this.score = score;
 	}
 
+	/**
+	 * Method: getUsername
+	 * Gets the username of this player.
+	 * @return The username of this player.
+	 */
 	public String getUsername() {
 		return this.username;
 	}
 
 	/**
-	 * 
-	 * @param username
+	 * Method: setUsername
+	 * Sets the username of this player.
+	 * @param username The username to set.
 	 */
 	public void setUsername(String username) {
 		this.username = username;
 	}
 
+	/**
+	 * Method: getEquippedWeapon
+	 * Gets the equipped weapon of this player.
+	 * @return The equipped weapon of this player.
+	 */
 	public Weapon getEquippedWeapon() {
 		return this.equippedWeapon;
 	}
 
 	/**
-	 * 
-	 * @param equippedWeapon
+	 * Method: setEquippedWeapon
+	 * Sets the equipped weapon of this player.
+	 * @param equippedWeapon The equipped weapon to set.
 	 */
 	public void setEquippedWeapon(Weapon equippedWeapon) {
 		this.equippedWeapon = equippedWeapon;
 	}
 
 	/**
-	 * 
-	 * @param currentRoom
+	 * Method: setCurrentRoom
+	 * Sets the current room of this player.
+	 * @param currentRoom The current room to set.
 	 */
 	public void setCurrentRoom(Room currentRoom) {
 		previousRoom = this.currentRoom;
@@ -307,8 +393,9 @@ public class Player extends Entity {
 	}
 
 	/**
-	 * 
-	 * @param previousRoom
+	 * Method: setPreviousRoom
+	 * Sets the previous room of this player.
+	 * @param previousRoom The previous room to set.
 	 */
 	public void setPreviousRoom(Room previousRoom) {
 		this.previousRoom = previousRoom;

@@ -31,7 +31,7 @@ public class GameplayCommands extends Commands {
 	/**
 	 * One-Argument Constructor for the GameplayCommands class
 	 * Calls parent one-argument constructor, then initializes booleans to false.
-	 * @param player
+	 * @param player The current player.
 	 */
 	public GameplayCommands(Player player) {
 		super(player);
@@ -52,16 +52,21 @@ public class GameplayCommands extends Commands {
 	 * Battle commands - Attack, Defend
 	 *
 	 * Throws an exception for an invalid command
-	 * @param command
+	 * @param command The command to execute.
+	 * @return The string to display.
 	 */
 	@Override
 	String executeCommand(String command) throws GameException {
-		if (isExiting) {
+		Optional<String> override = player.getCurrentRoom().overrideInput(this, command);
+
+		if (override.isPresent()) {
+			return override.get();
+		} else if (isExiting) {
 			return exit(command);
-		} else if (command.equals("HELP")) {
-			return help();
 		} else if (currentRewards != null && !currentRewards.isEmpty()) {
 			return giveRewards(command);
+		} else if (command.equals("HELP")) {
+			return help();
 		} else if (command.equals("HINT")) {
 			return hint();
 		} else if (currentPuzzle != null) {
@@ -73,6 +78,8 @@ public class GameplayCommands extends Commands {
 			}
 
 			return runPuzzle(command);
+		} else if (command.equals("EXIT")) {
+			return exit(command);
 		} else if (isManagingInventory) {
 			return inventory(command);
 		} else if (teleportCounter != 0) {
@@ -84,12 +91,17 @@ public class GameplayCommands extends Commands {
 			case "SAVE" -> saveGame();
 			case "LOAD" -> loadGame();
 			case "INV" -> inventory(command);
-			case "EXIT" -> exit(command);
-			case "TEL" -> teleport(command);
+            case "TEL" -> teleport(command);
 			default -> throw new GameException("Invalid command");
 		};
 	}
 
+	/**
+	 * Method: runPuzzle
+	 * Handles running puzzles.
+	 * @param command The string entered by the player.
+	 * @return The string to display.
+	 */
 	private String runPuzzle(String command) throws GameException {
 		String output = currentPuzzle.run(command);
 		if (currentPuzzle.getIsCompleted()) {
@@ -101,15 +113,27 @@ public class GameplayCommands extends Commands {
 		return output;
 	}
 
+	/**
+	 * Method: getCurrentReward
+	 * Gets the text to display for the current reward.
+	 * @return The string to display.
+	 */
 	private String getCurrentReward() {
 		if (!currentRewards.isEmpty()) {
+			player.addScore(5);
 			Item reward = currentRewards.getFirst();
-			return "\nYou have obtained an item!\n" + reward.display() + "\n\"Keep\" or \"Discard\" the item?";
+			return "\nYou have obtained an item! (+5 score)\n" + reward.display() + "\n\"Keep\" or \"Discard\" the item?";
 		}
 
 		return "";
 	}
 
+	/**
+	 * Method: giveRewards
+	 * Handles giving rewards to the player after a puzzle or monster fight.
+	 * @param command The string entered by the player.
+	 * @return The string to display.
+	 */
 	protected String giveRewards(String command) throws GameException {
 		if (currentRewards.isEmpty()) {
 			return "";
@@ -119,14 +143,22 @@ public class GameplayCommands extends Commands {
 
 		if (discardingReward) {
 			Item item = player.getInventoryItemByName(command);
+
+			if (!item.canDiscard()) {
+				return discardItem(item);
+			}
+
 			discardingReward = false;
 			player.addItem(reward);
 			currentRewards.remove(reward);
+			if (currentRewards.isEmpty()) {
+				return discardItem(item) + "\n" + player.getCurrentRoom().display(player);
+			}
 			return discardItem(item) + getCurrentReward();
 		} else if (command == null) {
 			return getCurrentReward();
 		} else if (command.equals("KEEP")) {
-			if (player.inventoryFull()) {
+			if (!player.canAddToInventory(reward)) {
 				discardingReward = true;
 				return player.displayInventory() + "\nInventory is Full. Please pick an item to discard.";
 			}
@@ -140,6 +172,9 @@ public class GameplayCommands extends Commands {
 		} else if (command.equals("DISCARD")) {
 			if (reward.canDiscard()) {
 				currentRewards.remove(reward);
+				if (currentRewards.isEmpty()) {
+					return discardItem(reward) + "\n" + player.getCurrentRoom().display(player);
+				}
 				return discardItem(reward) + getCurrentReward();
 			} else {
 				return discardItem(reward);
@@ -149,6 +184,12 @@ public class GameplayCommands extends Commands {
 		}
 	}
 
+	/**
+	 * Method: setRewards
+	 * Sets the current rewards to give to the player.
+	 * @param rewards The list of items.
+	 * @return The string to display.
+	 */
 	protected String setRewards(List<Item> rewards) throws GameException {
 		currentRewards = rewards;
 		return giveRewards(null);
@@ -175,6 +216,7 @@ public class GameplayCommands extends Commands {
 	/**
 	 * Method: look
 	 * returns the description for the room the player is currently in.
+	 * If the room has a puzzle, starts it.
 	 */
 	private String look() throws GameException {
 		List<RoomEvent> roomEvents = player.getCurrentRoom().getRoomEvents();
@@ -242,6 +284,10 @@ public class GameplayCommands extends Commands {
 				throw new GameException("Item does not exist in room");
 			}
 
+			if (!player.canAddToInventory(item.get())) {
+				throw new GameException("Inventory full");
+			}
+
 			player.getCurrentRoom().removeItem(item.get());
 			player.addItem(item.get());
 			return player.displayInventory() + "\nSelect an Item to \"Use\" or \"Discard\"";
@@ -258,19 +304,36 @@ public class GameplayCommands extends Commands {
 		throw new GameException("Invalid command");
 	}
 
+	/**
+	 * Method: useItem
+	 * Uses an item in the player's inventory.
+	 * @param item The item to use.
+	 * @return The string to display.
+	 */
 	protected String useItem(Item item) throws GameException {
 		return player.useItem(item);
 	}
 
+	/**
+	 * Method: discardItem
+	 * Attempts to discard an item in the player's inventory.
+	 * @param item The item to discard.
+	 * @return The string to display.
+	 */
 	private String discardItem(Item item) throws GameException {
 		if (!item.canDiscard()) {
 			return "Item cannot be discarded";
 		}
 
 		player.discardItem(item);
-		return "You have discarded the item";
+		return "You have discarded the item\n";
 	}
 
+	/**
+	 * Method: onInventoryClose
+	 * Gets text to display after the player closes their inventory.
+	 * @return The string to display.
+	 */
 	protected String onInventoryClose() throws GameException {
 		return player.getCurrentRoom().display(player);
 	}
@@ -316,19 +379,19 @@ public class GameplayCommands extends Commands {
 	 * @throws GameException
 	 */
 	private String moveInDirection(Direction direction) throws GameException {
-		int destinationId = player.getCurrentRoom().leaveRoom(player, direction);
-		return moveTo(destinationId);
+		Room destination = player.getCurrentRoom().leaveRoom(player, direction);
+		return moveTo(destination);
 	}
 
 	/**
 	 * Method: moveTo
 	 * Moves to the given room.
-	 * @param destinationId The id of the room to move to.
+	 * @param destination The room to move to.
 	 * @return The text returned by the move.
 	 * @throws GameException
 	 */
-	protected String moveTo(int destinationId) throws GameException {
-		player.setCurrentRoom(Room.getById(destinationId, player.getID()));
+	protected String moveTo(Room destination) throws GameException {
+		player.setCurrentRoom(destination);
 		player.update();
 		return "\n" + player.getCurrentRoom().display(player) + enterRoom();
 	}
@@ -340,7 +403,7 @@ public class GameplayCommands extends Commands {
 	 * @return An empty string if the room does not have any monsters, otherwise
 	 * the monster encounter string.
 	 */
-	private String enterRoom() {
+	String enterRoom() {
 		List<Monster> monsters = player.getCurrentRoom().getRoomEvents().stream()
 				.filter(e -> e instanceof Monster).map(e -> (Monster) e)
 				.toList();
@@ -439,9 +502,8 @@ public class GameplayCommands extends Commands {
 		reloadCurrentRoom();
 
 		if (command.equals("YES") || command.equals("Y")) {
-			SaveManager.saveGame();
 			changeGameState(new MainMenuCommands(player));
-			return "";
+			return saveGame();
 		}
 
 		if (command.equals("NO") || command.equals("N")) {
@@ -453,6 +515,11 @@ public class GameplayCommands extends Commands {
 		throw new GameException("Invalid command");
 	}
 
+	/**
+	 * Method: flee
+	 * Handles the player fleeing from a puzzle.
+	 * @return The string to display.
+	 */
 	protected String flee() throws GameException {
 		if (player.getPreviousRoom() == null) {
 			return "Nowhere to flee to.";
@@ -460,9 +527,13 @@ public class GameplayCommands extends Commands {
 
 		player.getCurrentRoom().getRoomEvents().addFirst(currentPuzzle);
 		currentPuzzle = null;
-		return moveTo(player.getPreviousRoom().getID());
+		return moveTo(player.getPreviousRoom());
 	}
 
+	/**
+	 * Method: reloadCurrentRoom
+	 * Reloads the current room from the database.
+	 */
 	protected void reloadCurrentRoom() throws GameException {
 		player.setCurrentRoom(Room.getById(player.getCurrentRoom().getID(), player.getID()));
 	}
@@ -483,15 +554,13 @@ public class GameplayCommands extends Commands {
 		introTextPrinted = true;
 
         try {
-			reloadCurrentRoom();
-
             return """
             Welcome to Intruder Stranded
-            Enter north, south, east, or west to move
-            Enter look to look at the room
-            Enter help for more commands
+            Enter "North", "South", "East", or "West" to move
+            Enter "Look" to look at the room
+            Enter "Help" for more commands
             
-            """ + player.getCurrentRoom().display(player) + "\n";
+            """ + player.getCurrentRoom().display(player) + enterRoom();
         } catch (GameException exception) {
             return exception.getMessage();
         }
@@ -531,7 +600,7 @@ public class GameplayCommands extends Commands {
 	 */
 	String teleport(String command) throws GameException {
 		if (teleportCounter == 0) {
-			if (!player.getCurrentRoom().allowsTeleport()) {
+			if (!player.getCurrentRoom().allowsTeleport() || !player.getCurrentRoom().canLeave(player)) {
 				throw new GameException("Invalid command");
 			}
 

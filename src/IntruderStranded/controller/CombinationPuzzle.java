@@ -1,7 +1,5 @@
 package IntruderStranded.controller;
 
-import IntruderStranded.gameExceptions.GameException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -19,6 +17,7 @@ public class CombinationPuzzle extends Puzzle {
 	private String answerNumber;
 	private List<String> guessArray;
 	private List<String> answerArray;
+	private int current;
 
 	/**
 	 * No-argument Constructor for CombinationPuzzle class
@@ -56,11 +55,12 @@ public class CombinationPuzzle extends Puzzle {
 
 		if (puzzleCounter == -1) {
 			output.append("To open the chest, enter a number between 0 and 9 to guess\n" +
-					"the combination: ___");
+					"the combination: _ _ _");
 			puzzleCounter++;
 		} else if (puzzleCounter >= 5) {
 			output.append("You've lost the puzzle, and cannot open the chest.");
 			setupPuzzle();
+			output.append('\n').append(run(null));
 		} else {
 
 			try {
@@ -74,32 +74,34 @@ public class CombinationPuzzle extends Puzzle {
 
 				boolean correctGuess = false;
 
-				for (int i = 0; i < answerNumber.length(); i++) {
-					if (answerNumber.charAt(i) == cmd.charAt(i)) {
-						guessArray.set(i, answerNumber.substring(i, i + 1));
-						correctGuess = true;
-					}
+				if (Integer.parseInt(String.valueOf(answerNumber.charAt(current))) == guessInt) {
+					guessArray.set(current, String.valueOf(guessInt));
+					puzzleCounter = 0;
+					current++;
+					correctGuess = true;
 				}
+
 				puzzleCounter++;
 
 
 				if (!correctGuess) {
-					output.append("Incorrect number, try again. \n You have " + (puzzleCounter - 1) + " guesses left.");
+					output.append("Incorrect number, try again.\nYou have " + (6 - puzzleCounter) + " guesses left.\n");
 					if (guessIsHot) {
-						output.append("You were close to a digit in the combination");
+						output.append("You were close to a digit in the combination\n");
 					} else {
-						output.append("You were not close to a digit in the combination.");
+						output.append("You were not close to a digit in the combination.\n");
 					}
-					output.append(guessArray);
-					output.append("Enter a number between 0 and 9:");
+					output.append(guesses());
+					output.append("\nEnter a number between 0 and 9:");
 
 				} else if (answerArray.equals(guessArray)) {
-					setIsCompleted(true);
-					output.append("You've solved the puzzle, and can now open the chest!");
+					setCompleted();
+					output.append(guesses());
+					output.append("\nYou've solved the puzzle, and can now open the chest!");
 
 				} else {
-					output.append(guessArray);
-					output.append("Enter a number between 0 and 9:");
+					output.append(guesses());
+					output.append("\nEnter a number between 0 and 9:");
 				}
 
 			} catch (NumberFormatException ex) {
@@ -109,6 +111,10 @@ public class CombinationPuzzle extends Puzzle {
 
 
 		return output.toString();
+	}
+
+	private String guesses() {
+		return String.join(" ", guessArray);
 	}
 
 	/**
@@ -138,6 +144,7 @@ public class CombinationPuzzle extends Puzzle {
 		Random random = new Random();
 		answerNumber = String.valueOf(random.nextInt(900) + 100);
 		puzzleCounter = -1;
+		current = 0;
 
 		answerArray = new ArrayList<>();
 		for(int i = 0; i < answerNumber.length(); i++) {

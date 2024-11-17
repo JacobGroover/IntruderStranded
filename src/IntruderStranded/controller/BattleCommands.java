@@ -23,6 +23,7 @@ public class BattleCommands extends GameplayCommands {
     private final List<Monster> monsters;
     private Monster currentMonster;
     private boolean restartPrompted;
+    private final int battleStartHealth;
     private static final String ACTION_PROMPT = """
             
             What would you like to do?
@@ -40,6 +41,7 @@ public class BattleCommands extends GameplayCommands {
         this.monsters = new ArrayList<>(monsters);
         this.originalMonsters = new ArrayList<>(monsters);
         this.currentMonster = monsters.getFirst();
+        battleStartHealth = player.getHealth();
     }
 
     /**
@@ -156,8 +158,9 @@ public class BattleCommands extends GameplayCommands {
      * @return The string to display.
      */
     private String attack() throws GameException {
-        boolean monsterImmune = currentMonster.getName().equals("Slime") && !player.getEquippedWeapon().getItemName().equals("Flame Knife");
-        String attackText = monsterImmune ? "The monster is immune to your current weapon!\n" : "You landed a hit!\n";
+        final boolean monsterImmune = currentMonster.getName().equalsIgnoreCase("Slime") && (player.getEquippedWeapon() == null || !player.getEquippedWeapon().getItemName().equalsIgnoreCase("Flame Knife"));
+        final boolean finalBoss = currentMonster.getName().equalsIgnoreCase("Boss: Supreme Alien Commander");
+        String attackText = monsterImmune ? "The monster is immune to your attack!\n" : "You landed a hit!\n";
 
         if (!monsterImmune) {
             currentMonster.setHealth(Math.max(currentMonster.getHealth() - player.getDamage(), 0));
@@ -167,19 +170,33 @@ public class BattleCommands extends GameplayCommands {
             monsters.remove(currentMonster);
             currentMonster.delete();
 
+            int scoreGained = player.getHealth() <= battleStartHealth / 2 ? 5 : 10;
+            if (finalBoss) {
+                scoreGained += 20;
+            }
+            player.addScore(scoreGained);
+
             String display = "You charged on " + currentMonster.getName() + "!\n"
                     + attackText + getBattleInfo()
-                    + "\n\nYou have defeated " + currentMonster.getName();
+                    + "\n\nYou have defeated " + currentMonster.getName()
+                    + "\n(+" + scoreGained + " score) New Score: " + player.getScore() + "\n";
 
             if (monsters.isEmpty()) {
                 String output = source.setRewards(currentMonster.getRewards());
                 source.reloadCurrentRoom();
                 changeGameState(source);
-                display += "\n\n" + player.getCurrentRoom().display(player) + (output.isEmpty() ? "" : "\n" + output);
+                if (finalBoss) {
+                    display += "\nYou have beaten the final boss and won the game!\nScore: " + player.getScore();
+                }
+                else if (currentMonster.getRewards().isEmpty()) {
+                    display += "\n" + player.getCurrentRoom().display(player);
+                } else {
+                    display += output;
+                }
                 return display;
             } else {
                 currentMonster = monsters.getFirst();
-                display += "\n\n" + currentMonster.getName() + " is blocking your path.\n";
+                display += currentMonster.getName() + " is blocking your path.\n";
                 display += getBattleInfo() + ACTION_PROMPT;
             }
 
@@ -238,7 +255,7 @@ public class BattleCommands extends GameplayCommands {
     protected String flee() throws GameException {
         player.getCurrentRoom().getRoomEvents().addFirst(currentMonster);
         changeGameState(source);
-        return moveTo(player.getPreviousRoom().getID());
+        return moveTo(player.getPreviousRoom());
     }
 
     /**

@@ -98,7 +98,7 @@ public abstract class Commands {
 		GameDBCreate gdb = new GameDBCreate();
 
 		if (gdb.gameExists(player.getID())) {
-			changeGameState(new GameplayCommands(player));
+			changeGameState(new GameplayCommands(Player.getById(player.getID())));
 
 			// return a blank String to trigger GameController to append new intro text for the changed game state
 			return "";

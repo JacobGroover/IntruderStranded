@@ -32,6 +32,18 @@ public class Monster extends Entity implements RoomEvent {
 	}
 
     /**
+     * Creates a new Monster instance from an existing one, copying all of its fields.
+     * @param monster The monster to copy.
+     */
+    public Monster(Monster monster) {
+        super(monster);
+        this.roomDB = monster.roomDB;
+        this.name = monster.name;
+        this.damage = monster.damage;
+        this.freezeCounter = monster.freezeCounter;
+    }
+
+    /**
      * Method: getRewards
      * Returns a List of rewards for defeating the Monster from RoomDB
      * @return The list of rewards.
@@ -108,7 +120,7 @@ public class Monster extends Entity implements RoomEvent {
      * Freezes this monster.
      */
     void freeze() {
-        freezeCounter = 2;
+        freezeCounter = 1;
         setHealth(getHealth() - 10);
     }
 }
