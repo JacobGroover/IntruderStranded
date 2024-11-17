@@ -148,9 +148,9 @@ public class GameplayCommands extends Commands {
 			player.addItem(reward);
 			currentRewards.remove(reward);
 			if (currentRewards.isEmpty()) {
-				return discardItem(reward) + "\n" + player.getCurrentRoom().display(player);
+				return discardItem(item) + "\n" + player.getCurrentRoom().display(player);
 			}
-			return discardItem(reward) + getCurrentReward();
+			return discardItem(item) + getCurrentReward();
 		} else if (command == null) {
 			return getCurrentReward();
 		} else if (command.equals("KEEP")) {
