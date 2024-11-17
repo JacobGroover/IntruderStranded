@@ -15,14 +15,13 @@ import java.util.stream.Collectors;
  * This class handles business logic for Room objects.
  */
 public class Room {
-
-	private int roomID;
+	private final int roomID;
 	private String roomName;
 	private String roomDescription;
 	private String hint;
 	private boolean visited;
-	private RoomDB rdb;
-	private boolean teleport;
+	private final RoomDB rdb;
+	private boolean allowsTeleport;
 	private List<Exit> exits;
 	private List<RoomEvent> roomEvents;
 	private String level;
@@ -40,6 +39,23 @@ public class Room {
 	}
 
 	/**
+	 * Creates a copy of this Room object. Designed for use in subclasses.
+	 * @param room The room to copy.
+	 */
+	protected Room(Room room) {
+		this.roomID = room.roomID;
+		this.roomName = room.roomName;
+		this.roomDescription = room.roomDescription;
+		this.hint = room.hint;
+		this.visited = room.visited;
+		this.rdb = room.rdb;
+		this.allowsTeleport = room.allowsTeleport;
+		this.exits = room.exits;
+		this.roomEvents = room.roomEvents;
+		this.level = room.level;
+	}
+
+	/**
 	 * Method: getById
 	 * Gets a Room object by its ID.
 	 * Calls rdb.getExits method to assign exits class attribute.
@@ -54,10 +70,15 @@ public class Room {
 	public static Room getById(int roomID, int playerID) throws GameException {
 		RoomDB rdb = new RoomDB(roomID, playerID);
 		Room room = rdb.getRoom();
+
+		if (room.roomName.equalsIgnoreCase("Dining Hall")) {
+			room = new DiningHallRoom(room);
+		}
+
 		room.exits = rdb.getExits();
 		room.roomEvents = new ArrayList<>(rdb.getMonsters());
 		room.roomEvents.addAll(rdb.getPuzzles());
-		room.teleport = room.canTeleport();
+		room.allowsTeleport = room.canTeleport();
 		room.visited = rdb.getVisited();
 		return room;
 	}
@@ -76,11 +97,23 @@ public class Room {
 	}
 
 	/**
+	 * Method: overrideInput
+	 * Allows a room to override the handling of user input.
+	 * @param commands The GameplayCommands instance calling this method.
+	 * @param input The string entered by the user.
+	 * @return An empty optional if the room does not want to override input handling, otherwise, an
+	 * optional containing the string to display.
+	 */
+    Optional<String> overrideInput(GameplayCommands commands, String input) throws GameException {
+		return Optional.empty();
+	}
+
+    /**
 	 * Method: allowsTeleport
 	 * Getter for teleport class attribute
 	 */
 	boolean allowsTeleport() {
-		return this.teleport;
+		return this.allowsTeleport;
 	}
 
 	/**
@@ -136,18 +169,27 @@ public class Room {
 			itemList = "\nItems in room:\n" + itemList;
 		}
 
-		String exitText = exits.stream()
-				.filter(e -> !e.getDirection().isTeleport())
-				.map(Exit::display)
-				.collect(Collectors.joining(", "));
+		String exitText = displayExits();
 
 		if (allowsTeleport()) {
 			exitText += "\nThe teleportation feature can be activated.";
 		}
 
 		return roomName + " " + status + "\nCurrent Level: Level " + level +
-				"\n\n" + limitStringWidth(roomDescription, 90) + itemList
+				"\n\n" + limitStringWidth(getRoomDescription(), 90) + itemList
 				+ (canLeave(player) ? "\n" + exitText : "");
+	}
+
+	/**
+	 * Method: displayExits
+	 * Constructs the string for displaying the exits in this room.
+	 * @return The string to display.
+	 */
+	String displayExits() {
+		return exits.stream()
+				.filter(e -> !e.getDirection().isTeleport())
+				.map(Exit::display)
+				.collect(Collectors.joining(", "));
 	}
 
 	/**

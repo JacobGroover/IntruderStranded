@@ -57,7 +57,11 @@ public class GameplayCommands extends Commands {
 	 */
 	@Override
 	String executeCommand(String command) throws GameException {
-		if (isExiting) {
+		Optional<String> override = player.getCurrentRoom().overrideInput(this, command);
+
+		if (override.isPresent()) {
+			return override.get();
+		} else if (isExiting) {
 			return exit(command);
 		} else if (currentRewards != null && !currentRewards.isEmpty()) {
 			return giveRewards(command);
@@ -399,7 +403,7 @@ public class GameplayCommands extends Commands {
 	 * @return An empty string if the room does not have any monsters, otherwise
 	 * the monster encounter string.
 	 */
-	private String enterRoom() {
+	String enterRoom() {
 		List<Monster> monsters = player.getCurrentRoom().getRoomEvents().stream()
 				.filter(e -> e instanceof Monster).map(e -> (Monster) e)
 				.toList();
