@@ -22,6 +22,15 @@ public abstract class Entity {
 	}
 
 	/**
+	 * Creates a new Entity instance from an existing one, copying all of its fields.
+	 * @param entity The entity to copy.
+	 */
+	public Entity(Entity entity) {
+		this.id = entity.id;
+		this.health = entity.health;
+	}
+
+	/**
 	 * Method: getHealth
 	 * Gets the health of this entity.
 	 * @return The health value.

@@ -6,7 +6,6 @@ import IntruderStranded.gameExceptions.GameException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,7 +34,11 @@ public record MonsterRoomDB(int roomID, int playerID) {
 				monster.setHealth(resultSet.getInt("Health"));
 				monster.setDamage(resultSet.getInt("Damage"));
 
-				monsters.addAll(Collections.nCopies(resultSet.getInt("MonsterQuantity"), monster));
+				monsters.add(monster);
+				int quantity = resultSet.getInt("MonsterQuantity");
+				for (int i = 1; i < quantity; i++) {
+					monsters.add(new Monster(monster)); // monsters are mutable, so use copy constructor
+				}
 			}
 
 			resultSet.getStatement().close();
