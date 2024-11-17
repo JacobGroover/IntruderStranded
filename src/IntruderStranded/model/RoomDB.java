@@ -62,7 +62,7 @@ public class RoomDB {
 			resultSet.next();
 			Room room = new Room(this, roomID);
 			room.setRoomName(resultSet.getString("RoomName"));
-			room.setRoomDescription(resultSet.getString("RoomDescription"));
+			room.setRoomDescription(resultSet.getString("RoomDescription").replace("\\n", "\n"));
 			room.setLevel(resultSet.getString("RoomLevel"));
 			room.setHint(resultSet.getString("RoomHint"));
 			resultSet.getStatement().close();
