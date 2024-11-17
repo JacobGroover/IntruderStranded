@@ -13,13 +13,16 @@ import java.io.*;
  */
 public class GameException extends IOException {
 
+	/**
+	 * Creates a new GameException.
+	 */
 	public GameException() {
 		super();
 	}
 
 	/**
-	 * 
-	 * @param message
+	 * Creates a new GameException with the given message.
+	 * @param message The exception message.
 	 */
 	public GameException(String message) {
 		super(message);

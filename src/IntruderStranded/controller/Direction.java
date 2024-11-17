@@ -3,6 +3,15 @@ package IntruderStranded.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Enum: Direction
+ * @author Fareed Ahmed
+ * @version 1.0
+ * Course: ITEC 3860 Fall 2024
+ * Written: November 14, 2024
+ *
+ * This enum contains the valid directions a player can move in.
+ */
 public enum Direction {
 	NORTH,
 	SOUTH,
@@ -33,6 +42,11 @@ public enum Direction {
 		return physicalDirectionMap.get(direction);
 	}
 
+	/**
+	 * Method: isTeleport
+	 * Checks if this direction is a teleport direction.
+	 * @return True if this direction is a teleport direction, otherwise false.
+	 */
 	public boolean isTeleport() {
 		return !physicalDirectionMap.containsValue(this);
 	}
