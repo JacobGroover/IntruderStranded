@@ -14,7 +14,7 @@ import java.util.Random;
  */
 public class CombinationPuzzle extends Puzzle {
 
-	private String answerNumber;
+	private final String answerNumber;
 	private List<String> guessArray;
 	private List<String> answerArray;
 	private int current;
@@ -25,6 +25,8 @@ public class CombinationPuzzle extends Puzzle {
 	 */
 	public CombinationPuzzle(int id, int roomID, int playerID) {
 		super(id, roomID, playerID);
+		Random random = new Random();
+		answerNumber = String.valueOf(random.nextInt(900) + 100);
 		setupPuzzle();
 	}
 
@@ -142,8 +144,6 @@ public class CombinationPuzzle extends Puzzle {
 	 */
 	@Override()
 	void setupPuzzle() {
-		Random random = new Random();
-		answerNumber = String.valueOf(random.nextInt(900) + 100);
 		puzzleCounter = -1;
 		current = 0;
 
