@@ -57,12 +57,7 @@ public class CombinationPuzzle extends Puzzle {
 			output.append("To open the chest, enter a number between 0 and 9 to guess\n" +
 					"the combination: _ _ _");
 			puzzleCounter++;
-		} else if (puzzleCounter >= 5) {
-			output.append("You've lost the puzzle, and cannot open the chest.");
-			setupPuzzle();
-			output.append('\n').append(run(null));
 		} else {
-
 			try {
 				int guessInt = Integer.parseInt(cmd);
 				boolean guessIsHot = isHot(guessInt);
@@ -76,24 +71,25 @@ public class CombinationPuzzle extends Puzzle {
 
 				if (Integer.parseInt(String.valueOf(answerNumber.charAt(current))) == guessInt) {
 					guessArray.set(current, String.valueOf(guessInt));
-					puzzleCounter = 0;
 					current++;
 					correctGuess = true;
 				}
 
-				puzzleCounter++;
-
-
 				if (!correctGuess) {
-					output.append("Incorrect number, try again.\nYou have " + (6 - puzzleCounter) + " guesses left.\n");
+					puzzleCounter++;
+					output.append("Incorrect number, try again.\nYou have " + (5 - puzzleCounter) + " guesses left.\n");
 					if (guessIsHot) {
 						output.append("You were close to a digit in the combination\n");
 					} else {
 						output.append("You were not close to a digit in the combination.\n");
 					}
-					output.append(guesses());
-					output.append("\nEnter a number between 0 and 9:");
 
+					if (puzzleCounter >= 5) {
+						output.append(onLose("You've lost the puzzle, and cannot open the chest."));
+					} else {
+						output.append(guesses());
+						output.append("\nEnter a number between 0 and 9:");
+					}
 				} else if (answerArray.equals(guessArray)) {
 					setCompleted();
 					output.append(guesses());

@@ -33,11 +33,6 @@ public class SandPuzzle extends Puzzle {
 					"The first is half of 18, The second is the number of seasons, The third is the sides of a hexagon.");
 			puzzleCounter ++;
 		}
-		else if (puzzleCounter == 3) {
-			output.append("You've lost the puzzle, and fallen into the sand.");
-			setupPuzzle();
-			output.append('\n').append(run(null));
-		}
 		else {
 			try {
 				int guess = Integer.parseInt(cmd);
@@ -47,6 +42,10 @@ public class SandPuzzle extends Puzzle {
 				} else {
 					output.append("The number you've entered is incorrect, try again.");
 					puzzleCounter++;
+
+					if (puzzleCounter >= 3) {
+						output.append(onLose("You've lost the puzzle, and fallen into the sand."));
+					}
 				}
 			} catch (NumberFormatException e) {
 				output.append("Please enter a valid number.");

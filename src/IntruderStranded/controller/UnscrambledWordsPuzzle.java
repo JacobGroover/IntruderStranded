@@ -43,11 +43,6 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 			output.append("Unscramble the planets name: " + scrambledWord);
 			puzzleCounter++;
 		}
-		else if (puzzleCounter == 3) {
-			output.append("Incorrect word, you have lost the puzzle!");
-			setupPuzzle();
-			output.append('\n').append(run(null));
-		}
 		else {
 			if (cmd.equalsIgnoreCase(answerWord)) {
 				output.append("You have successfully solved the puzzle!");
@@ -59,6 +54,9 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 				output.append("Incorrect word, try again. ");
 				puzzleCounter++;
 
+				if (puzzleCounter >= 3) {
+					output.append(onLose("You've lost the puzzle, and cannot open the chest."));
+				}
 			}
 		}
 
