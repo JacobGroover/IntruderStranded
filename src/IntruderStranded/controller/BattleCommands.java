@@ -101,6 +101,10 @@ public class BattleCommands extends GameplayCommands {
      */
     @Override
     String help() {
+        if (isManagingInventory) {
+            return super.help();
+        }
+
         return """
             Battle Commands
             
