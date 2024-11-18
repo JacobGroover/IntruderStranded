@@ -64,42 +64,42 @@ public class UnscrambledWordsPuzzle extends Puzzle {
 	}
 
 
-			/**
-			 * Method: setupPuzzle
-			 * Generates a random number between 1 and 8. Depending on which number is chosen assigns the
-			 * answerWord class attribute to a planet name:
-			 * 1 - MERCURY
-			 * 2 - VENUS
-			 * 3 - EARTH
-			 * 4 - MARS
-			 * 5 - JUPITER
-			 * 6 - SATURN
-			 * 7 - URANUS
-			 * 8 - NEPTUNE
-			 *
-			 * Once the word is assigned, a scrambled version of that word is then assigned to the scrambledWord
-			 * class attribute.
-			 * Sets the puzzleCounter class attribute to -1.
-			 */
-			void setupPuzzle () {
-				Random random = new Random();
+	/**
+	 * Method: setupPuzzle
+	 * Generates a random number between 1 and 8. Depending on which number is chosen assigns the
+	 * answerWord class attribute to a planet name:
+	 * 1 - MERCURY
+	 * 2 - VENUS
+	 * 3 - EARTH
+	 * 4 - MARS
+	 * 5 - JUPITER
+	 * 6 - SATURN
+	 * 7 - URANUS
+	 * 8 - NEPTUNE
+	 *
+	 * Once the word is assigned, a scrambled version of that word is then assigned to the scrambledWord
+	 * class attribute.
+	 * Sets the puzzleCounter class attribute to -1.
+	 */
+	void setupPuzzle () {
+		Random random = new Random();
 
-				List<String> planets = new ArrayList<>();
-				planets.add("MERCURY");
-				planets.add("VENUS");
-				planets.add("EARTH");
-				planets.add("MARS");
-				planets.add("JUPITER");
-				planets.add("SATURN");
-				planets.add("URANUS");
-				planets.add("NEPTUNE");
+		List<String> planets = new ArrayList<>();
+		planets.add("MERCURY");
+		planets.add("VENUS");
+		planets.add("EARTH");
+		planets.add("MARS");
+		planets.add("JUPITER");
+		planets.add("SATURN");
+		planets.add("URANUS");
+		planets.add("NEPTUNE");
 
-				answerWord = planets.get(random.nextInt(planets.size()));
+		answerWord = planets.get(random.nextInt(planets.size()));
 
-				scrambledWord = scrambleWord(answerWord);
+		scrambledWord = scrambleWord(answerWord);
 
-				puzzleCounter = -1;
-			}
+		puzzleCounter = -1;
+	}
 
 
 	public String scrambleWord(String word) {
