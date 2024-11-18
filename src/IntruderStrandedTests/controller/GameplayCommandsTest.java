@@ -84,14 +84,14 @@ class GameplayCommandsTest {
 
     @Test
     void exit() throws Throwable {
-        assertEquals("Do you want to save your game?", callExecuteCommand("exit"));
+        assertEquals("Do you want to save your game? (yes/no)", callExecuteCommand("exit"));
         assertThrows(GameException.class, () -> callExecuteCommand(""));
 
-        assertEquals("Do you want to save your game?", callExecuteCommand("exit"));
+        assertEquals("Do you want to save your game? (yes/no)", callExecuteCommand("exit"));
         assertThrows(GameException.class, () -> callExecuteCommand("aaaaaaaa"));
 
         for (String command : List.of("yes", "y", "no", "n")) {
-            assertEquals("Do you want to save your game?", callExecuteCommand("exit"));
+            assertEquals("Do you want to save your game? (yes/no)", callExecuteCommand("exit"));
             assertEquals(command.startsWith("y") ? "Game Saved" : "", callExecuteCommand(command));
             beforeEach();
         }
@@ -122,7 +122,7 @@ class GameplayCommandsTest {
         assertResponse("-2", "You are already in this level.");
         assertResponse("0", "Please enter \"inside\" or \"outside\"");
         assertResponse("bbbb", "Please enter \"inside\" or \"outside\"");
-        assertResponse("Inside", "Are you sure you want to teleport?");
+        assertResponse("Inside", "Are you sure you want to teleport? (yes/no)");
         assertResponse("cccc", "Please enter yes or no.");
         assertResponse("no", "");
 

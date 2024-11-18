@@ -495,7 +495,7 @@ public class GameplayCommands extends Commands {
 	String exit(String command) throws GameException {
 		if (!isExiting) {
 			isExiting = true;
-			return "Do you want to save your game?";
+			return "Do you want to save your game? (yes/no)";
 		}
 
 		isExiting = false;
@@ -628,7 +628,7 @@ public class GameplayCommands extends Commands {
                 default -> throw new IllegalStateException();
             };
 
-			return "Are you sure you want to teleport?";
+			return "Are you sure you want to teleport? (yes/no)";
 		} else if (teleportCounter == 2) {
 			teleportDirection = switch (command) {
 				case "INSIDE" -> Direction.TEL0IN;
@@ -647,7 +647,7 @@ public class GameplayCommands extends Commands {
 			}
 
 			teleportCounter++;
-			return "Are you sure you want to teleport?";
+			return "Are you sure you want to teleport? (yes/no)";
 		}
 		else if (teleportCounter == 3) {
 			if (command.equals("YES")) {
