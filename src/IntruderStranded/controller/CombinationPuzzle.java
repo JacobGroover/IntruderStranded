@@ -109,6 +109,11 @@ public class CombinationPuzzle extends Puzzle {
 		return output.toString();
 	}
 
+	/**
+	 * Method: guesses
+	 * Gets the current state of the combination lock as a string.
+	 * @return The string to display.
+	 */
 	private String guesses() {
 		return String.join(" ", guessArray);
 	}
