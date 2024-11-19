@@ -123,6 +123,16 @@ public abstract class DB implements AutoCloseable {
 	}
 
 	/**
+	 * Method Name: isClosed
+	 * Checks if this <code>DB</code> has been closed.
+	 * @return True if this <code>DB</code>'s underlying connection has been closed, otherwise false.
+	 * @throws SQLException If a database error occurs.
+	 */
+	public boolean isClosed() throws SQLException {
+		return connection.isClosed();
+	}
+
+	/**
 	 * Method Name: createPreparedStatement
 	 * Creates a <code>PreparedStatement</code> from an SQL string and a list of parameters.
 	 * @param sql The SQL string to use.
