@@ -203,10 +203,12 @@ public class Room {
 		StringBuilder stringBuilder = new StringBuilder(str);
 		int breakIndex = lineLimit;
 
-		for (int i = 0; i != -1; i = stringBuilder.indexOf(" ", i + 1)) {
-			if (i >= breakIndex) {
+		for (int i = 0; i < str.length(); i++) {
+			if (stringBuilder.charAt(i) == '\n') {
+				breakIndex = i + lineLimit;
+			} else if (i >= breakIndex && stringBuilder.charAt(i) == ' ') {
 				stringBuilder.replace(i, i + 1, "\n");
-				breakIndex += lineLimit;
+				breakIndex = i + lineLimit;
 			}
 		}
 
