@@ -101,6 +101,10 @@ public class BattleCommands extends GameplayCommands {
      */
     @Override
     String help() {
+        if (isManagingInventory) {
+            return super.help();
+        }
+
         return """
             Battle Commands
             
@@ -243,7 +247,7 @@ public class BattleCommands extends GameplayCommands {
      */
     private String onPlayerLose() {
         restartPrompted = true;
-        return "You have been defeated\nWould you like to restart?";
+        return "You have been defeated\nWould you like to restart? (yes/no)";
     }
 
     /**

@@ -41,6 +41,17 @@ public abstract class Puzzle implements RoomEvent {
 	}
 
 	/**
+	 * Method: onLose
+	 * Resets the puzzle and returns the string to display.
+	 * @param message The failure message to show to the player.
+	 * @return The string to display.
+	 */
+	protected String onLose(String message) {
+		setupPuzzle();
+		return "\n" + message + "\n" + run(null);
+	}
+
+	/**
 	 * Method: run
 	 * Abstract method to be implemented in child classes. Runs the primary functionality of a puzzle.
 	 *

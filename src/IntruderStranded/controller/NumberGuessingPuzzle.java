@@ -46,12 +46,7 @@ public class NumberGuessingPuzzle extends Puzzle {
 			if (puzzleCounter == -1) {
 				output.append("Guess a number between 1 and 10:");
 				puzzleCounter++;
-			} else if (puzzleCounter == 3) {
-				output.append("You lost this puzzle.");
-				setupPuzzle();
-				output.append('\n').append(run(null));
 			} else {
-
 				int guess = Integer.parseInt(cmd);
 				if (guess == answerNumber) {
 					output.append("You have successfully solved the puzzle!");
@@ -59,6 +54,10 @@ public class NumberGuessingPuzzle extends Puzzle {
 				} else {
 					output.append("Incorrect number, try again!");
 					puzzleCounter++;
+
+					if (puzzleCounter == 3) {
+						output.append(onLose("You've lost the puzzle, and cannot open the chest."));
+					}
 				}
 			}
 		} catch (NumberFormatException e) {
