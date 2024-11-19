@@ -257,7 +257,7 @@ public class AuthenticationCommands extends Commands {
 		} else if (email == null) {
 			if (Player.checkEmailField(command)) {
 				// retrieve username associated with email from database
-				text += "Your username is \b";
+				text += "Your username is ";
 				text += Player.retrieveUsername(command);
 			} else {
 				text += "Cannot find Username.";
