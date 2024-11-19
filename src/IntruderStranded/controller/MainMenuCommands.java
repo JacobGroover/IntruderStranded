@@ -89,12 +89,12 @@ public class MainMenuCommands extends Commands {
 	 */
 	protected String getIntroText() {
 		return """
+                
                 Intruder Stranded
 
                 Please select an option "New" Game or "Load" Game
-                If you need help, please enter "HELP" to find more commands.
+                If you need help. Please enter "HELP" to find more commands.
                 Please enter "exit" to end the game.
-                
                 """;
 	}
 

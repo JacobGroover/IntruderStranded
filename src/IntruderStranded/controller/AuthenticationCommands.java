@@ -97,10 +97,10 @@ public class AuthenticationCommands extends Commands {
 	private String login(String command) throws GameException {
 		if (!isLoggingIn) {
 			isLoggingIn = true;
-			return "\nUsername: ";
+			return "\nUsername: \\b";
 		} else if (username == null) {
 			username = command;
-			return "Password: ";
+			return "Password: \\b";
 		} else {
 			password = command;
 
@@ -118,7 +118,8 @@ public class AuthenticationCommands extends Commands {
 					text.append("""
                             
                             If you have forgotten your user account please enter "Retrieve Username" to retrieve
-                            username, or "Forgot Password" to reset password.""");
+                            username, or "Forgot Password" to reset password.
+                            """);
 					loginCounter = 0;
 				}
 				isLoggingIn = false;
@@ -159,30 +160,30 @@ public class AuthenticationCommands extends Commands {
 		String text = "";
 		if (!isCreatingAccount) {
 			isCreatingAccount = true;
-			text += "\nUsername: ";
+			text += "\nUsername: \\b";
 		} else if (username == null) {
 			if (command.length() < 4 || command.length() > 10) {
-				text += "Username must be between 4 and 10 characters long.\n\nUsername: ";
+				text += "Username must be between 4 and 10 characters long.\n\nUsername: \\b";
 			} else {
 				username = command;
-				text += "Password: ";
+				text += "Password: \\b";
 			}
 		} else if (password == null) {
 			if (command.length() < 8 || command.length() > 12) {
-				text += "Password must be between 8 and 12 characters long.\n\nPassword: ";
+				text += "Password must be between 8 and 12 characters long.\n\nPassword: \\b";
 			} else {
 				password = command;
-				text += "Email: ";
+				text += "Email: \\b";
 			}
 		} else if (email == null) {
 			if (command.length() > 20 || !command.contains("@") || !command.contains(".")) {
-				text += "Email must be 20 characters or less and contain a '.' and a '@'\n\nEmail: ";
+				text += "Email must be 20 characters or less and contain a '.' and a '@'\n\nEmail: \\b";
 			} else {
 				email = command;
 				if (Player.createAccount(username, password, email)) {
-					text += "Successfully created account. Please login to continue.";
+					text += "Successfully created account. Please login to continue.\n";
 				} else {
-					text += "Account already exists, please try logging in.";
+					text += "Account already exists, please try logging in\n";
 				}
 				username = null;
 				password = null;
@@ -207,28 +208,32 @@ public class AuthenticationCommands extends Commands {
 	 */
 	private String resetPassword(String command) throws GameException {
 		String text = "";
-		if (!isResettingPassword) {
-			isResettingPassword = true;
-			text += "\nPlease Enter Username: ";
-		} else if (username == null) {
-			if (Player.checkUsernameField(command)) {
-				username = command;
-				text += "Username found.\nPassword: ";
-			} else {
-				isResettingPassword = false;
-				text += "Username does not exist.";
+		try {
+			if (!isResettingPassword) {
+				isResettingPassword = true;
+				text += "\nPlease Enter Username: \\b";
+			} else if (username == null) {
+				if (Player.checkUsernameField(command)) {
+					username = command;
+					text += "Username Found.\nPlease enter new password: \\b";
+				} else {
+					isResettingPassword = false;
+					text += "Username does not exist.";
+				}
+			} else if (password == null) {
+				if (command.length() < 8 || command.length() > 12) {
+					text += "Password must be between 8 and 12 characters long.\n\nPassword: \\b";
+				} else {
+					password = command;
+					Player.updatePassword(username, password);
+					text += "Successfully Reset Password\n";
+					isResettingPassword = false;
+					username = null;
+					password = null;
+				}
 			}
-		} else if (password == null) {
-			if (command.length() < 8 || command.length() > 12) {
-				text += "Password must be between 8 and 12 characters long.\n\nPassword: ";
-			} else {
-				password = command;
-				Player.updatePassword(username, password);
-				text += "Successfully reset password.";
-				isResettingPassword = false;
-				username = null;
-				password = null;
-			}
+		} catch (GameException ge) {
+			throw new GameException("Failed to reset password\n");
 		}
 		return text;
 	}
@@ -248,11 +253,11 @@ public class AuthenticationCommands extends Commands {
 		String text = "";
 		if (!isRetrievingUsername) {
 			isRetrievingUsername = true;
-			text += "\nPlease Enter Email: ";
+			text += "\nPlease Enter Email: \\b";
 		} else if (email == null) {
 			if (Player.checkEmailField(command)) {
 				// retrieve username associated with email from database
-				text += "Your username is ";
+				text += "Your username is \\b";
 				text += Player.retrieveUsername(command);
 			} else {
 				text += "Cannot find Username.";
@@ -299,8 +304,7 @@ public class AuthenticationCommands extends Commands {
                 Please enter the command "Login" or "Create Account"
                 Forgot Password "Forgot Password"
                 Forgot Username "Retrieve Username"
-                If you need help, please enter "HELP" to find more commands.
-                
+                If you need help. Please enter "HELP" to find more commands.
                 """;
 	}
 
