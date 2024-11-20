@@ -1,5 +1,7 @@
 package IntruderStranded.model;
 
+import java.sql.SQLException;
+
 /**
  * Class: DBService
  * @author Fareed Ahmed
@@ -19,8 +21,8 @@ public final class DBService {
      * Starts the service with the given <code>DB</code>.
      * @param db The <code>DB</code> to use.
      */
-    public static void start(DB db) {
-        if (DBService.db != null) {
+    public static void start(DB db) throws SQLException {
+        if (DBService.db != null && !DBService.db.isClosed()) {
             throw new IllegalStateException("DBService has already been started.");
         }
 
