@@ -158,7 +158,7 @@ public class Room {
 	 * @return The string representation of this room.
 	 */
 	String display(Player player) throws GameException {
-		String status = visited ? "(Visited)" : "(Not visited)";
+		String status = visited ? "(Visited)" : "(Not Visited)";
 
 		List<Item> items = rdb.getItems();
 		String itemList = items.stream()
