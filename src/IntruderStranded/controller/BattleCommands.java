@@ -100,7 +100,7 @@ public class BattleCommands extends GameplayCommands {
      * @return The help string.
      */
     @Override
-    String help() {
+    String help() throws GameException {
         if (isManagingInventory) {
             return super.help();
         }

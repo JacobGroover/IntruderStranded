@@ -50,7 +50,7 @@ public class IntruderStranded {
 				String command = getCommand();
 				response = gc.executeCommand(command);
 				if (response.endsWith("\b")) {
-					System.out.print(response.substring(0, response.length() - 2));
+					System.out.print(response.substring(0, response.length() - 1));
 				} else {
 					System.out.println(response);
 				}

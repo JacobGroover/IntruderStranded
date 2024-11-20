@@ -53,7 +53,7 @@ public abstract class Commands {
 	 * Method: help
 	 * Abstract help method for when the player types the help command. Implementation in child classes.
 	 */
-	abstract String help();
+	abstract String help() throws GameException;
 
 	/**
 	 * Method: exit
@@ -83,7 +83,9 @@ public abstract class Commands {
 	 * @param observer
 	 */
 	void addObserver(Observer<Commands> observer) {
-		observers.add(observer);
+		if (!observers.contains(observer)) {
+			observers.add(observer);
+		}
 	}
 
 	/**

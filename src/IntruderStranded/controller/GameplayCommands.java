@@ -435,7 +435,7 @@ public class GameplayCommands extends Commands {
 	 * Flee (only available during room event, i.e. monster encounter or puzzle)
 	 */
 	@Override
-	String help() {
+	String help() throws GameException {
 		if (isManagingInventory) {
 			return """
             Inventory Commands
@@ -473,7 +473,7 @@ public class GameplayCommands extends Commands {
             South - Move south
             East - Move east
             West - Move west
-            """ + (player.getCurrentRoom().allowsTeleport() ? "TEL - Access teleportation\n" : "");
+            """ + (player.getCurrentRoom().allowsTeleport() && player.getCurrentRoom().canLeave(player) ? "TEL - Access teleportation\n" : "");
 	}
 
 	/**
