@@ -1,5 +1,7 @@
 package IntruderStrandedTests.view;
 
+import IntruderStranded.controller.Player;
+import IntruderStranded.gameExceptions.GameException;
 import IntruderStranded.model.*;
 import IntruderStranded.view.IntruderStranded;
 import org.junit.jupiter.api.*;
@@ -14,6 +16,7 @@ class IntruderStrandedTest {
 
     private static DB db;
     private static IntruderStranded is;
+    private static Player player;
 
     @BeforeAll
     public static void setup() throws Exception {
@@ -193,6 +196,102 @@ class IntruderStrandedTest {
                         "Please enter \"exit\" to end the game.\n", is.gc.executeCommand("PASSWORD1")));
     }
 
-    
+    @Test
+    @Order(9)
+    void helpTest2() throws Exception {
+        player = Player.getById(1);
+        assertEquals("""
+				Main Menu Commands
+				
+				New - Start a new game
+				Load - Load a saved game
+				Exit - Exits the application
+				Help - This command, displays available commands
+				""", is.gc.executeCommand("HELP"));
+    }
+
+    @Test
+    @Order(10)
+    void exitTest2() throws Exception {
+        assertEquals("\nExiting Game", is.gc.executeCommand("EXIT"));
+    }
+
+    @Test
+    @Order(11)
+    void loadTest1() throws Exception {
+        assertEquals("No save has been made.", is.gc.executeCommand("LOAD"));
+    }
+
+    @Test
+    @Order(12)
+    void newGameTest1() throws Exception {
+        assertEquals("""
+            
+            Welcome to Intruder Stranded
+            Enter "North", "South", "East", or "West" to move
+            Enter "Look" to look at the room
+            Enter "Help" for more commands
+            
+            Cell (Not Visited)
+            Current Level: Level -2
+            
+            An empty cell with somewhat rusty bars, most of them are empty except a few of them filled
+            with dangerous monsters""", is.gc.executeCommand("NEW"));
+    }
+
+    @Test
+    @Order(13)
+    void moveTest1() {
+        GameException exception = assertThrows(GameException.class, () -> is.gc.executeCommand("WEST"));
+        assertEquals("Can't leave room yet", exception.getMessage());
+        exception = assertThrows(GameException.class, () -> is.gc.executeCommand("EAST"));
+        assertEquals("Can't leave room yet", exception.getMessage());
+        exception = assertThrows(GameException.class, () -> is.gc.executeCommand("SOUTH"));
+        assertEquals("Can't leave room yet", exception.getMessage());
+        exception = assertThrows(GameException.class, () -> is.gc.executeCommand("NORTH"));
+        assertEquals("Can't leave room yet", exception.getMessage());
+    }
+
+    @Test
+    @Order(14)
+    void teleportTest1() {
+        GameException exception = assertThrows(GameException.class, () -> is.gc.executeCommand("TEL"));
+        assertEquals("Invalid command", exception.getMessage());
+    }
+
+    @Test
+    @Order(15)
+    void helpTest3() throws Exception {
+        assertEquals("""
+            Gameplay Commands
+            
+            Hint - Display the hint for the current room
+            Look - Display the current room
+            Exit - Exit to the main menu
+            Help - This command, displays available commands
+            Save - Creates a save file or overwrites a previous save
+            Load - Loads previous saved game
+            INV - Open inventory
+            North - Move north
+            South - Move south
+            East - Move east
+            West - Move west
+            TEL - Access teleportation
+            """, is.gc.executeCommand("HELP"));
+    }
+
+    @Test
+    @Order(16)
+    void hintTest1() throws Exception {
+        assertEquals("Enter \"look\" to look around", is.gc.executeCommand("HINT"));
+    }
+
+    @Test
+    @Order(17)
+    void exitTest3() throws Exception {
+        assertEquals("Do you want to save your game? (yes/no)", is.gc.executeCommand("EXIT"));
+        GameException exception = assertThrows(GameException.class, () -> is.gc.executeCommand("maybe"));
+        assertEquals("Invalid command", exception.getMessage());
+    }
 
 }
