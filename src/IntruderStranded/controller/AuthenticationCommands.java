@@ -97,10 +97,10 @@ public class AuthenticationCommands extends Commands {
 	private String login(String command) throws GameException {
 		if (!isLoggingIn) {
 			isLoggingIn = true;
-			return "\nUsername: \\b";
+			return "\nUsername: \b";
 		} else if (username == null) {
 			username = command;
-			return "Password: \\b";
+			return "Password: \b";
 		} else {
 			password = command;
 
@@ -160,24 +160,24 @@ public class AuthenticationCommands extends Commands {
 		String text = "";
 		if (!isCreatingAccount) {
 			isCreatingAccount = true;
-			text += "\nUsername: \\b";
+			text += "\nUsername: \b";
 		} else if (username == null) {
 			if (command.length() < 4 || command.length() > 10) {
-				text += "Username must be between 4 and 10 characters long.\n\nUsername: \\b";
+				text += "Username must be between 4 and 10 characters long.\n\nUsername: \b";
 			} else {
 				username = command;
-				text += "Password: \\b";
+				text += "Password: \b";
 			}
 		} else if (password == null) {
 			if (command.length() < 8 || command.length() > 12) {
-				text += "Password must be between 8 and 12 characters long.\n\nPassword: \\b";
+				text += "Password must be between 8 and 12 characters long.\n\nPassword: \b";
 			} else {
 				password = command;
-				text += "Email: \\b";
+				text += "Email: \b";
 			}
 		} else if (email == null) {
 			if (command.length() > 20 || !command.contains("@") || !command.contains(".")) {
-				text += "Email must be 20 characters or less and contain a '.' and a '@'\n\nEmail: \\b";
+				text += "Email must be 20 characters or less and contain a '.' and a '@'\n\nEmail: \b";
 			} else {
 				email = command;
 				if (Player.createAccount(username, password, email)) {
@@ -211,18 +211,18 @@ public class AuthenticationCommands extends Commands {
 		try {
 			if (!isResettingPassword) {
 				isResettingPassword = true;
-				text += "\nPlease Enter Username: \\b";
+				text += "\nPlease Enter Username: \b";
 			} else if (username == null) {
 				if (Player.checkUsernameField(command)) {
 					username = command;
-					text += "Username Found.\nPlease enter new password: \\b";
+					text += "Username Found.\nPlease enter new password: \b";
 				} else {
 					isResettingPassword = false;
 					text += "Username does not exist.";
 				}
 			} else if (password == null) {
 				if (command.length() < 8 || command.length() > 12) {
-					text += "Password must be between 8 and 12 characters long.\n\nPassword: \\b";
+					text += "Password must be between 8 and 12 characters long.\n\nPassword: \b";
 				} else {
 					password = command;
 					Player.updatePassword(username, password);
@@ -253,11 +253,11 @@ public class AuthenticationCommands extends Commands {
 		String text = "";
 		if (!isRetrievingUsername) {
 			isRetrievingUsername = true;
-			text += "\nPlease Enter Email: \\b";
+			text += "\nPlease Enter Email: \b";
 		} else if (email == null) {
 			if (Player.checkEmailField(command)) {
 				// retrieve username associated with email from database
-				text += "Your username is \\b";
+				text += "Your username is ";
 				text += Player.retrieveUsername(command);
 			} else {
 				text += "Cannot find Username.";
