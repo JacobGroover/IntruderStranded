@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class IntruderStranded {
 
 	private Scanner input;
-	private GameController gc;
+	public GameController gc;
 
 	/**
 	 * Method: IntruderStranded
@@ -48,7 +48,12 @@ public class IntruderStranded {
 		do {
 			try {
 				String command = getCommand();
-				System.out.println(response = gc.executeCommand(command));
+				response = gc.executeCommand(command);
+				if (response.endsWith("\b")) {
+					System.out.print(response.substring(0, response.length() - 2));
+				} else {
+					System.out.println(response);
+				}
 			} catch (GameException ge) {
 				System.out.println(ge.getMessage());
 			}
