@@ -133,7 +133,7 @@ class IntruderStrandedTest {
 
     @Test
     @Order(5)
-    void forgotPasswordTest1() throws Exception {
+    void forgotPasswordTest1() {
         assertAll("forgot password 1",
                 () -> assertEquals("\nPlease Enter Username: \b", is.gc.executeCommand("FORGOT PASSWORD")),
                 () -> assertEquals("Username does not exist.", is.gc.executeCommand("A PERSON")));
@@ -148,6 +148,27 @@ class IntruderStrandedTest {
 
     @Test
     @Order(6)
+    void helpTest1() throws Exception {
+        assertEquals("""
+				Account Management Commands
+				
+				Login - Enter your username and password
+				Create Account - Sign up with username, password, and email
+				Forgot Password - Reset user's password
+				Retrieve Username - Get user's username with email
+				Exit - Exits the application
+				Help - This command, displays available commands
+				""", is.gc.executeCommand("HELP"));
+    }
+
+    @Test
+    @Order(7)
+    void exitTest1() throws Exception {
+        assertEquals("\nExiting Game", is.gc.executeCommand("EXIT"));
+    }
+
+    @Test
+    @Order(8)
     void loginTest3() {
         // Ensure old password no longer works after being changed
         assertAll("login 3.0",
@@ -171,5 +192,7 @@ class IntruderStrandedTest {
                         "If you need help. Please enter \"HELP\" to find more commands.\n" +
                         "Please enter \"exit\" to end the game.\n", is.gc.executeCommand("PASSWORD1")));
     }
+
+    
 
 }
