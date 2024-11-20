@@ -83,7 +83,9 @@ public abstract class Commands {
 	 * @param observer
 	 */
 	void addObserver(Observer<Commands> observer) {
-		observers.add(observer);
+		if (!observers.contains(observer)) {
+			observers.add(observer);
+		}
 	}
 
 	/**
