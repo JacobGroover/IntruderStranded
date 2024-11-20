@@ -276,7 +276,6 @@ class IntruderStrandedTest {
             South - Move south
             East - Move east
             West - Move west
-            TEL - Access teleportation
             """, is.gc.executeCommand("HELP"));
     }
 
